@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+  <g id="Group_18341" data-name="Group 18341" transform="translate(-316 -148)">
+    <g id="Rectangle_6116" data-name="Rectangle 6116" transform="translate(316 148)" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.6)" stroke-width="0.3">
+      <rect width="30" height="30" rx="2" stroke="none"/>
+      <rect x="0.15" y="0.15" width="29.7" height="29.7" rx="1.85" fill="none"/>
+    </g>
+    <g id="delete_1_" data-name="delete (1)" transform="translate(322.146 153.455)">
+      <path id="Path_37120" data-name="Path 37120" d="M13.738,13a.737.737,0,0,0-.738.738v5.9a.738.738,0,0,0,1.476,0v-5.9A.737.737,0,0,0,13.738,13Z" transform="translate(-6.36 -5.622)" fill="#fff" stroke="#1ac186" stroke-width="0.5"/>
+      <path id="Path_37121" data-name="Path 37121" d="M17.738,13a.737.737,0,0,0-.738.738v5.9a.738.738,0,0,0,1.476,0v-5.9A.737.737,0,0,0,17.738,13Z" transform="translate(-7.408 -5.622)" fill="#fff" stroke="#1ac186" stroke-width="0.5"/>
+      <path id="Path_37122" data-name="Path 37122" d="M15.067,3H10.64A1.477,1.477,0,0,0,9.165,4.476V5.951H4.738a.738.738,0,1,0,0,1.476H6.213V19.97a2.216,2.216,0,0,0,2.213,2.213h8.854a2.216,2.216,0,0,0,2.213-2.213V7.427H20.97a.738.738,0,1,0,0-1.476H16.543V4.476A1.477,1.477,0,0,0,15.067,3Zm2.951,16.97a.738.738,0,0,1-.738.738H8.427a.738.738,0,0,1-.738-.738V7.427h10.33ZM10.64,5.951V4.476h4.427V5.951Z" transform="translate(-4 -3)" fill="#fff" stroke="#1ac186" stroke-width="0.5"/>
+    </g>
+  </g>
+</svg>
