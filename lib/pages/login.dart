@@ -3,8 +3,12 @@ import 'dart:developer';
 import 'package:patientapp/pages/forgotpassword.dart';
 import 'package:patientapp/pages/registration.dart';
 import 'package:patientapp/pages/sidedrawer.dart';
+import 'package:patientapp/provider/generalprovider.dart';
 import 'package:patientapp/utils/colors.dart';
+import 'package:patientapp/utils/constant.dart';
+import 'package:patientapp/utils/sharedpre.dart';
 import 'package:patientapp/utils/strings.dart';
+import 'package:patientapp/utils/utility.dart';
 import 'package:patientapp/widgets/myassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:patientapp/widgets/mytextformfield.dart';
@@ -12,9 +16,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../utils/constant.dart';
-import '../utils/utility.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -24,15 +27,20 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  late ProgressDialog prDialog;
+  SharedPre sharePref = SharedPre();
   final _formKey = GlobalKey<FormState>();
   late bool isPrivacyChecked, _passwordVisible;
   final mEmailController = TextEditingController();
   final mPasswordController = TextEditingController();
+  dynamic email, password, type, deviceToken;
+  late GeneralProvider generalProvider;
 
   @override
   void initState() {
     isPrivacyChecked = false;
     _passwordVisible = false;
+    prDialog = ProgressDialog(context);
     super.initState();
   }
 
@@ -253,7 +261,7 @@ class _LoginState extends State<Login> {
               ),
               value: isPrivacyChecked,
               onChanged: (bool? value) {
-                print(value);
+                log("onChanged value => $value");
                 setState(
                   () {
                     isPrivacyChecked = value!;
@@ -365,79 +373,86 @@ class _LoginState extends State<Login> {
     log("isValidForm => $isValidForm");
     // Validate returns true if the form is valid, or false otherwise.
     if (isValidForm) {
-      log("Email => ${mEmailController.text}");
-      log("Password => ${mPasswordController.text}");
+      email = mEmailController.text.toString().trim();
+      password = mPasswordController.text.toString().trim();
+      type = "1";
+      deviceToken = "123456789";
+      log("Email => $email");
+      log("Password => $password");
+      log("type => $type");
+      log("deviceToken => $deviceToken");
       log("isPrivacyChecked => $isPrivacyChecked");
 
       if (mEmailController.text.isEmpty) {
         Utility.showToast(enterEmail);
-        return;
-      }
-      if (mPasswordController.text.isEmpty) {
+      } else if (mPasswordController.text.isEmpty) {
         Utility.showToast(enterPassword);
-        return;
-      }
-      if (!EmailValidator.validate(mEmailController.text)) {
+      } else if (!EmailValidator.validate(mEmailController.text)) {
         Utility.showToast(enterValidEmail);
-        return;
-      }
-      if (mPasswordController.text.length < 6) {
+      } else if (mPasswordController.text.length < 6) {
         Utility.showToast("$enterMinimumCharacters in $password");
-        return;
-      }
-      if (!isPrivacyChecked) {
+      } else if (!isPrivacyChecked) {
         Utility.showToast(acceptPrivacyPolicyMsg);
-        return;
-      }
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Successfull!')),
-      );
+      } else {
+        generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+        // doctor_login API call
+        Utility.showProgress(context, prDialog);
+        await generalProvider.loginDoctor(email, password, type, deviceToken);
 
-      await showMyDialog();
+        checkAndNavigate();
+      }
     }
   }
 
-  Future<void> showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Login Details'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                MyText(
-                  mTitle:
-                      "Email : ${mEmailController.text}\nPassword : ${mPasswordController.text}",
-                  mTextColor: black,
-                  mFontSize: 16,
-                ),
-              ],
-            ),
+  void checkAndNavigate() {
+    log('checkAndNavigate loading ==>> ${generalProvider.loading}');
+    if (!generalProvider.loading) {
+      // Hide Progress Dialog
+      prDialog.hide();
+
+      if (generalProvider.loginRegisterModel.status == 200) {
+        log('loginRegisterModel ==>> ${generalProvider.loginRegisterModel.toString()}');
+        log('Login Successfull!');
+        for (var i = 0;
+            i < generalProvider.loginRegisterModel.result!.length;
+            i++) {
+          sharePref.save(
+              "userid", generalProvider.loginRegisterModel.result![i].id);
+          sharePref.save("firstname",
+              generalProvider.loginRegisterModel.result![i].firstName);
+          sharePref.save("lastname",
+              generalProvider.loginRegisterModel.result![i].lastName);
+          sharePref.save("image",
+              generalProvider.loginRegisterModel.result![i].profileImg);
+          sharePref.save(
+              "email", generalProvider.loginRegisterModel.result![i].email);
+          sharePref.save("password",
+              generalProvider.loginRegisterModel.result![i].password);
+          sharePref.save("mobile",
+              generalProvider.loginRegisterModel.result![i].mobileNumber);
+          sharePref.save(
+              "type", generalProvider.loginRegisterModel.result![i].type);
+          sharePref.save(
+              "status", generalProvider.loginRegisterModel.result![i].status);
+        }
+
+        // Set UserID for Next
+        Constant.userID =
+            generalProvider.loginRegisterModel.result![0].id ?? "";
+        log('Constant userID ==>> ${Constant.userID}');
+
+        Utility.setFirstTime();
+        clearTextFormField();
+        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const MySideDrawer(),
           ),
-          actions: <Widget>[
-            TextButton(
-              child: MyText(
-                mTitle: next,
-                mTextColor: primaryDarkColor,
-                mFontSize: 20,
-                mFontStyle: FontStyle.normal,
-                mFontWeight: FontWeight.w600,
-                mTextAlign: TextAlign.center,
-              ),
-              onPressed: () {
-                clearTextFormField();
-                Navigator.pop(context);
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const MySideDrawer()));
-              },
-            ),
-          ],
         );
-      },
-    );
+      } else {
+        Utility.showSnackbar(
+            context, "${generalProvider.loginRegisterModel.message}");
+      }
+    }
   }
 }

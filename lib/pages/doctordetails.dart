@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:patientapp/pages/allfeedback.dart';
 import 'package:patientapp/pages/bookappointment.dart';

@@ -1,6 +1,8 @@
-import 'package:patientapp/model/dummyDataModel.dart';
+import 'package:patientapp/model/dummydatamodel.dart';
 
 class Constant {
+  static const String baseurl = 'https://divinetechs.in/envato/app/docpro';
+
   static String appName = "";
 
   // Dimentions START
@@ -11,6 +13,10 @@ class Constant {
   static double backBtnHeight = 15;
   static double backBtnWidth = 19;
   // Dimentions END
+
+  static String userID = "";
+  static String userPlaceholder =
+      "https://i.pinimg.com/564x/5d/69/42/5d6942c6dff12bd3f960eb30c5fdd0f9.jpg";
 
   static List<String> gradientBG = [
     'assets/images/spec_blue_bg.png',

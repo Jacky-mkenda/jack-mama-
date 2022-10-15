@@ -102,7 +102,7 @@ class _HomeFState extends State<HomeF> {
                   children: <Widget>[
                     Expanded(
                       child: MyTextFormField(
-                        mHint: "Search...",
+                        mHint: searchHint,
                         mController: mSearchController,
                         mHintTextColor: textEdtHintColor,
                         mObscureText: false,
@@ -258,7 +258,7 @@ class _HomeFState extends State<HomeF> {
                 ),
               ),
               const SizedBox(height: 8),
-              Container(
+              SizedBox(
                 height: 125,
                 // constraints:
                 // const BoxConstraints(minHeight: 120, maxHeight: 250),
@@ -283,11 +283,14 @@ class _HomeFState extends State<HomeF> {
                     InkWell(
                       onTap: () {
                         log("Tapped on $seeAll");
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => const ViewAll(
-                                  appBarTitle: availableDoctors,
-                                  layoutType: "Doctors",
-                                )));
+                              appBarTitle: availableDoctors,
+                              layoutType: "Doctors",
+                            ),
+                          ),
+                        );
                       },
                       borderRadius: BorderRadius.circular(5),
                       child: MyText(
@@ -326,11 +329,14 @@ class _HomeFState extends State<HomeF> {
         borderRadius: BorderRadius.circular(8),
         onTap: () {
           log("Item Clicked! => $position");
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context).push(
+            MaterialPageRoute(
               builder: (context) => const ViewAll(
-                    appBarTitle: availableDoctors,
-                    layoutType: 'Doctors',
-                  )));
+                appBarTitle: availableDoctors,
+                layoutType: 'Doctors',
+              ),
+            ),
+          );
         },
         child: Container(
           width: 80,

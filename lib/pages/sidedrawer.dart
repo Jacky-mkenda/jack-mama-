@@ -425,7 +425,10 @@ class _MySideDrawerState extends State<MySideDrawer> {
                 selectedMenuItemId = 6;
                 log("selectedMenuItemId => $selectedMenuItemId");
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const Login()));
+                  MaterialPageRoute(
+                    builder: (context) => const Login(),
+                  ),
+                );
               });
             },
             child: Container(

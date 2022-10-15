@@ -37,6 +37,7 @@ const next = "Next";
 const forgotPassNote = "We will send new password to this email address.";
 const acceptPrivacyPolicyMsg = "Please, accept the Privacy Policy of this app.";
 const pickInsImageNote = "Choose option to pick your Insurance image!";
+const pleaseWait = "Please wait...";
 //Login, Registration Strings END
 
 //BottomNavigation & Side Navigation START
@@ -63,6 +64,7 @@ const availableDoctors = "Available Doctors";
 const seeAll = "See all";
 const notifications = "Notifications";
 const bookNow = "Book Now";
+const searchHint = "Search...";
 //Home Strings END
 
 //Prescription Strings START

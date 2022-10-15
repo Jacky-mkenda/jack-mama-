@@ -54,6 +54,11 @@ dependencies:
   flutter_phone_direct_caller: ^2.1.1
   awesome_drawer_bar: ^1.0.0
   webview_flutter: ^3.0.4
+  provider: ^6.0.4
+  screen_loader: ^4.0.1
+  progress_dialog_null_safe: ^1.0.7
+  dio: ^4.0.6
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

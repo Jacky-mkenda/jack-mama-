@@ -1,12 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:patientapp/utils/colors.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:patientapp/utils/sharedpre.dart';
+import 'package:patientapp/utils/strings.dart';
 import 'package:patientapp/widgets/myappbarwithback.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'constant.dart';
@@ -21,6 +27,71 @@ class Utility {
         backgroundColor: white,
         textColor: black,
         fontSize: 16);
+  }
+
+  static void getUserId() async {
+    SharedPre sharedPref = SharedPre();
+    Constant.userID = await sharedPref.read("userid") ?? "";
+    log('Constant userID ==> ${Constant.userID}');
+  }
+
+  static setFirstTime() async {
+    SharedPre sharedPref = SharedPre();
+    await sharedPref.save("seen", "1");
+  }
+
+  static Widget pageLoader() {
+    return const Align(
+      alignment: Alignment.center,
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  static void showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: MyText(
+          mTitle: message,
+          mFontSize: 14,
+          mFontStyle: FontStyle.normal,
+          mFontWeight: FontWeight.normal,
+          mTextColor: white,
+          mTextAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  static void showProgress(
+      BuildContext context, ProgressDialog prDialog) async {
+    prDialog = ProgressDialog(context);
+    //For normal dialog
+    prDialog = ProgressDialog(context,
+        type: ProgressDialogType.normal, isDismissible: false, showLogs: false);
+
+    prDialog.style(
+      message: pleaseWait,
+      borderRadius: 5,
+      progressWidget: Container(
+        padding: const EdgeInsets.all(8),
+        child: const CircularProgressIndicator(),
+      ),
+      maxProgress: 100,
+      progressTextStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+      ),
+      backgroundColor: white,
+      insetAnimCurve: Curves.easeInOut,
+      messageTextStyle: const TextStyle(
+        color: black,
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+      ),
+    );
+
+    await prDialog.show();
   }
 
   static PreferredSize appBarCommon(var appBarTitle) {

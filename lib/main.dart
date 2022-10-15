@@ -4,12 +4,22 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:patientapp/pages/splash.dart';
+import 'package:patientapp/provider/generalprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:patientapp/utils/utility.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GeneralProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -23,8 +33,10 @@ class _MyAppState extends State<MyApp> {
   PackageInfo packageInfo;
   @override
   void initState() {
-    super.initState();
+    //Saved UserID in Constant for Future use
+    Utility.getUserId();
     getPackage();
+    super.initState();
   }
 
   @override

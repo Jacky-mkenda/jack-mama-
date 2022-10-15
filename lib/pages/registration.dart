@@ -3,20 +3,19 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:image_picker/image_picker.dart';
-import 'package:patientapp/pages/home.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:patientapp/pages/sidedrawer.dart';
+import 'package:patientapp/provider/generalprovider.dart';
+import 'package:patientapp/utils/colors.dart';
+import 'package:patientapp/utils/constant.dart';
+import 'package:patientapp/utils/strings.dart';
+import 'package:patientapp/utils/utility.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
-
-import '../utils/constant.dart';
-import '../utils/strings.dart';
-import '../utils/utility.dart';
-import '../utils/colors.dart';
-import '../widgets/mytext.dart';
-import '../widgets/mytextformfield.dart';
+import 'package:patientapp/widgets/mytext.dart';
+import 'package:patientapp/widgets/mytextformfield.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);
@@ -38,6 +37,7 @@ class _RegistrationState extends State<Registration> {
   final mInsNoController = TextEditingController();
   final mInsNameController = TextEditingController();
   final mInsIMGController = TextEditingController();
+  late GeneralProvider generalProvider;
 
   @override
   void initState() {
@@ -294,6 +294,9 @@ class _RegistrationState extends State<Registration> {
     mEmailController.clear();
     mPasswordController.clear();
     mMobileController.clear();
+    mInsNoController.clear();
+    mInsNameController.clear();
+    mInsIMGController.clear();
   }
 
   Future<void> imagePickDialog() async {
@@ -389,6 +392,7 @@ class _RegistrationState extends State<Registration> {
     if (pickedFile != null) {
       setState(() {
         pickedImageFile = File(pickedFile.path);
+        mInsIMGController.text = p.basename(pickedFile.path);
         log("Camera ImageFile ==> ${pickedImageFile!.path}");
       });
     }
@@ -411,7 +415,7 @@ class _RegistrationState extends State<Registration> {
               ),
               value: isPrivacyChecked,
               onChanged: (bool? value) {
-                print(value);
+                log("onChanged value ==> $value");
                 setState(
                   () {
                     isPrivacyChecked = value!;
@@ -475,7 +479,7 @@ class _RegistrationState extends State<Registration> {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  log(loginFSpace + " tapped!");
+                  log("$loginFSpace tapped!");
                   clearTextFormField();
                   Navigator.of(context).pop();
                 },
@@ -508,43 +512,29 @@ class _RegistrationState extends State<Registration> {
 
       if (mFirstNameController.text.isEmpty) {
         Utility.showToast(enterFirstname);
-        return;
-      }
-      if (mLastNameController.text.isEmpty) {
+      } else if (mLastNameController.text.isEmpty) {
         Utility.showToast(enterLastname);
-        return;
-      }
-      if (mEmailController.text.isEmpty) {
+      } else if (mEmailController.text.isEmpty) {
         Utility.showToast(enterEmail);
-        return;
-      }
-      if (mPasswordController.text.isEmpty) {
+      } else if (mPasswordController.text.isEmpty) {
         Utility.showToast(enterPassword);
-        return;
-      }
-      if (mMobileController.text.isEmpty) {
+      } else if (mMobileController.text.isEmpty) {
         Utility.showToast(enterMobilenumber);
-        return;
-      }
-      if (!EmailValidator.validate(mEmailController.text)) {
+      } else if (!EmailValidator.validate(mEmailController.text)) {
         Utility.showToast(enterValidEmail);
-        return;
-      }
-      if (mPasswordController.text.length < 6) {
+      } else if (mPasswordController.text.length < 6) {
         Utility.showToast("$enterMinimumCharacters in $password");
-        return;
-      }
-      if (!isPrivacyChecked) {
+      } else if (!isPrivacyChecked) {
         Utility.showToast(acceptPrivacyPolicyMsg);
-        return;
-      }
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration Successfull!')),
-      );
+      } else {
+        // If the form is valid, display a snackbar. In the real world,
+        // you'd often call a server or save the information in a database.
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration Successfull!')),
+        );
 
-      await showMyDialog();
+        await showMyDialog();
+      }
     }
   }
 

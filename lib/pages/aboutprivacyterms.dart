@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:patientapp/utils/colors.dart';
@@ -61,24 +62,24 @@ class _AboutPrivacyTermsState extends State<AboutPrivacyTerms> {
         _controller.complete(webViewController);
       },
       onProgress: (int progress) {
-        print('WebView is loading (progress : $progress%)');
+        log('WebView is loading (progress : $progress%)');
       },
       javascriptChannels: <JavascriptChannel>{
         _toasterJavascriptChannel(context),
       },
       navigationDelegate: (NavigationRequest request) {
         if (request.url.startsWith('https://www.youtube.com/')) {
-          print('blocking navigation to $request}');
+          log('blocking navigation to $request}');
           return NavigationDecision.prevent;
         }
-        print('allowing navigation to $request');
+        log('allowing navigation to $request');
         return NavigationDecision.navigate;
       },
       onPageStarted: (String url) {
-        print('Page started loading: $url');
+        log('Page started loading: $url');
       },
       onPageFinished: (String url) {
-        print('Page finished loading: $url');
+        log('Page finished loading: $url');
       },
       gestureNavigationEnabled: true,
       backgroundColor: const Color(0x00000000),
