@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:patientapp/utils/colors.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -278,5 +279,145 @@ class Utility {
     } catch (error) {
       throw ("Cannot dial");
     }
+  }
+
+  static String formateDate(String date) {
+    String finalDate = "";
+    DateFormat inputDate = DateFormat("yyyy-MM-dd");
+    DateFormat outputDate = DateFormat("MMMM dd, yyyy");
+
+    log('date => $date');
+    DateTime inputTime = inputDate.parse(date);
+    log('inputTime => $inputTime');
+
+    finalDate = outputDate.format(inputTime);
+    log('finalDate => $finalDate');
+
+    return finalDate;
+  }
+
+  static String formateInMMMMDD(String date) {
+    String finalDate = "";
+    DateFormat inputDate = DateFormat("yyyy-MM-dd");
+    DateFormat outputDate = DateFormat("MMMM dd");
+
+    log('date => $date');
+    DateTime inputTime = inputDate.parse(date);
+    log('inputTime => $inputTime');
+
+    finalDate = outputDate.format(inputTime);
+    log('finalDate => $finalDate');
+
+    return finalDate;
+  }
+
+  static String formateTime(String time) {
+    String finalTime = "";
+    DateFormat hhmmFormatter = DateFormat("HH:mm");
+    DateFormat mmFormatter = DateFormat("hh:mm a");
+
+    log('date => $date');
+    DateTime inputTime = hhmmFormatter.parse(time);
+    log('inputTime => $inputTime');
+
+    finalTime = mmFormatter.format(inputTime);
+    log('finalTime => $finalTime');
+
+    return finalTime;
+  }
+
+  static String covertTimeToText(String dataDate) {
+    String convTime = "";
+    String suffix = "ago";
+
+    try {
+      DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+      DateTime pasTime = dateFormat.parse(dataDate);
+      DateTime nowTime = DateTime.now();
+
+      log("==>pastTime ${pasTime.day}");
+      log("==>nowTime ${nowTime.day}");
+
+      Duration difference = nowTime.difference(pasTime);
+      log('(1). difference => $difference');
+
+      int day = difference.inDays;
+      double hour = difference.inHours % 24;
+      double minute = difference.inMinutes % 60;
+      double second = difference.inSeconds % 60;
+
+      log("==>second : $second");
+      log("==>minute : $minute");
+      log("==>hour : $hour");
+      log("==>day : $day");
+
+      if (day >= 7) {
+        if (day > 360) {
+          convTime = "${(day / 360)} yrs $suffix";
+        } else if (day > 30) {
+          convTime = "${(day / 30)} months $suffix";
+        } else {
+          convTime = "${(day / 7)} week $suffix";
+        }
+      } else if (day > 0 && day < 7) {
+        if (day == 1) {
+          convTime = "$day day $suffix";
+        } else {
+          convTime = "$day days $suffix";
+        }
+      } else if (hour < 24 && hour > 0) {
+        if (hour == 1) {
+          convTime = "${hour.round()} hr $suffix";
+        } else {
+          convTime = "${hour.round()} hrs $suffix";
+        }
+      } else if (minute < 60 && minute > 0) {
+        if (minute == 1) {
+          convTime = "${minute.round()} min $suffix";
+        } else {
+          convTime = "${minute.round()} mins $suffix";
+        }
+      } else if (second < 60 && second > 0) {
+        if (second == 1) {
+          convTime = "${second.round()} sec $suffix";
+        } else {
+          convTime = "${second.round()} secs $suffix";
+        }
+      }
+    } catch (e) {
+      log("ConvTimeE Exception ==> $e");
+    }
+
+    return convTime;
+  }
+
+  static String calculateBMI(String strWeight, String strHeight) {
+    String strBMIText = "", bmiResult = "";
+    double bmi = 0;
+    if (strWeight.isNotEmpty && strWeight != "-") {
+      double weightValue = double.parse(strWeight.trim());
+      double heightValue = double.parse(strHeight.trim()) / 100;
+
+      bmi = (weightValue / (heightValue * heightValue));
+
+      log("bmi :==> $bmi");
+      if (bmi < 18.5) {
+        bmiResult = "You are in the underweight BMI range!";
+      } else if (bmi >= 18.5 && bmi < 24.9) {
+        bmiResult = "You are in the healthy weight BMI range!";
+      } else if (bmi >= 25 && bmi <= 29.9) {
+        bmiResult = "You are in the overweight BMI range!";
+      } else if (bmi > 30) {
+        bmiResult = "You are in the obese BMI range!";
+      }
+
+      strBMIText = htmlTexts(
+              "BMI is : <b><font color='#000'>${bmi.toStringAsFixed(2)}</font></b> and $bmiResult")
+          .data
+          .toString();
+    } else {
+      strBMIText = "-";
+    }
+    return strBMIText;
   }
 }

@@ -65,6 +65,17 @@ const seeAll = "See all";
 const notifications = "Notifications";
 const bookNow = "Book Now";
 const searchHint = "Search...";
+const pending = "Pending";
+const approved = "Approved";
+const rejected = "Rejected";
+const completed = "Completed";
+const notDataFound = "Data Not Found!";
+const guestUser = "Guest User";
+const searchDoctorByName = "Find a doctor by Name or Speciality";
+const youDontHaveAnyAppointment = "You don't have any appointment";
+const findBestDoctorsNearYouBySpeciality =
+    "Find best doctors near you by speciality,";
+const clickHere = "click here";
 //Home Strings END
 
 //Prescription Strings START
@@ -99,10 +110,7 @@ const all = "All";
 
 //History Details Strings START
 const historyDetails = "History Details";
-const pending = "Pending";
-const rejected = "Rejected";
 const accepted = "Accepted";
-const completed = "Completed";
 const doctorSymptoms = "Doctor Symptoms";
 const doctorDiagnosis = "Doctor Diagnosis";
 const doctorPrescription = "Doctor Prescription";

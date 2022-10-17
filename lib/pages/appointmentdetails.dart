@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:patientapp/pages/nodata.dart';
+import 'package:patientapp/provider/appointmentdetailprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
@@ -10,9 +12,11 @@ import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:flutter/material.dart';
 import 'package:patientapp/widgets/mytextformfield.dart';
+import 'package:provider/provider.dart';
 
 class AppointmentDetails extends StatefulWidget {
-  const AppointmentDetails({Key? key}) : super(key: key);
+  final String appoitnmentID;
+  const AppointmentDetails(this.appoitnmentID, {Key? key}) : super(key: key);
 
   @override
   State<AppointmentDetails> createState() => _AppointmentDetailsState();
@@ -22,6 +26,9 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
   final mAddCommentController = TextEditingController();
   @override
   void initState() {
+    final detailProvider =
+        Provider.of<AppointmentDetailProvider>(context, listen: false);
+    detailProvider.getAppointmentDetail(widget.appoitnmentID);
     super.initState();
   }
 
@@ -41,153 +48,230 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
         scrollDirection: Axis.vertical,
         child: Container(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(8),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      clipBehavior: Clip.antiAlias,
-                      child: MyNetworkImage(
-                        imageUrl:
-                            "https://images.unsplash.com/photo-1512479064533-47d51d07bb93?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NjF8fGRvY3RvcnxlbnwwfDF8MHx8&auto=format&fit=crop&w=400&q=60",
-                        fit: BoxFit.fill,
-                        imgHeight: 66,
-                        imgWidth: 66,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 13, right: 13),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            MyText(
-                              mTitle: "Tonya Burns",
-                              mTextAlign: TextAlign.start,
-                              mTextColor: textTitleColor,
-                              mFontSize: 14,
-                              mFontStyle: FontStyle.normal,
-                              mFontWeight: FontWeight.bold,
-                            ),
-                            const SizedBox(
-                              height: 4,
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                MyText(
-                                  mTitle: 'Dentist',
-                                  mFontSize: 12,
-                                  mFontWeight: FontWeight.normal,
-                                  mTextAlign: TextAlign.start,
-                                  mTextColor: otherLightColor,
+          child: Consumer<AppointmentDetailProvider>(
+              builder: (context, detailProvider, child) {
+            if (!detailProvider.loading) {
+              if (detailProvider.appointmentModel.status == 200) {
+                if (detailProvider.appointmentModel.result != null) {
+                  if (detailProvider.appointmentModel.result!.isNotEmpty) {
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(8),
+                            shape: BoxShape.rectangle,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                clipBehavior: Clip.antiAlias,
+                                child: MyNetworkImage(
+                                  imageUrl: detailProvider
+                                          .appointmentModel.result
+                                          ?.elementAt(0)
+                                          .doctorImage
+                                          .toString() ??
+                                      "",
+                                  fit: BoxFit.fill,
+                                  imgHeight: 66,
+                                  imgWidth: 66,
                                 ),
-                                const SizedBox(
-                                  width: 4,
-                                ),
-                                Container(
-                                  width: 4,
-                                  height: 4,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: otherLightColor,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 13, right: 13),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      MyText(
+                                        mTitle: detailProvider
+                                                .appointmentModel.result
+                                                ?.elementAt(0)
+                                                .doctorName
+                                                .toString() ??
+                                            "-",
+                                        mTextAlign: TextAlign.start,
+                                        mTextColor: textTitleColor,
+                                        mFontSize: 14,
+                                        mFontStyle: FontStyle.normal,
+                                        mFontWeight: FontWeight.bold,
+                                      ),
+                                      const SizedBox(
+                                        height: 4,
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          MyText(
+                                            mTitle: detailProvider
+                                                    .appointmentModel.result
+                                                    ?.elementAt(0)
+                                                    .specialitiesName
+                                                    .toString() ??
+                                                "-",
+                                            mFontSize: 12,
+                                            mFontWeight: FontWeight.normal,
+                                            mTextAlign: TextAlign.start,
+                                            mTextColor: otherLightColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 4,
+                                          ),
+                                          Container(
+                                            width: 4,
+                                            height: 4,
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: otherLightColor,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 4,
+                                          ),
+                                          MyText(
+                                            mTitle: detailProvider
+                                                        .appointmentModel.result
+                                                        ?.elementAt(0)
+                                                        .status
+                                                        .toString() ==
+                                                    "1"
+                                                ? pending
+                                                : (detailProvider
+                                                            .appointmentModel
+                                                            .result
+                                                            ?.elementAt(0)
+                                                            .status
+                                                            .toString() ==
+                                                        "2"
+                                                    ? approved
+                                                    : (detailProvider
+                                                                .appointmentModel
+                                                                .result
+                                                                ?.elementAt(0)
+                                                                .status
+                                                                .toString() ==
+                                                            "3"
+                                                        ? rejected
+                                                        : detailProvider
+                                                                    .appointmentModel
+                                                                    .result
+                                                                    ?.elementAt(
+                                                                        0)
+                                                                    .status
+                                                                    .toString() ==
+                                                                "4"
+                                                            ? absent
+                                                            : (detailProvider
+                                                                        .appointmentModel
+                                                                        .result
+                                                                        ?.elementAt(
+                                                                            0)
+                                                                        .status
+                                                                        .toString() ==
+                                                                    "5"
+                                                                ? completed
+                                                                : "-"))),
+                                            mFontSize: 12,
+                                            mFontWeight: FontWeight.normal,
+                                            mTextAlign: TextAlign.start,
+                                            mTextColor: detailProvider
+                                                        .appointmentModel.result
+                                                        ?.elementAt(0)
+                                                        .status
+                                                        .toString() ==
+                                                    "1"
+                                                ? pendingStatus
+                                                : (detailProvider
+                                                            .appointmentModel
+                                                            .result
+                                                            ?.elementAt(0)
+                                                            .status
+                                                            .toString() ==
+                                                        "2"
+                                                    ? approvedStatus
+                                                    : (detailProvider
+                                                                .appointmentModel
+                                                                .result
+                                                                ?.elementAt(0)
+                                                                .status
+                                                                .toString() ==
+                                                            "3"
+                                                        ? rejectedStatus
+                                                        : detailProvider
+                                                                    .appointmentModel
+                                                                    .result
+                                                                    ?.elementAt(
+                                                                        0)
+                                                                    .status
+                                                                    .toString() ==
+                                                                "4"
+                                                            ? absentStatus
+                                                            : (detailProvider
+                                                                        .appointmentModel
+                                                                        .result
+                                                                        ?.elementAt(
+                                                                            0)
+                                                                        .status
+                                                                        .toString() ==
+                                                                    "5"
+                                                                ? completedStatus
+                                                                : black))),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 4,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  log('Clicked on call!');
+                                  Utility.launchPhoneDialer(detailProvider
+                                          .appointmentModel.result
+                                          ?.elementAt(0)
+                                          .doctorMobileNumber
+                                          .toString() ??
+                                      "");
+                                },
+                                child: MySvgAssetsImg(
+                                  imageName: "mobile_dark.svg",
+                                  fit: BoxFit.cover,
+                                  imgHeight: 38,
+                                  imgWidth: 38,
                                 ),
-                                MyText(
-                                  mTitle: 'Pending',
-                                  mFontSize: 12,
-                                  mFontWeight: FontWeight.normal,
-                                  mTextAlign: TextAlign.start,
-                                  mTextColor: pendingStatus,
-                                ),
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        log('Clicked on call!');
-                        Utility.launchPhoneDialer('9913269834');
-                      },
-                      child: MySvgAssetsImg(
-                        imageName: "mobile_dark.svg",
-                        fit: BoxFit.cover,
-                        imgHeight: 38,
-                        imgWidth: 38,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(8),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    MyText(
-                      mTitle: contactNo,
-                      mFontSize: 12,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: otherLightColor,
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    MyText(
-                      mTitle: "+91 9632587410",
-                      mFontSize: 14,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: textTitleColor,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
+                        const SizedBox(
+                          height: 2,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(8),
+                            shape: BoxShape.rectangle,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: <Widget>[
                               MyText(
-                                mTitle: date,
+                                mTitle: contactNo,
                                 mFontSize: 12,
                                 mFontWeight: FontWeight.normal,
                                 mFontStyle: FontStyle.normal,
@@ -198,11 +282,211 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 height: 4,
                               ),
                               MyText(
-                                mTitle: "February 12, 2022",
+                                mTitle: detailProvider.appointmentModel.result
+                                        ?.elementAt(0)
+                                        .doctorMobileNumber
+                                        .toString() ??
+                                    "-",
                                 mFontSize: 14,
                                 mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: textTitleColor,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        MyText(
+                                          mTitle: date,
+                                          mFontSize: 12,
+                                          mFontWeight: FontWeight.normal,
+                                          mFontStyle: FontStyle.normal,
+                                          mTextAlign: TextAlign.start,
+                                          mTextColor: otherLightColor,
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        MyText(
+                                          mTitle: Utility.formateInMMMMDD(
+                                              detailProvider
+                                                      .appointmentModel.result
+                                                      ?.elementAt(0)
+                                                      .date
+                                                      .toString() ??
+                                                  ""),
+                                          mFontSize: 14,
+                                          mFontWeight: FontWeight.normal,
+                                          mMaxLine: 1,
+                                          mOverflow: TextOverflow.ellipsis,
+                                          mFontStyle: FontStyle.normal,
+                                          mTextAlign: TextAlign.start,
+                                          mTextColor: textTitleColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        MyText(
+                                          mTitle: time,
+                                          mFontSize: 12,
+                                          mFontWeight: FontWeight.normal,
+                                          mFontStyle: FontStyle.normal,
+                                          mTextAlign: TextAlign.start,
+                                          mTextColor: otherLightColor,
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        MyText(
+                                          mTitle: Utility.formateTime(
+                                              detailProvider
+                                                      .appointmentModel.result
+                                                      ?.elementAt(0)
+                                                      .startTime
+                                                      .toString() ??
+                                                  "-"),
+                                          mFontSize: 14,
+                                          mMaxLine: 1,
+                                          mOverflow: TextOverflow.ellipsis,
+                                          mFontWeight: FontWeight.normal,
+                                          mFontStyle: FontStyle.normal,
+                                          mTextAlign: TextAlign.start,
+                                          mTextColor: textTitleColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              MyText(
+                                mTitle: emailAddress,
+                                mFontSize: 12,
+                                mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: otherLightColor,
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              MyText(
+                                mTitle: detailProvider.appointmentModel.result
+                                        ?.elementAt(0)
+                                        .doctorEmail
+                                        .toString() ??
+                                    "-",
+                                mFontSize: 14,
                                 mMaxLine: 1,
                                 mOverflow: TextOverflow.ellipsis,
+                                mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: textTitleColor,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              MyText(
+                                mTitle: allergiesToMedicine,
+                                mFontSize: 12,
+                                mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: otherLightColor,
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              MyText(
+                                mTitle: detailProvider.appointmentModel.result
+                                        ?.elementAt(0)
+                                        .allergiesToMedicine
+                                        .toString() ??
+                                    "-",
+                                mFontSize: 14,
+                                mMaxLine: 3,
+                                mOverflow: TextOverflow.ellipsis,
+                                mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: textTitleColor,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              MyText(
+                                mTitle: medicineTaken,
+                                mFontSize: 12,
+                                mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: otherLightColor,
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              MyText(
+                                mTitle: detailProvider.appointmentModel.result
+                                        ?.elementAt(0)
+                                        .medicinesTaken
+                                        .toString() ??
+                                    "-",
+                                mFontSize: 14,
+                                mMaxLine: 2,
+                                mOverflow: TextOverflow.ellipsis,
+                                mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: textTitleColor,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              MyText(
+                                mTitle: description,
+                                mFontSize: 12,
+                                mFontWeight: FontWeight.normal,
+                                mFontStyle: FontStyle.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: otherLightColor,
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              MyText(
+                                mTitle: detailProvider.appointmentModel.result
+                                        ?.elementAt(0)
+                                        .description
+                                        .toString() ??
+                                    "-",
+                                mFontSize: 14,
+                                mMaxLine: 5,
+                                mOverflow: TextOverflow.ellipsis,
+                                mFontWeight: FontWeight.normal,
                                 mFontStyle: FontStyle.normal,
                                 mTextAlign: TextAlign.start,
                                 mTextColor: textTitleColor,
@@ -210,188 +494,67 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             ],
                           ),
                         ),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MyText(
-                                mTitle: time,
-                                mFontSize: 12,
-                                mFontWeight: FontWeight.normal,
+                        const SizedBox(
+                          height: 65,
+                        ),
+                        Visibility(
+                          visible: true,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(4),
+                            onTap: () {
+                              log("Tapped on $giveFeedBack");
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30),
+                                  ),
+                                ),
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                builder: (BuildContext context) {
+                                  return Wrap(children: <Widget>[
+                                    buildAddFeedBackDialog(),
+                                  ]);
+                                },
+                              );
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: Constant.buttonHeight,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(4),
+                                shape: BoxShape.rectangle,
+                              ),
+                              child: MyText(
+                                mTitle: giveFeedBack,
+                                mFontSize: 16,
                                 mFontStyle: FontStyle.normal,
-                                mTextAlign: TextAlign.start,
-                                mTextColor: otherLightColor,
-                              ),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              MyText(
-                                mTitle: "10:30 am - 11:00 am",
-                                mFontSize: 14,
+                                mFontWeight: FontWeight.w600,
                                 mMaxLine: 1,
-                                mOverflow: TextOverflow.ellipsis,
-                                mFontWeight: FontWeight.normal,
-                                mFontStyle: FontStyle.normal,
-                                mTextAlign: TextAlign.start,
-                                mTextColor: textTitleColor,
+                                mTextAlign: TextAlign.center,
+                                mTextColor: primaryColor,
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    MyText(
-                      mTitle: emailAddress,
-                      mFontSize: 12,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: otherLightColor,
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    MyText(
-                      mTitle: "john.marshal@gmail.com",
-                      mFontSize: 14,
-                      mMaxLine: 1,
-                      mOverflow: TextOverflow.ellipsis,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: textTitleColor,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    MyText(
-                      mTitle: allergiesToMedicine,
-                      mFontSize: 12,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: otherLightColor,
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    MyText(
-                      mTitle: "Skin problem when I take capsules",
-                      mFontSize: 14,
-                      mMaxLine: 3,
-                      mOverflow: TextOverflow.ellipsis,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: textTitleColor,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    MyText(
-                      mTitle: medicineTaken,
-                      mFontSize: 12,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: otherLightColor,
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    MyText(
-                      mTitle: "No",
-                      mFontSize: 14,
-                      mMaxLine: 2,
-                      mOverflow: TextOverflow.ellipsis,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: textTitleColor,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    MyText(
-                      mTitle: description,
-                      mFontSize: 12,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: otherLightColor,
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    MyText(
-                      mTitle:
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                      mFontSize: 14,
-                      mMaxLine: 5,
-                      mOverflow: TextOverflow.ellipsis,
-                      mFontWeight: FontWeight.normal,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: textTitleColor,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 65,
-              ),
-              Visibility(
-                visible: true,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(4),
-                  onTap: () {
-                    log("Tapped on $giveFeedBack");
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    // builder: (context) => const AddMedicine()));
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(30),
-                        ),
-                      ),
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      builder: (BuildContext context) {
-                        return Wrap(children: <Widget>[
-                          buildAddFeedBackDialog(),
-                        ]);
-                      },
                     );
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: Constant.buttonHeight,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: white,
-                      borderRadius: BorderRadius.circular(4),
-                      shape: BoxShape.rectangle,
-                    ),
-                    child: MyText(
-                      mTitle: giveFeedBack,
-                      mFontSize: 16,
-                      mFontStyle: FontStyle.normal,
-                      mFontWeight: FontWeight.w600,
-                      mMaxLine: 1,
-                      mTextAlign: TextAlign.center,
-                      mTextColor: primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+                  } else {
+                    return const NoData();
+                  }
+                } else {
+                  return Utility.pageLoader();
+                }
+              } else {
+                return Utility.pageLoader();
+              }
+            } else {
+              return Utility.pageLoader();
+            }
+          }),
         ),
       ),
     );

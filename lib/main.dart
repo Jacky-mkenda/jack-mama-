@@ -4,7 +4,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:patientapp/pages/splash.dart';
+import 'package:patientapp/provider/allappointmentprovider.dart';
+import 'package:patientapp/provider/appointmentdetailprovider.dart';
 import 'package:patientapp/provider/generalprovider.dart';
+import 'package:patientapp/provider/historyprovider.dart';
+import 'package:patientapp/provider/homeprovider.dart';
+import 'package:patientapp/provider/notificationprovider.dart';
+import 'package:patientapp/provider/profileprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -16,6 +22,12 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GeneralProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => AllAppointmentProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentDetailProvider()),
       ],
       child: const MyApp(),
     ),

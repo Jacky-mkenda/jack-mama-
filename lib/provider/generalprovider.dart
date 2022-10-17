@@ -20,37 +20,47 @@ class GeneralProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> registerDoctor(
-      firstName, lastName, email, password, mobile, deviceToken) async {
-    debugPrint("registerDoctor firstName :==> $firstName");
-    debugPrint("registerDoctor lastName :==> $lastName");
-    debugPrint("registerDoctor email :==> $email");
-    debugPrint("registerDoctor password :==> $password");
-    debugPrint("registerDoctor mobile :==> $mobile");
-    debugPrint("registerDoctor deviceToken :==> $deviceToken");
+  Future<void> registerPatient(firstName, lastName, email, password, mobile,
+      deviceToken, insCompanyId, insNumber, insImage) async {
+    debugPrint("registerPatient firstName :==> $firstName");
+    debugPrint("registerPatient lastName :==> $lastName");
+    debugPrint("registerPatient email :==> $email");
+    debugPrint("registerPatient password :==> $password");
+    debugPrint("registerPatient mobile :==> $mobile");
+    debugPrint("registerPatient deviceToken :==> $deviceToken");
+    debugPrint("registerPatient insCompanyId :==> $insCompanyId");
+    debugPrint("registerPatient insNumber :==> $insNumber");
+    debugPrint("registerPatient insImage :==> $insImage");
 
     loading = true;
-    loginRegisterModel = await ApiService().doctorRegistration(
-        firstName, lastName, email, password, mobile, deviceToken);
-    debugPrint("doctor_registration status :==> ${loginRegisterModel.status}");
-    debugPrint(
-        "doctor_registration message :==> ${loginRegisterModel.message}");
+    loginRegisterModel = await ApiService().patientRegistration(
+        email,
+        password,
+        firstName,
+        lastName,
+        mobile,
+        deviceToken,
+        insCompanyId,
+        insNumber,
+        insImage);
+    debugPrint("registration status :==> ${loginRegisterModel.status}");
+    debugPrint("registration message :==> ${loginRegisterModel.message}");
 
     loading = false;
     notifyListeners();
   }
 
-  Future<void> loginDoctor(email, password, type, deviceToken) async {
-    debugPrint("loginDoctor email :==> $email");
-    debugPrint("loginDoctor password :==> $password");
-    debugPrint("loginDoctor type :==> $type");
-    debugPrint("loginDoctor deviceToken :==> $deviceToken");
+  Future<void> loginPatient(email, password, type, deviceToken) async {
+    debugPrint("loginPatient email :==> $email");
+    debugPrint("loginPatient password :==> $password");
+    debugPrint("loginPatient type :==> $type");
+    debugPrint("loginPatient deviceToken :==> $deviceToken");
 
     loading = true;
     loginRegisterModel =
-        await ApiService().doctorLogin(email, password, type, deviceToken);
-    debugPrint("doctor_login status :==> ${loginRegisterModel.status}");
-    debugPrint("doctor_login message :==> ${loginRegisterModel.message}");
+        await ApiService().patientLogin(email, password, type, deviceToken);
+    debugPrint("login status :==> ${loginRegisterModel.status}");
+    debugPrint("login message :==> ${loginRegisterModel.message}");
     loading = false;
     notifyListeners();
   }

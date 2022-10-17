@@ -1,5 +1,6 @@
 // To parse this JSON data, do
-// final notificationModel = notificationModelFromJson(jsonString);
+//
+//     final notificationModel = notificationModelFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -26,13 +27,15 @@ class NotificationModel {
         message: json["message"],
         result: json["result"] != null
             ? List<Result>.from(json["result"].map((x) => Result.fromJson(x)))
-            : [],
+            : <Result>[],
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "result": List<dynamic>.from(result!.map((x) => x.toJson())),
+        "result": result != null
+            ? List<dynamic>.from(result!.map((x) => x.toJson()))
+            : <Result>[],
       };
 }
 
@@ -48,8 +51,8 @@ class Result {
     this.status,
     this.createdAt,
     this.updatedAt,
-    this.patientName,
-    this.patientProfileImg,
+    this.doctorName,
+    this.doctorProfileImg,
   });
 
   String? id;
@@ -62,8 +65,8 @@ class Result {
   String? status;
   DateTime? createdAt;
   DateTime? updatedAt;
-  String? patientName;
-  String? patientProfileImg;
+  String? doctorName;
+  String? doctorProfileImg;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         id: json["id"],
@@ -76,8 +79,8 @@ class Result {
         status: json["status"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        patientName: json["patient_name"],
-        patientProfileImg: json["patient_profile_img"],
+        doctorName: json["doctor_name"],
+        doctorProfileImg: json["doctor_profile_img"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -91,7 +94,7 @@ class Result {
         "status": status,
         "created_at": createdAt.toString(),
         "updated_at": updatedAt.toString(),
-        "patient_name": patientName,
-        "patient_profile_img": patientProfileImg,
+        "doctor_name": doctorName,
+        "doctor_profile_img": doctorProfileImg,
       };
 }

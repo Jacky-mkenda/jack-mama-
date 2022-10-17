@@ -5,16 +5,20 @@ import 'package:badges/badges.dart';
 import 'package:patientapp/pages/appointmentf.dart';
 import 'package:patientapp/pages/historyf.dart';
 import 'package:patientapp/pages/homef.dart';
+import 'package:patientapp/pages/login.dart';
 import 'package:patientapp/pages/medicaltestf.dart';
 import 'package:patientapp/pages/notifications.dart';
 import 'package:patientapp/pages/profile.dart';
+import 'package:patientapp/provider/homeprovider.dart';
 import 'package:patientapp/utils/colors.dart';
+import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
 import 'package:patientapp/widgets/mynetworkimg.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -37,10 +41,13 @@ class _HomeState extends State<Home> {
   ];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     appBarTitle = home;
     isHomePage = true;
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    homeProvider.getPatientNotification();
+    homeProvider.getPatientProfile();
   }
 
   @override
@@ -85,27 +92,41 @@ class _HomeState extends State<Home> {
           maintainSize: true,
           maintainAnimation: true,
           maintainState: true,
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const Notifications()));
+          child: Consumer<HomeProvider>(
+            builder: (context, homeProvider, child) {
+              return IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const Notifications(),
+                    ),
+                  );
+                },
+                icon: Badge(
+                  position: BadgePosition.bottomStart(bottom: 8, start: 8),
+                  badgeColor: white,
+                  badgeContent: MyText(
+                    mTitle: !homeProvider.loading
+                        ? ((homeProvider.notificationModel.status == 200 &&
+                                homeProvider.notificationModel.result != null)
+                            ? (homeProvider.notificationModel.result?.length
+                                    .toString() ??
+                                "0")
+                            : "0")
+                        : "0",
+                    mFontSize: 8,
+                    mFontStyle: FontStyle.normal,
+                    mFontWeight: FontWeight.normal,
+                    mTextAlign: TextAlign.center,
+                    mTextColor: primaryColor,
+                  ),
+                  child: MySvgAssetsImg(
+                    imageName: "notification.svg",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              );
             },
-            icon: Badge(
-              position: BadgePosition.bottomStart(bottom: 8, start: 8),
-              badgeColor: white,
-              badgeContent: MyText(
-                mTitle: '5',
-                mFontSize: 8,
-                mFontStyle: FontStyle.normal,
-                mFontWeight: FontWeight.normal,
-                mTextAlign: TextAlign.center,
-                mTextColor: primaryColor,
-              ),
-              child: MySvgAssetsImg(
-                imageName: "notification.svg",
-                fit: BoxFit.contain,
-              ),
-            ),
           ),
         ),
         Visibility(
@@ -113,25 +134,44 @@ class _HomeState extends State<Home> {
           maintainSize: true,
           maintainAnimation: true,
           maintainState: true,
-          child: IconButton(
-            onPressed: (() {
-              log('Profile tapped!');
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const Profile()));
-            }),
-            icon: CircleAvatar(
-                radius: 16,
-                backgroundColor: white,
-                child: ClipOval(
-                  clipBehavior: Clip.antiAlias,
-                  child: MyNetworkImage(
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                    fit: BoxFit.cover,
-                    imgHeight: 30,
-                    imgWidth: 30,
-                  ),
-                )),
+          child: Consumer<HomeProvider>(
+            builder: (context, homeProvider, child) {
+              return IconButton(
+                onPressed: (() {
+                  log('Profile tapped!');
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return (Constant.userID == "0" || Constant.userID == "")
+                            ? const Profile()
+                            : const Login();
+                      },
+                    ),
+                  );
+                }),
+                icon: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: white,
+                    child: ClipOval(
+                      clipBehavior: Clip.antiAlias,
+                      child: MyNetworkImage(
+                        imageUrl: !homeProvider.loading
+                            ? ((homeProvider.profileModel.status == 200 &&
+                                    homeProvider.profileModel.result != null)
+                                ? (homeProvider.profileModel.result
+                                        ?.elementAt(0)
+                                        .profileImg
+                                        .toString() ??
+                                    Constant.userPlaceholder)
+                                : Constant.userPlaceholder)
+                            : Constant.userPlaceholder,
+                        fit: BoxFit.cover,
+                        imgHeight: 30,
+                        imgWidth: 30,
+                      ),
+                    )),
+              );
+            },
           ),
         ),
       ],
@@ -238,486 +278,6 @@ class _HomeState extends State<Home> {
       ],
     );
   }
-
-  // SideDrawer mySideNavDrawer() {
-  //   return SideDrawer(
-  //     percentage: 0.7,
-  //     cornerRadius: 10,
-  //     slide: true,
-  //     headerView: Container(),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         InkWell(
-  //           onTap: () {
-  //             log("Tapped on $changePassword");
-  //             setState(() {
-  //               selectedMenuItemId = menu.items.elementAt(0).id;
-  //               log("selectedMenuItemId => $selectedMenuItemId");
-  //             });
-  //             toggleDrawer();
-  //           },
-  //           child: Container(
-  //             decoration: selectedMenuItemId == menu.items.elementAt(0).id
-  //                 ? BoxDecoration(
-  //                     color: other50OpacColor,
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     shape: BoxShape.rectangle,
-  //                   )
-  //                 : null,
-  //             margin: const EdgeInsets.only(left: 15, bottom: 5, right: 15),
-  //             width: MediaQuery.of(context).size.width * 0.55,
-  //             height: 60,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: <Widget>[
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "reset_pw.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 24,
-  //                   iconColor: white,
-  //                   imgWidth: 24,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 Expanded(
-  //                   child: MyText(
-  //                     mTitle: menu.items.elementAt(0).title,
-  //                     mFontSize: 16,
-  //                     mFontStyle: FontStyle.normal,
-  //                     mFontWeight: FontWeight.normal,
-  //                     mTextColor: white,
-  //                     mOverflow: TextOverflow.ellipsis,
-  //                     mMaxLine: 2,
-  //                     mTextAlign: TextAlign.start,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "view_more.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 13,
-  //                   imgWidth: 7,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             log("Tapped on $scanQRCode");
-  //             setState(() {
-  //               selectedMenuItemId = menu.items.elementAt(1).id;
-  //               log("selectedMenuItemId => $selectedMenuItemId");
-  //             });
-  //             toggleDrawer();
-  //             Navigator.of(context).push(MaterialPageRoute(
-  //                 builder: (context) => const QRCodeScanner()));
-  //           },
-  //           child: Container(
-  //             margin: const EdgeInsets.only(left: 15, bottom: 5, right: 15),
-  //             width: MediaQuery.of(context).size.width * 0.55,
-  //             decoration: selectedMenuItemId == menu.items.elementAt(1).id
-  //                 ? BoxDecoration(
-  //                     color: other50OpacColor,
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     shape: BoxShape.rectangle,
-  //                   )
-  //                 : null,
-  //             height: 60,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: <Widget>[
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "scanner.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 24,
-  //                   imgWidth: 24,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 Expanded(
-  //                   child: MyText(
-  //                     mTitle: menu.items.elementAt(1).title,
-  //                     mFontSize: 16,
-  //                     mFontStyle: FontStyle.normal,
-  //                     mFontWeight: FontWeight.normal,
-  //                     mTextColor: white,
-  //                     mOverflow: TextOverflow.ellipsis,
-  //                     mMaxLine: 2,
-  //                     mTextAlign: TextAlign.start,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "view_more.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 13,
-  //                   imgWidth: 7,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             log("Tapped on $aboutUs");
-  //             setState(() {
-  //               selectedMenuItemId = menu.items.elementAt(2).id;
-  //               log("selectedMenuItemId => $selectedMenuItemId");
-  //             });
-  //             toggleDrawer();
-  //           },
-  //           child: Container(
-  //             margin: const EdgeInsets.only(left: 15, bottom: 5, right: 15),
-  //             width: MediaQuery.of(context).size.width * 0.55,
-  //             decoration: selectedMenuItemId == menu.items.elementAt(2).id
-  //                 ? BoxDecoration(
-  //                     color: other50OpacColor,
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     shape: BoxShape.rectangle,
-  //                   )
-  //                 : null,
-  //             height: 60,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: <Widget>[
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "about_us.svg",
-  //                   fit: BoxFit.cover,
-  //                   iconColor: white,
-  //                   imgHeight: 24,
-  //                   imgWidth: 24,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 Expanded(
-  //                   child: MyText(
-  //                     mTitle: menu.items.elementAt(2).title,
-  //                     mFontSize: 16,
-  //                     mFontStyle: FontStyle.normal,
-  //                     mFontWeight: FontWeight.normal,
-  //                     mTextColor: white,
-  //                     mOverflow: TextOverflow.ellipsis,
-  //                     mMaxLine: 2,
-  //                     mTextAlign: TextAlign.start,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "view_more.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 13,
-  //                   imgWidth: 7,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             log("Tapped on $termConditions");
-  //             setState(() {
-  //               selectedMenuItemId = menu.items.elementAt(3).id;
-  //               log("selectedMenuItemId => $selectedMenuItemId");
-  //             });
-  //             toggleDrawer();
-  //           },
-  //           child: Container(
-  //             margin: const EdgeInsets.only(left: 15, bottom: 5, right: 15),
-  //             width: MediaQuery.of(context).size.width * 0.55,
-  //             decoration: selectedMenuItemId == menu.items.elementAt(3).id
-  //                 ? BoxDecoration(
-  //                     color: other50OpacColor,
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     shape: BoxShape.rectangle,
-  //                   )
-  //                 : null,
-  //             height: 60,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: <Widget>[
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "t_and_c.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 24,
-  //                   iconColor: white,
-  //                   imgWidth: 24,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 Expanded(
-  //                   child: MyText(
-  //                     mTitle: menu.items.elementAt(3).title,
-  //                     mFontSize: 16,
-  //                     mFontStyle: FontStyle.normal,
-  //                     mFontWeight: FontWeight.normal,
-  //                     mTextColor: white,
-  //                     mOverflow: TextOverflow.ellipsis,
-  //                     mMaxLine: 2,
-  //                     mTextAlign: TextAlign.start,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "view_more.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 13,
-  //                   imgWidth: 7,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             log("Tapped on $reportIssues");
-  //             setState(() {
-  //               selectedMenuItemId = menu.items.elementAt(4).id;
-  //               log("selectedMenuItemId => $selectedMenuItemId");
-  //             });
-  //             toggleDrawer();
-  //           },
-  //           child: Container(
-  //             margin: const EdgeInsets.only(left: 15, bottom: 5, right: 15),
-  //             width: MediaQuery.of(context).size.width * 0.55,
-  //             decoration: selectedMenuItemId == menu.items.elementAt(4).id
-  //                 ? BoxDecoration(
-  //                     color: other50OpacColor,
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     shape: BoxShape.rectangle,
-  //                   )
-  //                 : null,
-  //             height: 60,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: <Widget>[
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "report_issue.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 24,
-  //                   iconColor: white,
-  //                   imgWidth: 24,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 Expanded(
-  //                   child: MyText(
-  //                     mTitle: menu.items.elementAt(4).title,
-  //                     mFontSize: 16,
-  //                     mFontStyle: FontStyle.normal,
-  //                     mFontWeight: FontWeight.normal,
-  //                     mTextColor: white,
-  //                     mOverflow: TextOverflow.ellipsis,
-  //                     mMaxLine: 2,
-  //                     mTextAlign: TextAlign.start,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "view_more.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 13,
-  //                   imgWidth: 7,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             log("Tapped on $helpCenter");
-  //             setState(() {
-  //               selectedMenuItemId = menu.items.elementAt(5).id;
-  //               log("selectedMenuItemId => $selectedMenuItemId");
-  //             });
-  //             toggleDrawer();
-  //           },
-  //           child: Container(
-  //             margin: const EdgeInsets.only(left: 15, bottom: 5, right: 15),
-  //             width: MediaQuery.of(context).size.width * 0.55,
-  //             decoration: selectedMenuItemId == menu.items.elementAt(5).id
-  //                 ? BoxDecoration(
-  //                     color: other50OpacColor,
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     shape: BoxShape.rectangle,
-  //                   )
-  //                 : null,
-  //             height: 60,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: <Widget>[
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "help_center.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 24,
-  //                   imgWidth: 24,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 Expanded(
-  //                   child: MyText(
-  //                     mTitle: menu.items.elementAt(5).title,
-  //                     mFontSize: 16,
-  //                     mFontStyle: FontStyle.normal,
-  //                     mFontWeight: FontWeight.normal,
-  //                     mTextColor: white,
-  //                     mOverflow: TextOverflow.ellipsis,
-  //                     mMaxLine: 2,
-  //                     mTextAlign: TextAlign.start,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 15,
-  //                 ),
-  //                 MySvgAssetsImg(
-  //                   imageName: "view_more.svg",
-  //                   fit: BoxFit.cover,
-  //                   imgHeight: 13,
-  //                   imgWidth: 7,
-  //                   iconColor: white,
-  //                 ),
-  //                 const SizedBox(
-  //                   width: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //     footerView: InkWell(
-  //       onTap: () {
-  //         log("Tapped on $logout");
-  //         setState(() {
-  //           selectedMenuItemId = menu.items.elementAt(6).id;
-  //           log("selectedMenuItemId => $selectedMenuItemId");
-  //         });
-  //         toggleDrawer();
-  //       },
-  //       child: Container(
-  //         margin: const EdgeInsets.only(left: 15, right: 15),
-  //         width: MediaQuery.of(context).size.width * 0.55,
-  //         decoration: selectedMenuItemId == menu.items.elementAt(6).id
-  //             ? BoxDecoration(
-  //                 color: other50OpacColor,
-  //                 borderRadius: BorderRadius.circular(10),
-  //                 shape: BoxShape.rectangle,
-  //               )
-  //             : null,
-  //         height: 60,
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: <Widget>[
-  //             const SizedBox(
-  //               width: 10,
-  //             ),
-  //             MySvgAssetsImg(
-  //               imageName: "logout.svg",
-  //               fit: BoxFit.cover,
-  //               imgHeight: 24,
-  //               imgWidth: 24,
-  //               iconColor: white,
-  //             ),
-  //             const SizedBox(
-  //               width: 15,
-  //             ),
-  //             Expanded(
-  //               child: MyText(
-  //                 mTitle: menu.items.elementAt(6).title,
-  //                 mFontSize: 16,
-  //                 mFontStyle: FontStyle.normal,
-  //                 mFontWeight: FontWeight.normal,
-  //                 mTextColor: white,
-  //                 mOverflow: TextOverflow.ellipsis,
-  //                 mMaxLine: 2,
-  //                 mTextAlign: TextAlign.start,
-  //               ),
-  //             ),
-  //             const SizedBox(
-  //               width: 10,
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //     direction: Direction.left,
-  //     animation: true,
-  //     color: drawerStartColor,
-  //     selectedItemId: selectedMenuItemId,
-  //   );
-  // }
 
   void onNavigationClick(int value) {
     log('$value');

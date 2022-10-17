@@ -6,7 +6,10 @@ import 'package:patientapp/pages/appointmentdetails.dart';
 import 'package:patientapp/pages/bookappointment.dart';
 import 'package:patientapp/pages/doctordetails.dart';
 import 'package:patientapp/pages/historydetails.dart';
+import 'package:patientapp/pages/noappointments.dart';
+import 'package:patientapp/pages/nodata.dart';
 import 'package:patientapp/pages/viewall.dart';
+import 'package:patientapp/provider/homeprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
@@ -16,6 +19,7 @@ import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:flutter/material.dart';
 import 'package:patientapp/widgets/mytextformfield.dart';
+import 'package:provider/provider.dart';
 
 class HomeF extends StatefulWidget {
   const HomeF({Key? key}) : super(key: key);
@@ -29,6 +33,12 @@ class _HomeFState extends State<HomeF> {
 
   @override
   void initState() {
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    homeProvider.getPatientProfile();
+    homeProvider.getSpecialities();
+    homeProvider.getUpcomingAppointment();
+    homeProvider.getUpcomingTestAppointment();
+    homeProvider.getDoctor();
     super.initState();
   }
 
@@ -58,24 +68,37 @@ class _HomeFState extends State<HomeF> {
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MyText(
-                      mTitle: 'Hi, Divinetechs',
-                      mTextColor: textTitleColor,
-                      mTextAlign: TextAlign.start,
-                      mFontWeight: FontWeight.normal,
-                      mFontSize: 20,
-                    ),
-                    MyText(
-                      mTitle: welcomeBack,
-                      mTextColor: textTitleColor,
-                      mTextAlign: TextAlign.start,
-                      mFontWeight: FontWeight.bold,
-                      mFontSize: 22,
-                    ),
-                  ],
+                child: Consumer<HomeProvider>(
+                  builder: (context, homeProvider, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MyText(
+                          mTitle: !homeProvider.loading
+                              ? homeProvider.profileModel.status == 200
+                                  ? homeProvider.profileModel.result != null
+                                      ? homeProvider
+                                              .profileModel.result!.isNotEmpty
+                                          ? ("Hi, ${homeProvider.profileModel.result!.elementAt(0).fullname ?? guestUser}")
+                                          : ("Hi, $guestUser")
+                                      : ("Hi, $guestUser")
+                                  : ("Hi, $guestUser")
+                              : ("Hi, $guestUser"),
+                          mTextColor: textTitleColor,
+                          mTextAlign: TextAlign.start,
+                          mFontWeight: FontWeight.normal,
+                          mFontSize: 20,
+                        ),
+                        MyText(
+                          mTitle: welcomeBack,
+                          mTextColor: textTitleColor,
+                          mTextAlign: TextAlign.start,
+                          mFontWeight: FontWeight.bold,
+                          mFontSize: 22,
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 14),
@@ -152,11 +175,14 @@ class _HomeFState extends State<HomeF> {
                     InkWell(
                       onTap: () {
                         log("Tapped on $seeAll");
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => const ViewAll(
-                                  appBarTitle: speciality,
-                                  layoutType: "Speciality",
-                                )));
+                              appBarTitle: speciality,
+                              layoutType: "Speciality",
+                            ),
+                          ),
+                        );
                       },
                       borderRadius: BorderRadius.circular(5),
                       child: MyText(
@@ -195,11 +221,14 @@ class _HomeFState extends State<HomeF> {
                     InkWell(
                       onTap: () {
                         log("Tapped on $seeAll");
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => const ViewAll(
-                                  appBarTitle: upcomingAppointments,
-                                  layoutType: "Appointment",
-                                )));
+                              appBarTitle: upcomingAppointments,
+                              layoutType: "Appointment",
+                            ),
+                          ),
+                        );
                       },
                       borderRadius: BorderRadius.circular(5),
                       child: MyText(
@@ -215,8 +244,8 @@ class _HomeFState extends State<HomeF> {
                 ),
               ),
               const SizedBox(height: 8),
-              SizedBox(
-                height: 105,
+              Container(
+                constraints: const BoxConstraints(minHeight: 105),
                 child: upcomingAppintmentList(),
               ),
               const SizedBox(height: 24),
@@ -238,11 +267,14 @@ class _HomeFState extends State<HomeF> {
                     InkWell(
                       onTap: () {
                         log("Tapped on $seeAll");
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => const ViewAll(
-                                  appBarTitle: upcomingTests,
-                                  layoutType: "Test",
-                                )));
+                              appBarTitle: upcomingTests,
+                              layoutType: "Test",
+                            ),
+                          ),
+                        );
                       },
                       borderRadius: BorderRadius.circular(5),
                       child: MyText(
@@ -258,10 +290,8 @@ class _HomeFState extends State<HomeF> {
                 ),
               ),
               const SizedBox(height: 8),
-              SizedBox(
-                height: 125,
-                // constraints:
-                // const BoxConstraints(minHeight: 120, maxHeight: 250),
+              Container(
+                constraints: const BoxConstraints(minHeight: 120),
                 child: upcomingTestList(),
               ),
               const SizedBox(height: 24),
@@ -317,541 +347,842 @@ class _HomeFState extends State<HomeF> {
   }
 
   Widget specialityList() {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      scrollDirection: Axis.horizontal,
-      itemCount: Constant.dummyDataList.length,
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 12,
-      ),
-      itemBuilder: (BuildContext context, int position) => InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          log("Item Clicked! => $position");
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const ViewAll(
-                appBarTitle: availableDoctors,
-                layoutType: 'Doctors',
-              ),
-            ),
-          );
-        },
-        child: Container(
-          width: 80,
-          height: 90,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            shape: BoxShape.rectangle,
-            image: DecorationImage(
-              image:
-                  ExactAssetImage(Constant.gradientBG.elementAt(position % 8)),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              MyNetworkImage(
-                imageUrl: Constant.dummyDataList.elementAt(position).specImage,
-                fit: BoxFit.cover,
-                imgHeight: 32,
-                imgWidth: 32,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 3, right: 3),
-                child: MyText(
-                  mTitle: Constant.dummyDataList.elementAt(position).speciality,
-                  mFontSize: 12,
-                  mFontStyle: FontStyle.normal,
-                  mFontWeight: FontWeight.normal,
-                  mTextAlign: TextAlign.center,
-                  mTextColor: white,
+    return Consumer<HomeProvider>(
+      builder: (context, homeProvider, child) {
+        if (!homeProvider.loading) {
+          if (homeProvider.specialityModel.status == 200 &&
+              homeProvider.specialityModel.result != null) {
+            if (homeProvider.specialityModel.result!.isNotEmpty) {
+              return ListView.separated(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                scrollDirection: Axis.horizontal,
+                itemCount: homeProvider.specialityModel.result!.length,
+                separatorBuilder: (context, index) => const SizedBox(
+                  width: 12,
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                itemBuilder: (BuildContext context, int position) => InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    log("Item Clicked! => $position");
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ViewAll(
+                          appBarTitle: availableDoctors,
+                          layoutType: 'Doctors',
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 80,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      shape: BoxShape.rectangle,
+                      image: DecorationImage(
+                        image: ExactAssetImage(
+                          Constant.gradientBG.elementAt(position % 8),
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        MyNetworkImage(
+                          imageUrl: homeProvider.specialityModel.result!
+                                  .elementAt(position)
+                                  .image ??
+                              "",
+                          fit: BoxFit.cover,
+                          imgHeight: 32,
+                          imgWidth: 32,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3, right: 3),
+                          child: MyText(
+                            mTitle: homeProvider.specialityModel.result!
+                                    .elementAt(position)
+                                    .name ??
+                                "",
+                            mFontSize: 12,
+                            mFontStyle: FontStyle.normal,
+                            mFontWeight: FontWeight.normal,
+                            mTextAlign: TextAlign.center,
+                            mTextColor: white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return const NoData();
+            }
+          } else {
+            return const NoData();
+          }
+        } else {
+          return const NoData();
+        }
+      },
     );
   }
 
   Widget upcomingAppintmentList() {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(left: 18, right: 18),
-      scrollDirection: Axis.horizontal,
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 3,
-      ),
-      itemCount: Constant.dummyDataList.length,
-      itemBuilder: (BuildContext context, int position) => Container(
-        padding: const EdgeInsets.only(top: 12),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () {
-            log("Item Clicked!");
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AppointmentDetails()));
-          },
-          child: Stack(
-            children: <Widget>[
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: 82,
-                  minWidth: MediaQuery.of(context).size.width * 0.5,
-                  maxWidth: MediaQuery.of(context).size.width * 0.9,
+    return Consumer<HomeProvider>(
+      builder: (context, homeProvider, child) {
+        if (!homeProvider.loading) {
+          if (homeProvider.appointmentModel.status == 200 &&
+              homeProvider.appointmentModel.result != null) {
+            if (homeProvider.appointmentModel.result!.isNotEmpty) {
+              return ListView.separated(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(left: 18, right: 18),
+                scrollDirection: Axis.horizontal,
+                separatorBuilder: (context, index) => const SizedBox(
+                  width: 3,
                 ),
-                child: Card(
-                  clipBehavior: Clip.antiAlias,
-                  elevation: 3,
-                  color: white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Flexible(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.only(left: 60),
-                                alignment: Alignment.topLeft,
-                                child: Column(
+                itemCount: homeProvider.appointmentModel.result!.length,
+                itemBuilder: (BuildContext context, int position) {
+                  return Container(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () {
+                        log("Item Clicked!");
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AppointmentDetails(
+                                homeProvider.appointmentModel.result
+                                        ?.elementAt(position)
+                                        .id ??
+                                    ""),
+                          ),
+                        );
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 82,
+                              minWidth: MediaQuery.of(context).size.width * 0.5,
+                              maxWidth: MediaQuery.of(context).size.width * 0.9,
+                            ),
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              elevation: 3,
+                              color: white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    MyText(
-                                      mTitle: Constant.dummyDataList
-                                          .elementAt(position)
-                                          .title,
-                                      mFontSize: 14,
-                                      mFontWeight: FontWeight.bold,
-                                      mTextAlign: TextAlign.start,
-                                      mTextColor: textTitleColor,
+                                    Flexible(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 60),
+                                            alignment: Alignment.topLeft,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                MyText(
+                                                  mTitle: homeProvider
+                                                          .appointmentModel
+                                                          .result
+                                                          ?.elementAt(position)
+                                                          .doctorName ??
+                                                      "-",
+                                                  mFontSize: 14,
+                                                  mFontWeight: FontWeight.bold,
+                                                  mTextAlign: TextAlign.start,
+                                                  mTextColor: textTitleColor,
+                                                ),
+                                                const SizedBox(
+                                                  height: 4,
+                                                ),
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    MyText(
+                                                      mTitle: homeProvider
+                                                              .appointmentModel
+                                                              .result
+                                                              ?.elementAt(
+                                                                  position)
+                                                              .specialitiesName ??
+                                                          "-",
+                                                      mFontSize: 12,
+                                                      mFontWeight:
+                                                          FontWeight.normal,
+                                                      mTextAlign:
+                                                          TextAlign.start,
+                                                      mTextColor:
+                                                          otherLightColor,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 4,
+                                                    ),
+                                                    Container(
+                                                      width: 4,
+                                                      height: 4,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: otherLightColor,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 4,
+                                                    ),
+                                                    MyText(
+                                                      mTitle: homeProvider
+                                                                  .appointmentModel
+                                                                  .result
+                                                                  ?.elementAt(
+                                                                      position)
+                                                                  .status
+                                                                  .toString() ==
+                                                              "1"
+                                                          ? pending
+                                                          : (homeProvider
+                                                                      .appointmentModel
+                                                                      .result
+                                                                      ?.elementAt(
+                                                                          position)
+                                                                      .status
+                                                                      .toString() ==
+                                                                  "2"
+                                                              ? approved
+                                                              : (homeProvider
+                                                                          .appointmentModel
+                                                                          .result
+                                                                          ?.elementAt(
+                                                                              position)
+                                                                          .status
+                                                                          .toString() ==
+                                                                      "3"
+                                                                  ? rejected
+                                                                  : homeProvider
+                                                                              .appointmentModel
+                                                                              .result
+                                                                              ?.elementAt(
+                                                                                  position)
+                                                                              .status
+                                                                              .toString() ==
+                                                                          "4"
+                                                                      ? absent
+                                                                      : (homeProvider.appointmentModel.result?.elementAt(position).status.toString() ==
+                                                                              "5"
+                                                                          ? completed
+                                                                          : "-"))),
+                                                      mFontSize: 12,
+                                                      mFontWeight:
+                                                          FontWeight.normal,
+                                                      mTextAlign:
+                                                          TextAlign.start,
+                                                      mTextColor: homeProvider
+                                                                  .appointmentModel
+                                                                  .result
+                                                                  ?.elementAt(
+                                                                      position)
+                                                                  .status
+                                                                  .toString() ==
+                                                              "1"
+                                                          ? pendingStatus
+                                                          : (homeProvider
+                                                                      .appointmentModel
+                                                                      .result
+                                                                      ?.elementAt(
+                                                                          position)
+                                                                      .status
+                                                                      .toString() ==
+                                                                  "2"
+                                                              ? approvedStatus
+                                                              : (homeProvider
+                                                                          .appointmentModel
+                                                                          .result
+                                                                          ?.elementAt(
+                                                                              position)
+                                                                          .status
+                                                                          .toString() ==
+                                                                      "3"
+                                                                  ? rejectedStatus
+                                                                  : homeProvider
+                                                                              .appointmentModel
+                                                                              .result
+                                                                              ?.elementAt(
+                                                                                  position)
+                                                                              .status
+                                                                              .toString() ==
+                                                                          "4"
+                                                                      ? absentStatus
+                                                                      : (homeProvider.appointmentModel.result?.elementAt(position).status.toString() ==
+                                                                              "5"
+                                                                          ? completedStatus
+                                                                          : black))),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 13,
+                                          ),
+                                          Container(
+                                            alignment: Alignment.topLeft,
+                                            child: MyText(
+                                              mTitle:
+                                                  '${Utility.formateDate((homeProvider.appointmentModel.result!.elementAt(position).date ?? "").toString())} at ${Utility.formateTime((homeProvider.appointmentModel.result!.elementAt(position).startTime ?? ""))} - ${Utility.formateTime((homeProvider.appointmentModel.result!.elementAt(position).endTime ?? ""))}',
+                                              mFontSize: 13,
+                                              mOverflow: TextOverflow.ellipsis,
+                                              mMaxLine: 1,
+                                              mFontWeight: FontWeight.normal,
+                                              mTextAlign: TextAlign.start,
+                                              mTextColor: textTitleColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     const SizedBox(
-                                      height: 4,
+                                      width: 20,
                                     ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        MyText(
-                                          mTitle: Constant.dummyDataList
-                                              .elementAt(position)
-                                              .speciality,
-                                          mFontSize: 12,
-                                          mFontWeight: FontWeight.normal,
-                                          mTextAlign: TextAlign.start,
-                                          mTextColor: otherLightColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
-                                        Container(
-                                          width: 4,
-                                          height: 4,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: otherLightColor,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
-                                        MyText(
-                                          mTitle: Constant.dummyDataList
-                                              .elementAt(position)
-                                              .status,
-                                          mFontSize: 12,
-                                          mFontWeight: FontWeight.normal,
-                                          mTextAlign: TextAlign.start,
-                                          mTextColor: pendingStatus,
-                                        ),
-                                      ],
+                                    CupertinoButton(
+                                      minSize: double.minPositive,
+                                      padding: EdgeInsets.zero,
+                                      child: MySvgAssetsImg(
+                                        imageName: "delete.svg",
+                                        fit: BoxFit.cover,
+                                        imgHeight: 25,
+                                        imgWidth: 25,
+                                      ),
+                                      onPressed: () {
+                                        log("on Delete Click!");
+                                      },
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(
-                                height: 13,
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: MyText(
-                                  mTitle: Constant.dummyDataList
-                                      .elementAt(position)
-                                      .date,
-                                  mFontSize: 13,
-                                  mOverflow: TextOverflow.ellipsis,
-                                  mMaxLine: 1,
-                                  mFontWeight: FontWeight.normal,
-                                  mTextAlign: TextAlign.start,
-                                  mTextColor: textTitleColor,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        CupertinoButton(
-                          minSize: double.minPositive,
-                          padding: EdgeInsets.zero,
-                          child: MySvgAssetsImg(
-                            imageName: "delete.svg",
-                            fit: BoxFit.cover,
-                            imgHeight: 25,
-                            imgWidth: 25,
+                          Container(
+                            transform: Matrix4.translationValues(12, -10, 0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4.0),
+                              clipBehavior: Clip.antiAlias,
+                              child: MyNetworkImage(
+                                imageUrl: homeProvider.appointmentModel.result
+                                        ?.elementAt(position)
+                                        .doctorImage
+                                        .toString() ??
+                                    Constant.userPlaceholder,
+                                fit: BoxFit.fill,
+                                imgHeight: 61,
+                                imgWidth: 54,
+                              ),
+                            ),
                           ),
-                          onPressed: () {
-                            log("on Delete Click!");
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Container(
-                transform: Matrix4.translationValues(12, -10, 0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  clipBehavior: Clip.antiAlias,
-                  child: MyNetworkImage(
-                    imageUrl:
-                        Constant.dummyDataList.elementAt(position).imageUrl,
-                    fit: BoxFit.fill,
-                    imgHeight: 61,
-                    imgWidth: 54,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                  );
+                },
+              );
+            } else {
+              return const NoAppointments();
+            }
+          } else {
+            return const NoAppointments();
+          }
+        } else {
+          return const NoAppointments();
+        }
+      },
     );
   }
 
   Widget upcomingTestList() {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(left: 18, right: 18),
-      scrollDirection: Axis.horizontal,
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 3,
-      ),
-      itemCount: Constant.dummyDataList.length,
-      itemBuilder: (BuildContext context, int position) => Container(
-        padding: const EdgeInsets.only(top: 12),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () {
-            log("Item Clicked!");
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const HistoryDetails()));
-          },
-          child: Stack(
-            children: <Widget>[
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: 82,
-                  minWidth: MediaQuery.of(context).size.width * 0.5,
-                  maxWidth: MediaQuery.of(context).size.width * 0.9,
+    return Consumer<HomeProvider>(
+      builder: (context, homeProvider, child) {
+        if (!homeProvider.loading) {
+          if (homeProvider.testAppointmentModel.status == 200 &&
+              homeProvider.testAppointmentModel.result != null) {
+            if (homeProvider.testAppointmentModel.result!.isNotEmpty) {
+              return ListView.separated(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(left: 18, right: 18),
+                scrollDirection: Axis.horizontal,
+                separatorBuilder: (context, index) => const SizedBox(
+                  width: 3,
                 ),
-                child: Card(
-                  clipBehavior: Clip.antiAlias,
-                  elevation: 3,
-                  color: white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Flexible(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.only(left: 60),
-                                alignment: Alignment.topLeft,
-                                child: Column(
+                itemCount: homeProvider.testAppointmentModel.result!.length,
+                itemBuilder: (BuildContext context, int position) {
+                  return Container(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () {
+                        log("Item Clicked!");
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const HistoryDetails(),
+                          ),
+                        );
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 82,
+                              minWidth: MediaQuery.of(context).size.width * 0.5,
+                              maxWidth: MediaQuery.of(context).size.width * 0.9,
+                            ),
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              elevation: 3,
+                              color: white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    MyText(
-                                      mTitle: Constant.dummyDataList
-                                          .elementAt(position)
-                                          .title,
-                                      mFontSize: 14,
-                                      mFontWeight: FontWeight.bold,
-                                      mTextAlign: TextAlign.start,
-                                      mTextColor: textTitleColor,
+                                    Flexible(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 60),
+                                            alignment: Alignment.topLeft,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                MyText(
+                                                  mTitle: homeProvider
+                                                          .testAppointmentModel
+                                                          .result
+                                                          ?.elementAt(position)
+                                                          .doctorName ??
+                                                      "",
+                                                  mFontSize: 14,
+                                                  mFontWeight: FontWeight.bold,
+                                                  mTextAlign: TextAlign.start,
+                                                  mTextColor: textTitleColor,
+                                                ),
+                                                const SizedBox(
+                                                  height: 4,
+                                                ),
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    MyText(
+                                                      mTitle: homeProvider
+                                                              .testAppointmentModel
+                                                              .result
+                                                              ?.elementAt(
+                                                                  position)
+                                                              .specialitiesName ??
+                                                          "",
+                                                      mFontSize: 12,
+                                                      mFontWeight:
+                                                          FontWeight.normal,
+                                                      mTextAlign:
+                                                          TextAlign.start,
+                                                      mTextColor:
+                                                          otherLightColor,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 4,
+                                                    ),
+                                                    Container(
+                                                      width: 4,
+                                                      height: 4,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: otherLightColor,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 4,
+                                                    ),
+                                                    MyText(
+                                                      mTitle: homeProvider
+                                                                  .testAppointmentModel
+                                                                  .result
+                                                                  ?.elementAt(
+                                                                      position)
+                                                                  .status
+                                                                  .toString() ==
+                                                              "1"
+                                                          ? pending
+                                                          : (homeProvider
+                                                                      .testAppointmentModel
+                                                                      .result
+                                                                      ?.elementAt(
+                                                                          position)
+                                                                      .status
+                                                                      .toString() ==
+                                                                  "2"
+                                                              ? approved
+                                                              : (homeProvider
+                                                                          .testAppointmentModel
+                                                                          .result
+                                                                          ?.elementAt(
+                                                                              position)
+                                                                          .status
+                                                                          .toString() ==
+                                                                      "3"
+                                                                  ? rejected
+                                                                  : homeProvider
+                                                                              .testAppointmentModel
+                                                                              .result
+                                                                              ?.elementAt(
+                                                                                  position)
+                                                                              .status
+                                                                              .toString() ==
+                                                                          "4"
+                                                                      ? absent
+                                                                      : (homeProvider.testAppointmentModel.result?.elementAt(position).status.toString() ==
+                                                                              "5"
+                                                                          ? completed
+                                                                          : "-"))),
+                                                      mFontSize: 12,
+                                                      mFontWeight:
+                                                          FontWeight.normal,
+                                                      mTextAlign:
+                                                          TextAlign.start,
+                                                      mTextColor: homeProvider
+                                                                  .testAppointmentModel
+                                                                  .result
+                                                                  ?.elementAt(
+                                                                      position)
+                                                                  .status
+                                                                  .toString() ==
+                                                              "1"
+                                                          ? pendingStatus
+                                                          : (homeProvider
+                                                                      .testAppointmentModel
+                                                                      .result
+                                                                      ?.elementAt(
+                                                                          position)
+                                                                      .status
+                                                                      .toString() ==
+                                                                  "2"
+                                                              ? approvedStatus
+                                                              : (homeProvider
+                                                                          .testAppointmentModel
+                                                                          .result
+                                                                          ?.elementAt(
+                                                                              position)
+                                                                          .status
+                                                                          .toString() ==
+                                                                      "3"
+                                                                  ? rejectedStatus
+                                                                  : homeProvider
+                                                                              .testAppointmentModel
+                                                                              .result
+                                                                              ?.elementAt(
+                                                                                  position)
+                                                                              .status
+                                                                              .toString() ==
+                                                                          "4"
+                                                                      ? absentStatus
+                                                                      : (homeProvider.testAppointmentModel.result?.elementAt(position).status.toString() ==
+                                                                              "5"
+                                                                          ? completedStatus
+                                                                          : black))),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 13,
+                                          ),
+                                          Container(
+                                            alignment: Alignment.topLeft,
+                                            child: MyText(
+                                              mTitle: Constant.dummyDataList
+                                                  .elementAt(position)
+                                                  .date,
+                                              mFontSize: 13,
+                                              mOverflow: TextOverflow.ellipsis,
+                                              mMaxLine: 1,
+                                              mFontWeight: FontWeight.normal,
+                                              mTextAlign: TextAlign.start,
+                                              mTextColor: textTitleColor,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 6,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              MySvgAssetsImg(
+                                                imageName: "test_desc.svg",
+                                                fit: BoxFit.cover,
+                                                imgHeight: 15,
+                                                imgWidth: 15,
+                                              ),
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              Flexible(
+                                                child: MyText(
+                                                  mTitle: Constant.dummyDataList
+                                                      .elementAt(position)
+                                                      .testDesc,
+                                                  mFontSize: 12,
+                                                  mMaxLine: 1,
+                                                  mOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  mFontWeight:
+                                                      FontWeight.normal,
+                                                  mTextAlign: TextAlign.start,
+                                                  mTextColor: otherColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     const SizedBox(
-                                      height: 4,
+                                      width: 20,
                                     ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        MyText(
-                                          mTitle: Constant.dummyDataList
-                                              .elementAt(position)
-                                              .speciality,
-                                          mFontSize: 12,
-                                          mFontWeight: FontWeight.normal,
-                                          mTextAlign: TextAlign.start,
-                                          mTextColor: otherLightColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
-                                        Container(
-                                          width: 4,
-                                          height: 4,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: otherLightColor,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
-                                        MyText(
-                                          mTitle: Constant.dummyDataList
-                                              .elementAt(position)
-                                              .status,
-                                          mFontSize: 12,
-                                          mFontWeight: FontWeight.normal,
-                                          mTextAlign: TextAlign.start,
-                                          mTextColor: pendingStatus,
-                                        ),
-                                      ],
+                                    CupertinoButton(
+                                      minSize: double.minPositive,
+                                      padding: EdgeInsets.zero,
+                                      child: MySvgAssetsImg(
+                                        imageName: "delete.svg",
+                                        fit: BoxFit.cover,
+                                        imgHeight: 25,
+                                        imgWidth: 25,
+                                      ),
+                                      onPressed: () {
+                                        log("on Delete Click!");
+                                      },
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(
-                                height: 13,
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: MyText(
-                                  mTitle: Constant.dummyDataList
-                                      .elementAt(position)
-                                      .date,
-                                  mFontSize: 13,
-                                  mOverflow: TextOverflow.ellipsis,
-                                  mMaxLine: 1,
-                                  mFontWeight: FontWeight.normal,
-                                  mTextAlign: TextAlign.start,
-                                  mTextColor: textTitleColor,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 6,
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  MySvgAssetsImg(
-                                    imageName: "test_desc.svg",
-                                    fit: BoxFit.cover,
-                                    imgHeight: 15,
-                                    imgWidth: 15,
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  Flexible(
-                                    child: MyText(
-                                      mTitle: Constant.dummyDataList
-                                          .elementAt(position)
-                                          .testDesc,
-                                      mFontSize: 12,
-                                      mMaxLine: 1,
-                                      mOverflow: TextOverflow.ellipsis,
-                                      mFontWeight: FontWeight.normal,
-                                      mTextAlign: TextAlign.start,
-                                      mTextColor: otherColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        CupertinoButton(
-                          minSize: double.minPositive,
-                          padding: EdgeInsets.zero,
-                          child: MySvgAssetsImg(
-                            imageName: "delete.svg",
-                            fit: BoxFit.cover,
-                            imgHeight: 25,
-                            imgWidth: 25,
+                          Container(
+                            transform: Matrix4.translationValues(12, -10, 0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4.0),
+                              clipBehavior: Clip.antiAlias,
+                              child: MyNetworkImage(
+                                imageUrl: homeProvider
+                                        .testAppointmentModel.result
+                                        ?.elementAt(position)
+                                        .doctorImage
+                                        .toString() ??
+                                    Constant.userPlaceholder,
+                                fit: BoxFit.fill,
+                                imgHeight: 61,
+                                imgWidth: 54,
+                              ),
+                            ),
                           ),
-                          onPressed: () {
-                            log("on Delete Click!");
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Container(
-                transform: Matrix4.translationValues(12, -10, 0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  clipBehavior: Clip.antiAlias,
-                  child: MyNetworkImage(
-                    imageUrl:
-                        Constant.dummyDataList.elementAt(position).imageUrl,
-                    fit: BoxFit.fill,
-                    imgHeight: 61,
-                    imgWidth: 54,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                  );
+                },
+              );
+            } else {
+              return const NoData();
+            }
+          } else {
+            return const NoData();
+          }
+        } else {
+          return const NoData();
+        }
+      },
     );
   }
 
   Widget availableDoctorList() {
-    return AlignedGridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 2,
-      crossAxisSpacing: 6,
-      mainAxisSpacing: 20,
-      padding: const EdgeInsets.only(left: 18, right: 18, bottom: 20),
-      itemCount: Constant.dummyDataList.length,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (BuildContext context, int position) => InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          log("Item Clicked! => $position");
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const DoctorDetails()));
-        },
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          clipBehavior: Clip.antiAlias,
-          children: <Widget>[
-            Card(
-              semanticContainer: true,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              elevation: 3,
-              color: white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Container(
-                constraints: const BoxConstraints(
-                  minHeight: 215,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 145,
-                      width: MediaQuery.of(context).size.width,
-                      child: MyNetworkImage(
-                        imageUrl:
-                            Constant.dummyDataList.elementAt(position).imageUrl,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5, right: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          const SizedBox(height: 4),
-                          MyText(
-                            mTitle: Constant.dummyDataList
-                                .elementAt(position)
-                                .title,
-                            mFontSize: 15,
-                            mMaxLine: 1,
-                            mOverflow: TextOverflow.ellipsis,
-                            mFontWeight: FontWeight.normal,
-                            mTextAlign: TextAlign.center,
-                            mTextColor: textTitleColor,
+    return Consumer<HomeProvider>(
+      builder: (context, homeProvider, child) {
+        if (!homeProvider.loading) {
+          if (homeProvider.doctorModel.status == 200 &&
+              homeProvider.doctorModel.result != null) {
+            if (homeProvider.doctorModel.result!.isNotEmpty) {
+              return AlignedGridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 20,
+                padding: const EdgeInsets.only(left: 18, right: 18, bottom: 20),
+                itemCount: Constant.dummyDataList.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int position) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      log("Item Clicked! => $position");
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => DoctorDetails(homeProvider
+                                  .doctorModel.result
+                                  ?.elementAt(position)
+                                  .id ??
+                              ""),
+                        ),
+                      );
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      clipBehavior: Clip.antiAlias,
+                      children: <Widget>[
+                        Card(
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 3,
+                          color: white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          const SizedBox(height: 2),
-                          MyText(
-                            mTitle: Constant.dummyDataList
-                                .elementAt(position)
-                                .speciality,
-                            mFontSize: 12,
-                            mFontWeight: FontWeight.normal,
-                            mMaxLine: 1,
-                            mOverflow: TextOverflow.ellipsis,
-                            mTextAlign: TextAlign.center,
-                            mTextColor: otherColor,
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 215,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 145,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: MyNetworkImage(
+                                    imageUrl: homeProvider.doctorModel.result
+                                            ?.elementAt(position)
+                                            .doctorImage ??
+                                        Constant.userPlaceholder,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, right: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      const SizedBox(height: 4),
+                                      MyText(
+                                        mTitle:
+                                            "${homeProvider.doctorModel.result?.elementAt(position).firstName ?? "-"} ${homeProvider.doctorModel.result?.elementAt(position).lastName ?? "-"}",
+                                        mFontSize: 15,
+                                        mMaxLine: 1,
+                                        mOverflow: TextOverflow.ellipsis,
+                                        mFontWeight: FontWeight.normal,
+                                        mTextAlign: TextAlign.center,
+                                        mTextColor: textTitleColor,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      MyText(
+                                        mTitle: homeProvider.doctorModel.result
+                                                ?.elementAt(position)
+                                                .specialitiesName ??
+                                            "-",
+                                        mFontSize: 12,
+                                        mFontWeight: FontWeight.normal,
+                                        mMaxLine: 1,
+                                        mOverflow: TextOverflow.ellipsis,
+                                        mTextAlign: TextAlign.center,
+                                        mTextColor: otherColor,
+                                      ),
+                                      const SizedBox(height: 25),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 25),
-                        ],
-                      ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            log("Item Clicked! => $position");
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const BookAppointment(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            transform: Matrix4.translationValues(0, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(23, 8, 23, 8),
+                            decoration: Utility.primaryButton(),
+                            clipBehavior: Clip.antiAlias,
+                            child: MyText(
+                              mTitle: bookNow,
+                              mFontSize: 12,
+                              mFontStyle: FontStyle.normal,
+                              mFontWeight: FontWeight.normal,
+                              mMaxLine: 1,
+                              mOverflow: TextOverflow.ellipsis,
+                              mTextColor: white,
+                              mTextAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                log("Item Clicked! => $position");
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const BookAppointment()));
-              },
-              child: Container(
-                transform: Matrix4.translationValues(0, 10, 0),
-                padding: const EdgeInsets.fromLTRB(23, 8, 23, 8),
-                decoration: Utility.primaryButton(),
-                clipBehavior: Clip.antiAlias,
-                child: MyText(
-                  mTitle: bookNow,
-                  mFontSize: 12,
-                  mFontStyle: FontStyle.normal,
-                  mFontWeight: FontWeight.normal,
-                  mMaxLine: 1,
-                  mOverflow: TextOverflow.ellipsis,
-                  mTextColor: white,
-                  mTextAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+                  );
+                },
+              );
+            } else {
+              return const NoData();
+            }
+          } else {
+            return const NoData();
+          }
+        } else {
+          return const NoData();
+        }
+      },
     );
   }
 }

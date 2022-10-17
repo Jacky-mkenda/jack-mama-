@@ -12,7 +12,8 @@ import 'package:patientapp/widgets/mytext.dart';
 import 'package:flutter/material.dart';
 
 class DoctorDetails extends StatefulWidget {
-  const DoctorDetails({Key? key}) : super(key: key);
+  final String doctorId;
+  const DoctorDetails(this.doctorId, {Key? key}) : super(key: key);
 
   @override
   State<DoctorDetails> createState() => _DoctorDetailsState();

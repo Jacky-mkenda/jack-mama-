@@ -26,13 +26,15 @@ class SpecialityModel {
         message: json["message"],
         result: json["result"] != null
             ? List<Result>.from(json["result"].map((x) => Result.fromJson(x)))
-            : [],
+            : <Result>[],
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "result": List<dynamic>.from(result!.map((x) => x.toJson())),
+        "result": result != null
+            ? List<dynamic>.from(result!.map((x) => x.toJson()))
+            : <Result>[],
       };
 }
 

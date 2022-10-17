@@ -60,8 +60,8 @@ class _SplashState extends State<Splash> {
 
       seen = await sharedPre.read('seen') ?? "0";
       log('seen ==> $seen');
+      if (!mounted) return;
       if (seen == "1") {
-        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -71,7 +71,6 @@ class _SplashState extends State<Splash> {
           ),
         );
       } else {
-        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

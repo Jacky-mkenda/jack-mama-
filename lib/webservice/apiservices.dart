@@ -1,9 +1,13 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:patientapp/model/appointmentmodel.dart';
+import 'package:patientapp/model/doctormodel.dart';
 import 'package:patientapp/model/generalsettingmodel.dart';
 import 'package:patientapp/model/loginregistermodel.dart';
 import 'package:patientapp/model/notificationmodel.dart';
+import 'package:patientapp/model/profilemodel.dart';
 import 'package:patientapp/model/specialitymodel.dart';
 import 'package:patientapp/model/successmodel.dart';
 import 'package:patientapp/utils/constant.dart';
@@ -28,40 +32,52 @@ class ApiService {
     return generalSettingModel;
   }
 
-  // doctor_registration API
-  Future<LoginRegisterModel> doctorRegistration(
-      firstName, lastName, email, password, mobile, deviceToken) async {
-    log("firstName :==> $firstName");
-    log("lastName :==> $lastName");
-    log("email :==> $email");
-    log("password :==> $password");
-    log("mobile :==> $mobile");
-    log("deviceToken :==> $deviceToken");
-
-    LoginRegisterModel registerModel;
-    String registration = "doctor_registration";
+  // registration API
+  Future<LoginRegisterModel> patientRegistration(
+      email,
+      password,
+      firstName,
+      lastName,
+      mobileNumber,
+      deviceToken,
+      insCompanyId,
+      insNumber,
+      File? insImageFile) async {
+    LoginRegisterModel loginRegisterModel;
+    String registrationAPI = "registration";
+    log("registration API :==> $baseUrl$registrationAPI");
+    log("Insurance Filename :==> ${insImageFile!.path.split('/').last}");
+    log("Insurance Extension :==> ${insImageFile.path.split('/').last.split(".").last}");
     Response response = await dio.post(
-      '$baseUrl$registration',
-      data: {
+      '$baseUrl$registrationAPI',
+      data: FormData.fromMap({
         'first_name': firstName,
         'last_name': lastName,
         'email': email,
         'password': password,
-        'mobile_number': mobile,
-        'device_token': deviceToken
-      },
+        'mobile_number': mobileNumber,
+        'device_token': deviceToken,
+        'insurance_company_id': insCompanyId ?? "0",
+        'insurance_no': insNumber ?? "0",
+        "insurance_card_pic": insImageFile.path.isNotEmpty
+            ? (await MultipartFile.fromFile(
+                insImageFile.path,
+                filename: insImageFile.path.split('/').last,
+              ))
+            : "",
+      }),
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
 
-    log("doctorRegistration statuscode :===> ${response.statusCode}");
-    log("doctorRegistration Message :===> ${response.statusMessage}");
-    log("doctorRegistration data :===> ${response.data}");
-    registerModel = loginRegisterModelFromJson(response.data.toString());
-    return registerModel;
+    log("patientRegistration statuscode :===> ${response.statusCode}");
+    log("patientRegistration Message :===> ${response.statusMessage}");
+    log("patientRegistration data :===> ${response.data}");
+    loginRegisterModel = loginRegisterModelFromJson(response.data.toString());
+    return loginRegisterModel;
   }
 
-  // doctor_login API
-  Future<LoginRegisterModel> doctorLogin(
+  // login API
+  Future<LoginRegisterModel> patientLogin(
       email, password, type, deviceToken) async {
     log("email :==> $email");
     log("password :==> $password");
@@ -69,7 +85,7 @@ class ApiService {
     log("deviceToken :==> $deviceToken");
 
     LoginRegisterModel loginModel;
-    String doctorLogin = "doctor_login";
+    String doctorLogin = "login";
     Response response = await dio.post(
       '$baseUrl$doctorLogin',
       data: {
@@ -81,31 +97,52 @@ class ApiService {
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
 
-    log("doctorLogin statuscode :===> ${response.statusCode}");
-    log("doctorLogin Message :===> ${response.statusMessage}");
-    log("doctorLogin data :===> ${response.data}");
+    log("patientLogin statuscode :===> ${response.statusCode}");
+    log("patientLogin Message :===> ${response.statusMessage}");
+    log("patientLogin data :===> ${response.data}");
     loginModel = loginRegisterModelFromJson(response.data.toString());
     return loginModel;
   }
 
-  // get_doctor_appoinment API
-  Future<NotificationModel> getDoctorNotification() async {
-    log("doctorID :==> ${Constant.userID}");
+  // profile API
+  Future<ProfileModel> patientProfile() async {
+    log("userId :==> ${Constant.userID}");
 
-    NotificationModel notificationModel;
-    String doctorAppoinments = "get_doctor_appoinment";
-    log("Notification API :==> $baseUrl$doctorAppoinments");
+    ProfileModel profileModel;
+    String doctorLogin = "profile";
     Response response = await dio.post(
-      '$baseUrl$doctorAppoinments',
+      '$baseUrl$doctorLogin',
       data: {
-        'doctor_id': Constant.userID,
+        'user_id': Constant.userID,
       },
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
 
-    log("getDoctorNotification statuscode :===> ${response.statusCode}");
-    log("getDoctorNotification Message :===> ${response.statusMessage}");
-    log("getDoctorNotification data :===> ${response.data}");
+    log("patientProfile statuscode :===> ${response.statusCode}");
+    log("patientProfile Message :===> ${response.statusMessage}");
+    log("patientProfile data :===> ${response.data}");
+    profileModel = profileModelFromJson(response.data.toString());
+    return profileModel;
+  }
+
+  // get_patient_appoinment API
+  Future<NotificationModel> getPatientNotification() async {
+    log("patientID :==> ${Constant.userID}");
+
+    NotificationModel notificationModel;
+    String patientAppoinments = "get_patient_appoinment";
+    log("Notification API :==> $baseUrl$patientAppoinments");
+    Response response = await dio.post(
+      '$baseUrl$patientAppoinments',
+      data: {
+        'patient_id': Constant.userID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("getPatientNotification statuscode :===> ${response.statusCode}");
+    log("getPatientNotification Message :===> ${response.statusMessage}");
+    log("getPatientNotification data :===> ${response.data}");
     notificationModel = notificationModelFromJson(response.data.toString());
     return notificationModel;
   }
@@ -135,7 +172,7 @@ class ApiService {
   }
 
   // get_specialities API
-  Future<SpecialityModel> getDoctorSpecialities() async {
+  Future<SpecialityModel> specialities() async {
     SpecialityModel specialityModel;
     String getSpecialities = "get_specialities";
     log("Speciality API :==> $baseUrl$getSpecialities");
@@ -144,10 +181,181 @@ class ApiService {
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
 
-    log("getDoctorSpecialities statuscode :===> ${response.statusCode}");
-    log("getDoctorSpecialities Message :===> ${response.statusMessage}");
-    log("getDoctorSpecialities data :===> ${response.data}");
+    log("specialities statuscode :===> ${response.statusCode}");
+    log("specialities Message :===> ${response.statusMessage}");
+    log("specialities data :===> ${response.data}");
     specialityModel = specialityModelFromJson(response.data.toString());
     return specialityModel;
+  }
+
+  // get_doctor API
+  Future<DoctorModel> doctor() async {
+    DoctorModel doctorModel;
+    String getDoctor = "get_doctor";
+    log("Doctor API :==> $baseUrl$getDoctor");
+    Response response = await dio.post(
+      '$baseUrl$getDoctor',
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("doctor statuscode :===> ${response.statusCode}");
+    log("doctor Message :===> ${response.statusMessage}");
+    log("doctor data :===> ${response.data}");
+    doctorModel = doctorModelFromJson(response.data.toString());
+    return doctorModel;
+  }
+
+  // doctor_detail API
+  Future<DoctorModel> doctorDetail(doctorId) async {
+    log("doctorID :==> $doctorId");
+
+    DoctorModel doctorModel;
+    String doctorDetail = "doctor_detail";
+    log("DoctorDetail API :==> $baseUrl$doctorDetail");
+    Response response = await dio.post(
+      '$baseUrl$doctorDetail',
+      data: {
+        'id': doctorId,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("doctorDetail statuscode :===> ${response.statusCode}");
+    log("doctorDetail Message :===> ${response.statusMessage}");
+    log("doctorDetail data :===> ${response.data}");
+    doctorModel = doctorModelFromJson(response.data.toString());
+    return doctorModel;
+  }
+
+  // searchDoctor API
+  Future<DoctorModel> searchDoctor(strName) async {
+    log("strName :==> $strName");
+
+    DoctorModel doctorModel;
+    String searchDoctor = "searchDoctor";
+    log("searchDoctor API :==> $baseUrl$searchDoctor");
+    Response response = await dio.post(
+      '$baseUrl$searchDoctor',
+      data: {
+        'name': strName,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("searchDoctor statuscode :===> ${response.statusCode}");
+    log("searchDoctor Message :===> ${response.statusMessage}");
+    log("searchDoctor data :===> ${response.data}");
+    doctorModel = doctorModelFromJson(response.data.toString());
+    return doctorModel;
+  }
+
+  // upcoming_appoinment API
+  Future<AppointmentModel> upcomingAppointment() async {
+    log("patientID :==> ${Constant.userID}");
+
+    AppointmentModel appointmentModel;
+    String upcomingAppoinment = "upcoming_appoinment";
+    log("upcomingAppoinment API :==> $baseUrl$upcomingAppoinment");
+    Response response = await dio.post(
+      '$baseUrl$upcomingAppoinment',
+      data: {
+        'user_id': Constant.userID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("upcomingAppointment statuscode :===> ${response.statusCode}");
+    log("upcomingAppointment Message :===> ${response.statusMessage}");
+    log("upcomingAppointment data :===> ${response.data}");
+    appointmentModel = appointmentModelFromJson(response.data.toString());
+    return appointmentModel;
+  }
+
+  // get_test_patient_appoinment API
+  Future<AppointmentModel> upcomingTestAppoinment() async {
+    log("patientID :==> ${Constant.userID}");
+
+    AppointmentModel appointmentModel;
+    String upcomingTestAppoinment = "get_test_patient_appoinment";
+    log("upcomingTestAppoinment API :==> $baseUrl$upcomingTestAppoinment");
+    Response response = await dio.post(
+      '$baseUrl$upcomingTestAppoinment',
+      data: {
+        'patient_id': Constant.userID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("upcomingTestAppoinment statuscode :===> ${response.statusCode}");
+    log("upcomingTestAppoinment Message :===> ${response.statusMessage}");
+    log("upcomingTestAppoinment data :===> ${response.data}");
+    appointmentModel = appointmentModelFromJson(response.data.toString());
+    return appointmentModel;
+  }
+
+  // appoinment_detail API
+  Future<AppointmentModel> appointmentDetails(appointmentId) async {
+    log("appointmentId :==> $appointmentId");
+
+    AppointmentModel appointmentModel;
+    String appoinmentDetail = "appoinment_detail";
+    log("appoinmentDetail API :==> $baseUrl$appoinmentDetail");
+    Response response = await dio.post(
+      '$baseUrl$appoinmentDetail',
+      data: {
+        'id': appointmentId,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("appointmentDetails statuscode :===> ${response.statusCode}");
+    log("appointmentDetails Message :===> ${response.statusMessage}");
+    log("appointmentDetails data :===> ${response.data}");
+    appointmentModel = appointmentModelFromJson(response.data.toString());
+    return appointmentModel;
+  }
+
+  // get_all_appoinment API
+  Future<AppointmentModel> allAppointment() async {
+    log("patientID :==> ${Constant.userID}");
+
+    AppointmentModel appointmentModel;
+    String allAppoinment = "get_all_appoinment";
+    log("allAppoinment API :==> $baseUrl$allAppoinment");
+    Response response = await dio.post(
+      '$baseUrl$allAppoinment',
+      data: {
+        'user_id': Constant.userID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("allAppointment statuscode :===> ${response.statusCode}");
+    log("allAppointment Message :===> ${response.statusMessage}");
+    log("allAppointment data :===> ${response.data}");
+    appointmentModel = appointmentModelFromJson(response.data.toString());
+    return appointmentModel;
+  }
+
+  // get_medicine_history API
+  Future<AppointmentModel> medicineHistory() async {
+    log("patientID :==> ${Constant.userID}");
+
+    AppointmentModel appointmentModel;
+    String medicineHistory = "get_medicine_history";
+    log("medicineHistory API :==> $baseUrl$medicineHistory");
+    Response response = await dio.post(
+      '$baseUrl$medicineHistory',
+      data: {
+        'patient_id': Constant.userID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("medicineHistory statuscode :===> ${response.statusCode}");
+    log("medicineHistory Message :===> ${response.statusMessage}");
+    log("medicineHistory data :===> ${response.data}");
+    appointmentModel = appointmentModelFromJson(response.data.toString());
+    return appointmentModel;
   }
 }

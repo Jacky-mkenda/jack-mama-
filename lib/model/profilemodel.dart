@@ -1,17 +1,15 @@
 // To parse this JSON data, do
-//
-//     final loginRegisterModel = loginRegisterModelFromJson(jsonString);
+//final profileModel = profileModelFromJson(jsonString);
 
 import 'dart:convert';
 
-LoginRegisterModel loginRegisterModelFromJson(String str) =>
-    LoginRegisterModel.fromJson(json.decode(str));
+ProfileModel profileModelFromJson(String str) =>
+    ProfileModel.fromJson(json.decode(str));
 
-String loginRegisterModelToJson(LoginRegisterModel data) =>
-    json.encode(data.toJson());
+String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
 
-class LoginRegisterModel {
-  LoginRegisterModel({
+class ProfileModel {
+  ProfileModel({
     this.status,
     this.message,
     this.result,
@@ -21,8 +19,7 @@ class LoginRegisterModel {
   String? message;
   List<Result>? result;
 
-  factory LoginRegisterModel.fromJson(Map<String, dynamic> json) =>
-      LoginRegisterModel(
+  factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
         status: json["status"],
         message: json["message"],
         result: json["result"] != null
@@ -54,7 +51,6 @@ class Result {
     this.facebookUrl,
     this.twitterUrl,
     this.biodata,
-    this.password,
     this.type,
     this.mobileNumber,
     this.location,
@@ -70,6 +66,8 @@ class Result {
     this.deviceToken,
     this.status,
     this.cDate,
+    this.insuranceCompanyName,
+    this.patientsQrcodeImg,
   });
 
   String? id;
@@ -85,7 +83,6 @@ class Result {
   String? facebookUrl;
   String? twitterUrl;
   String? biodata;
-  String? password;
   String? type;
   String? mobileNumber;
   String? location;
@@ -101,6 +98,8 @@ class Result {
   String? deviceToken;
   String? status;
   DateTime? cDate;
+  String? insuranceCompanyName;
+  String? patientsQrcodeImg;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         id: json["id"],
@@ -116,7 +115,6 @@ class Result {
         facebookUrl: json["facebook_url"],
         twitterUrl: json["twitter_url"],
         biodata: json["biodata"],
-        password: json["password"],
         type: json["type"],
         mobileNumber: json["mobile_number"],
         location: json["location"],
@@ -132,6 +130,8 @@ class Result {
         deviceToken: json["device_token"],
         status: json["status"],
         cDate: DateTime.parse(json["c_date"]),
+        insuranceCompanyName: json["insurance_company_name"],
+        patientsQrcodeImg: json["patients_qrcode_img"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -148,7 +148,6 @@ class Result {
         "facebook_url": facebookUrl,
         "twitter_url": twitterUrl,
         "biodata": biodata,
-        "password": password,
         "type": type,
         "mobile_number": mobileNumber,
         "location": location,
@@ -164,5 +163,7 @@ class Result {
         "device_token": deviceToken,
         "status": status,
         "c_date": cDate.toString(),
+        "insurance_company_name": insuranceCompanyName,
+        "patients_qrcode_img": patientsQrcodeImg,
       };
 }

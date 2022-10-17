@@ -282,8 +282,7 @@ class _LoginState extends State<Login> {
     return InkWell(
       focusColor: primaryColor,
       onTap: () {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MySideDrawer()));
+        validateFormData();
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.55,
@@ -376,7 +375,7 @@ class _LoginState extends State<Login> {
       email = mEmailController.text.toString().trim();
       password = mPasswordController.text.toString().trim();
       type = "1";
-      deviceToken = "123456789";
+      deviceToken = "1234567890";
       log("Email => $email");
       log("Password => $password");
       log("type => $type");
@@ -395,9 +394,9 @@ class _LoginState extends State<Login> {
         Utility.showToast(acceptPrivacyPolicyMsg);
       } else {
         generalProvider = Provider.of<GeneralProvider>(context, listen: false);
-        // doctor_login API call
+        // login API call
         Utility.showProgress(context, prDialog);
-        await generalProvider.loginDoctor(email, password, type, deviceToken);
+        await generalProvider.loginPatient(email, password, type, deviceToken);
 
         checkAndNavigate();
       }
@@ -443,7 +442,6 @@ class _LoginState extends State<Login> {
 
         Utility.setFirstTime();
         clearTextFormField();
-        Navigator.of(context).pop();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const MySideDrawer(),
