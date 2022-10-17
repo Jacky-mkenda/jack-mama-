@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:patientapp/pages/appointmentdetails.dart';
-import 'package:patientapp/pages/nodata.dart';
+import 'package:patientapp/pages/noappointments.dart';
 import 'package:patientapp/provider/allappointmentprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
@@ -328,10 +328,10 @@ class _AppointmentFState extends State<AppointmentF> {
                 },
               );
             } else {
-              return const NoData();
+              return const NoAppointments();
             }
           } else {
-            return Utility.pageLoader();
+            return const NoAppointments();
           }
         } else {
           return Utility.pageLoader();

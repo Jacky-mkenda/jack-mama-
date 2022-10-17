@@ -359,7 +359,7 @@ class _HistoryFState extends State<HistoryF> {
               return const NoData();
             }
           } else {
-            return Utility.pageLoader();
+            return const NoData();
           }
         } else {
           return Utility.pageLoader();

@@ -36,10 +36,22 @@ class _ViewAllState extends State<ViewAll> {
   @override
   void initState() {
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    homeProvider.getSpecialities();
-    homeProvider.getUpcomingAppointment();
-    homeProvider.getUpcomingTestAppointment();
-    homeProvider.getDoctor();
+    switch (widget.layoutType) {
+      case 'Speciality':
+        homeProvider.getSpecialities();
+        break;
+      case 'Appointment':
+        homeProvider.getUpcomingAppointment();
+        break;
+      case 'Test':
+        homeProvider.getUpcomingTestAppointment();
+        break;
+      case 'Doctors':
+        homeProvider.getDoctor();
+        break;
+      default:
+        break;
+    }
     super.initState();
   }
 
@@ -159,7 +171,7 @@ class _ViewAllState extends State<ViewAll> {
               return const NoData();
             }
           } else {
-            return Utility.pageLoader();
+            return const NoData();
           }
         } else {
           return Utility.pageLoader();
@@ -446,7 +458,7 @@ class _ViewAllState extends State<ViewAll> {
               return const NoAppointments();
             }
           } else {
-            return Utility.pageLoader();
+            return const NoAppointments();
           }
         } else {
           return Utility.pageLoader();
@@ -680,7 +692,7 @@ class _ViewAllState extends State<ViewAll> {
               return const NoData();
             }
           } else {
-            return Utility.pageLoader();
+            return const NoData();
           }
         } else {
           return Utility.pageLoader();
@@ -824,7 +836,7 @@ class _ViewAllState extends State<ViewAll> {
               return const NoData();
             }
           } else {
-            return Utility.pageLoader();
+            return const NoData();
           }
         } else {
           return Utility.pageLoader();

@@ -245,6 +245,7 @@ class _HomeFState extends State<HomeF> {
               ),
               const SizedBox(height: 8),
               Container(
+                height: 105,
                 constraints: const BoxConstraints(minHeight: 105),
                 child: upcomingAppintmentList(),
               ),
