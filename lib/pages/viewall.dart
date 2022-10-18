@@ -8,7 +8,7 @@ import 'package:patientapp/pages/doctordetails.dart';
 import 'package:patientapp/pages/historydetails.dart';
 import 'package:patientapp/pages/noappointments.dart';
 import 'package:patientapp/pages/nodata.dart';
-import 'package:patientapp/provider/homeprovider.dart';
+import 'package:patientapp/provider/viewallprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
@@ -20,12 +20,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ViewAll extends StatefulWidget {
-  final String appBarTitle, layoutType;
+  final String appBarTitle, layoutType, searchedText;
 
   const ViewAll({
     Key? key,
     required this.appBarTitle,
     required this.layoutType,
+    required this.searchedText,
   }) : super(key: key);
 
   @override
@@ -35,19 +36,24 @@ class ViewAll extends StatefulWidget {
 class _ViewAllState extends State<ViewAll> {
   @override
   void initState() {
-    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    final viewAllProvider =
+        Provider.of<ViewAllProvider>(context, listen: false);
     switch (widget.layoutType) {
       case 'Speciality':
-        homeProvider.getSpecialities();
+        viewAllProvider.getSpecialities();
         break;
       case 'Appointment':
-        homeProvider.getUpcomingAppointment();
+        viewAllProvider.getUpcomingAppointment();
         break;
       case 'Test':
-        homeProvider.getUpcomingTestAppointment();
+        viewAllProvider.getUpcomingTestAppointment();
         break;
       case 'Doctors':
-        homeProvider.getDoctor();
+        viewAllProvider.getDoctor();
+        break;
+      case 'BySearch':
+        log("searchedText ==> ${widget.searchedText}");
+        viewAllProvider.getSearchedDoctor(widget.searchedText);
         break;
       default:
         break;
@@ -89,18 +95,20 @@ class _ViewAllState extends State<ViewAll> {
         return upcomingTestList();
       case 'Doctors':
         return availableDoctorList();
+      case 'BySearch':
+        return searchedDoctorList();
       default:
         return Container();
     }
   }
 
   Widget specialityList() {
-    return Consumer<HomeProvider>(
-      builder: (context, homeProvider, child) {
-        if (!homeProvider.loading) {
-          if (homeProvider.specialityModel.status == 200 &&
-              homeProvider.specialityModel.result != null) {
-            if (homeProvider.specialityModel.result!.isNotEmpty) {
+    return Consumer<ViewAllProvider>(
+      builder: (context, viewAllProvider, child) {
+        if (!viewAllProvider.loading) {
+          if (viewAllProvider.specialityModel.status == 200 &&
+              viewAllProvider.specialityModel.result != null) {
+            if (viewAllProvider.specialityModel.result!.isNotEmpty) {
               return AlignedGridView.count(
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(18),
@@ -108,17 +116,28 @@ class _ViewAllState extends State<ViewAll> {
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
-                itemCount: homeProvider.specialityModel.result!.length,
+                itemCount: viewAllProvider.specialityModel.result!.length,
                 itemBuilder: (BuildContext context, int position) {
                   return InkWell(
                     borderRadius: BorderRadius.circular(8),
                     onTap: () {
                       log("Item Clicked! => $position");
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ViewAll(
-                                appBarTitle: availableDoctors,
-                                layoutType: 'Doctors',
-                              )));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ViewAll(
+                            appBarTitle: viewAllProvider.specialityModel.result!
+                                    .elementAt(position)
+                                    .name ??
+                                "",
+                            layoutType: 'BySearch',
+                            searchedText: viewAllProvider
+                                    .specialityModel.result!
+                                    .elementAt(position)
+                                    .name ??
+                                "",
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       height: 120,
@@ -137,7 +156,7 @@ class _ViewAllState extends State<ViewAll> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           MyNetworkImage(
-                            imageUrl: homeProvider.specialityModel.result!
+                            imageUrl: viewAllProvider.specialityModel.result!
                                     .elementAt(position)
                                     .image ??
                                 "",
@@ -148,13 +167,13 @@ class _ViewAllState extends State<ViewAll> {
                           Padding(
                             padding: const EdgeInsets.only(left: 3, right: 3),
                             child: MyText(
-                              mTitle: homeProvider.specialityModel.result!
+                              mTitle: viewAllProvider.specialityModel.result!
                                       .elementAt(position)
                                       .name ??
                                   "-",
                               mFontSize: 15,
                               mFontStyle: FontStyle.normal,
-                              mFontWeight: FontWeight.normal,
+                              mFontWeight: FontWeight.w500,
                               mMaxLine: 2,
                               mOverflow: TextOverflow.ellipsis,
                               mTextAlign: TextAlign.center,
@@ -181,19 +200,19 @@ class _ViewAllState extends State<ViewAll> {
   }
 
   Widget upcomingAppintmentList() {
-    return Consumer<HomeProvider>(
-      builder: (context, homeProvider, child) {
-        if (!homeProvider.loading) {
-          if (homeProvider.appointmentModel.status == 200 &&
-              homeProvider.appointmentModel.result != null) {
-            if (homeProvider.appointmentModel.result!.isNotEmpty) {
+    return Consumer<ViewAllProvider>(
+      builder: (context, viewAllProvider, child) {
+        if (!viewAllProvider.loading) {
+          if (viewAllProvider.appointmentModel.status == 200 &&
+              viewAllProvider.appointmentModel.result != null) {
+            if (viewAllProvider.appointmentModel.result!.isNotEmpty) {
               return AlignedGridView.count(
                 shrinkWrap: true,
                 padding: const EdgeInsets.fromLTRB(18, 14, 18, 20),
                 mainAxisSpacing: 14,
                 crossAxisCount: 1,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: homeProvider.appointmentModel.result!.length,
+                itemCount: viewAllProvider.appointmentModel.result!.length,
                 itemBuilder: (BuildContext context, int position) {
                   return Container(
                     padding: const EdgeInsets.only(top: 12),
@@ -204,7 +223,7 @@ class _ViewAllState extends State<ViewAll> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => AppointmentDetails(
-                                homeProvider.appointmentModel.result!
+                                viewAllProvider.appointmentModel.result!
                                         .elementAt(position)
                                         .id ??
                                     ""),
@@ -248,7 +267,7 @@ class _ViewAllState extends State<ViewAll> {
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 MyText(
-                                                  mTitle: homeProvider
+                                                  mTitle: viewAllProvider
                                                           .appointmentModel
                                                           .result!
                                                           .elementAt(position)
@@ -269,7 +288,7 @@ class _ViewAllState extends State<ViewAll> {
                                                       MainAxisAlignment.start,
                                                   children: <Widget>[
                                                     MyText(
-                                                      mTitle: homeProvider
+                                                      mTitle: viewAllProvider
                                                               .appointmentModel
                                                               .result!
                                                               .elementAt(
@@ -300,7 +319,7 @@ class _ViewAllState extends State<ViewAll> {
                                                       width: 4,
                                                     ),
                                                     MyText(
-                                                      mTitle: homeProvider
+                                                      mTitle: viewAllProvider
                                                                   .appointmentModel
                                                                   .result
                                                                   ?.elementAt(
@@ -309,7 +328,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                   .toString() ==
                                                               "1"
                                                           ? pending
-                                                          : (homeProvider
+                                                          : (viewAllProvider
                                                                       .appointmentModel
                                                                       .result
                                                                       ?.elementAt(
@@ -318,7 +337,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                       .toString() ==
                                                                   "2"
                                                               ? approved
-                                                              : (homeProvider
+                                                              : (viewAllProvider
                                                                           .appointmentModel
                                                                           .result
                                                                           ?.elementAt(
@@ -327,7 +346,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                           .toString() ==
                                                                       "3"
                                                                   ? rejected
-                                                                  : homeProvider
+                                                                  : viewAllProvider
                                                                               .appointmentModel
                                                                               .result
                                                                               ?.elementAt(
@@ -336,7 +355,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                               .toString() ==
                                                                           "4"
                                                                       ? absent
-                                                                      : (homeProvider.appointmentModel.result?.elementAt(position).status.toString() ==
+                                                                      : (viewAllProvider.appointmentModel.result?.elementAt(position).status.toString() ==
                                                                               "5"
                                                                           ? completed
                                                                           : "-"))),
@@ -345,7 +364,7 @@ class _ViewAllState extends State<ViewAll> {
                                                           FontWeight.normal,
                                                       mTextAlign:
                                                           TextAlign.start,
-                                                      mTextColor: homeProvider
+                                                      mTextColor: viewAllProvider
                                                                   .appointmentModel
                                                                   .result
                                                                   ?.elementAt(
@@ -354,7 +373,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                   .toString() ==
                                                               "1"
                                                           ? pendingStatus
-                                                          : (homeProvider
+                                                          : (viewAllProvider
                                                                       .appointmentModel
                                                                       .result
                                                                       ?.elementAt(
@@ -363,7 +382,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                       .toString() ==
                                                                   "2"
                                                               ? approvedStatus
-                                                              : (homeProvider
+                                                              : (viewAllProvider
                                                                           .appointmentModel
                                                                           .result
                                                                           ?.elementAt(
@@ -372,7 +391,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                           .toString() ==
                                                                       "3"
                                                                   ? rejectedStatus
-                                                                  : homeProvider
+                                                                  : viewAllProvider
                                                                               .appointmentModel
                                                                               .result
                                                                               ?.elementAt(
@@ -381,7 +400,7 @@ class _ViewAllState extends State<ViewAll> {
                                                                               .toString() ==
                                                                           "4"
                                                                       ? absentStatus
-                                                                      : (homeProvider.appointmentModel.result?.elementAt(position).status.toString() ==
+                                                                      : (viewAllProvider.appointmentModel.result?.elementAt(position).status.toString() ==
                                                                               "5"
                                                                           ? completedStatus
                                                                           : black))),
@@ -398,7 +417,7 @@ class _ViewAllState extends State<ViewAll> {
                                             alignment: Alignment.topLeft,
                                             child: MyText(
                                               mTitle:
-                                                  '${Utility.formateDate((homeProvider.appointmentModel.result!.elementAt(position).date ?? "").toString())} at ${Utility.formateTime((homeProvider.appointmentModel.result!.elementAt(position).startTime ?? ""))} - ${Utility.formateTime((homeProvider.appointmentModel.result!.elementAt(position).endTime ?? ""))}',
+                                                  '${Utility.formateDate((viewAllProvider.appointmentModel.result!.elementAt(position).date ?? "").toString())} at ${Utility.formateTime((viewAllProvider.appointmentModel.result!.elementAt(position).startTime ?? ""))} - ${Utility.formateTime((viewAllProvider.appointmentModel.result!.elementAt(position).endTime ?? ""))}',
                                               mFontSize: 13,
                                               mOverflow: TextOverflow.ellipsis,
                                               mMaxLine: 1,
@@ -437,7 +456,8 @@ class _ViewAllState extends State<ViewAll> {
                               borderRadius: BorderRadius.circular(4.0),
                               clipBehavior: Clip.antiAlias,
                               child: MyNetworkImage(
-                                imageUrl: homeProvider.appointmentModel.result
+                                imageUrl: viewAllProvider
+                                        .appointmentModel.result
                                         ?.elementAt(position)
                                         .doctorImage
                                         .toString() ??
@@ -468,19 +488,19 @@ class _ViewAllState extends State<ViewAll> {
   }
 
   Widget upcomingTestList() {
-    return Consumer<HomeProvider>(
-      builder: (context, homeProvider, child) {
-        if (!homeProvider.loading) {
-          if (homeProvider.testAppointmentModel.status == 200 &&
-              homeProvider.testAppointmentModel.result != null) {
-            if (homeProvider.testAppointmentModel.result!.isNotEmpty) {
+    return Consumer<ViewAllProvider>(
+      builder: (context, viewAllProvider, child) {
+        if (!viewAllProvider.loading) {
+          if (viewAllProvider.testAppointmentModel.status == 200 &&
+              viewAllProvider.testAppointmentModel.result != null) {
+            if (viewAllProvider.testAppointmentModel.result!.isNotEmpty) {
               return AlignedGridView.count(
                 shrinkWrap: true,
                 padding: const EdgeInsets.fromLTRB(18, 14, 18, 20),
                 mainAxisSpacing: 14,
                 crossAxisCount: 1,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: homeProvider.testAppointmentModel.result!.length,
+                itemCount: viewAllProvider.testAppointmentModel.result!.length,
                 itemBuilder: (BuildContext context, int position) {
                   return Container(
                     padding: const EdgeInsets.only(top: 12),
@@ -702,19 +722,19 @@ class _ViewAllState extends State<ViewAll> {
   }
 
   Widget availableDoctorList() {
-    return Consumer<HomeProvider>(
-      builder: (context, homeProvider, child) {
-        if (!homeProvider.loading) {
-          if (homeProvider.doctorModel.status == 200 &&
-              homeProvider.doctorModel.result != null) {
-            if (homeProvider.doctorModel.result!.isNotEmpty) {
+    return Consumer<ViewAllProvider>(
+      builder: (context, viewAllProvider, child) {
+        if (!viewAllProvider.loading) {
+          if (viewAllProvider.doctorModel.status == 200 &&
+              viewAllProvider.doctorModel.result != null) {
+            if (viewAllProvider.doctorModel.result!.isNotEmpty) {
               return AlignedGridView.count(
                 padding: const EdgeInsets.fromLTRB(18, 14, 18, 30),
                 shrinkWrap: true,
                 crossAxisCount: 2,
                 crossAxisSpacing: 6,
                 mainAxisSpacing: 20,
-                itemCount: homeProvider.doctorModel.result!.length,
+                itemCount: viewAllProvider.doctorModel.result!.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int position) {
                   return InkWell(
@@ -723,7 +743,7 @@ class _ViewAllState extends State<ViewAll> {
                       log("Item Clicked! => $position");
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => DoctorDetails(homeProvider
+                          builder: (context) => DoctorDetails(viewAllProvider
                                   .doctorModel.result!
                                   .elementAt(position)
                                   .id ??
@@ -755,7 +775,7 @@ class _ViewAllState extends State<ViewAll> {
                                   height: 145,
                                   width: MediaQuery.of(context).size.width,
                                   child: MyNetworkImage(
-                                    imageUrl: homeProvider.doctorModel.result
+                                    imageUrl: viewAllProvider.doctorModel.result
                                             ?.elementAt(position)
                                             .doctorImage ??
                                         Constant.userPlaceholder,
@@ -773,7 +793,7 @@ class _ViewAllState extends State<ViewAll> {
                                       const SizedBox(height: 4),
                                       MyText(
                                         mTitle:
-                                            "${homeProvider.doctorModel.result?.elementAt(position).firstName ?? "-"} ${homeProvider.doctorModel.result?.elementAt(position).lastName ?? "-"}",
+                                            "${viewAllProvider.doctorModel.result?.elementAt(position).firstName ?? "-"} ${viewAllProvider.doctorModel.result?.elementAt(position).lastName ?? "-"}",
                                         mFontSize: 15,
                                         mMaxLine: 1,
                                         mOverflow: TextOverflow.ellipsis,
@@ -783,7 +803,154 @@ class _ViewAllState extends State<ViewAll> {
                                       ),
                                       const SizedBox(height: 2),
                                       MyText(
-                                        mTitle: homeProvider.doctorModel.result
+                                        mTitle: viewAllProvider
+                                                .doctorModel.result
+                                                ?.elementAt(position)
+                                                .specialitiesName ??
+                                            "-",
+                                        mFontSize: 12,
+                                        mFontWeight: FontWeight.normal,
+                                        mMaxLine: 1,
+                                        mOverflow: TextOverflow.ellipsis,
+                                        mTextAlign: TextAlign.center,
+                                        mTextColor: otherColor,
+                                      ),
+                                      const SizedBox(height: 25),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            log("Item Clicked! => $position");
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const BookAppointment(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            transform: Matrix4.translationValues(0, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(23, 8, 23, 8),
+                            decoration: Utility.primaryButton(),
+                            child: MyText(
+                              mTitle: bookNow,
+                              mFontSize: 12,
+                              mFontStyle: FontStyle.normal,
+                              mFontWeight: FontWeight.normal,
+                              mMaxLine: 1,
+                              mOverflow: TextOverflow.ellipsis,
+                              mTextColor: white,
+                              mTextAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const NoData();
+            }
+          } else {
+            return const NoData();
+          }
+        } else {
+          return Utility.pageLoader();
+        }
+      },
+    );
+  }
+
+  Widget searchedDoctorList() {
+    return Consumer<ViewAllProvider>(
+      builder: (context, viewAllProvider, child) {
+        if (!viewAllProvider.loading) {
+          if (viewAllProvider.searchedDoctorModel.status == 200 &&
+              viewAllProvider.searchedDoctorModel.result != null) {
+            if (viewAllProvider.searchedDoctorModel.result!.isNotEmpty) {
+              return AlignedGridView.count(
+                padding: const EdgeInsets.fromLTRB(18, 14, 18, 30),
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 20,
+                itemCount: viewAllProvider.searchedDoctorModel.result!.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int position) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      log("Item Clicked! => $position");
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => DoctorDetails(viewAllProvider
+                                  .searchedDoctorModel.result!
+                                  .elementAt(position)
+                                  .id ??
+                              ""),
+                        ),
+                      );
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      clipBehavior: Clip.antiAlias,
+                      children: <Widget>[
+                        Card(
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 3,
+                          color: white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 215,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 145,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: MyNetworkImage(
+                                    imageUrl: viewAllProvider
+                                            .searchedDoctorModel.result
+                                            ?.elementAt(position)
+                                            .doctorImage ??
+                                        Constant.userPlaceholder,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, right: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      const SizedBox(height: 4),
+                                      MyText(
+                                        mTitle:
+                                            "${viewAllProvider.searchedDoctorModel.result?.elementAt(position).firstName ?? "-"} ${viewAllProvider.searchedDoctorModel.result?.elementAt(position).lastName ?? "-"}",
+                                        mFontSize: 15,
+                                        mMaxLine: 1,
+                                        mOverflow: TextOverflow.ellipsis,
+                                        mFontWeight: FontWeight.normal,
+                                        mTextAlign: TextAlign.center,
+                                        mTextColor: textTitleColor,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      MyText(
+                                        mTitle: viewAllProvider
+                                                .searchedDoctorModel.result
                                                 ?.elementAt(position)
                                                 .specialitiesName ??
                                             "-",

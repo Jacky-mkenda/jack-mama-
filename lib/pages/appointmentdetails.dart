@@ -93,11 +93,16 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                     children: <Widget>[
                                       MyText(
                                         mTitle: detailProvider
-                                                .appointmentModel.result
-                                                ?.elementAt(0)
-                                                .doctorName
-                                                .toString() ??
-                                            "-",
+                                                .appointmentModel.result!
+                                                .elementAt(0)
+                                                .doctorName!
+                                                .isNotEmpty
+                                            ? (detailProvider
+                                                    .appointmentModel.result!
+                                                    .elementAt(0)
+                                                    .doctorName ??
+                                                "-")
+                                            : "-",
                                         mTextAlign: TextAlign.start,
                                         mTextColor: textTitleColor,
                                         mFontSize: 14,
@@ -114,11 +119,17 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                         children: <Widget>[
                                           MyText(
                                             mTitle: detailProvider
-                                                    .appointmentModel.result
-                                                    ?.elementAt(0)
-                                                    .specialitiesName
-                                                    .toString() ??
-                                                "-",
+                                                    .appointmentModel.result!
+                                                    .elementAt(0)
+                                                    .specialitiesName!
+                                                    .isNotEmpty
+                                                ? (detailProvider
+                                                        .appointmentModel
+                                                        .result!
+                                                        .elementAt(0)
+                                                        .specialitiesName ??
+                                                    "-")
+                                                : "-",
                                             mFontSize: 12,
                                             mFontWeight: FontWeight.normal,
                                             mTextAlign: TextAlign.start,
@@ -140,92 +151,97 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                           ),
                                           MyText(
                                             mTitle: detailProvider
-                                                        .appointmentModel.result
-                                                        ?.elementAt(0)
-                                                        .status
-                                                        .toString() ==
-                                                    "1"
-                                                ? pending
-                                                : (detailProvider
-                                                            .appointmentModel
-                                                            .result
+                                                    .appointmentModel.result!
+                                                    .elementAt(0)
+                                                    .status!
+                                                    .isNotEmpty
+                                                ? detailProvider.appointmentModel.result
                                                             ?.elementAt(0)
                                                             .status
                                                             .toString() ==
-                                                        "2"
-                                                    ? approved
+                                                        "1"
+                                                    ? pending
                                                     : (detailProvider
                                                                 .appointmentModel
                                                                 .result
                                                                 ?.elementAt(0)
                                                                 .status
                                                                 .toString() ==
-                                                            "3"
-                                                        ? rejected
-                                                        : detailProvider
+                                                            "2"
+                                                        ? approved
+                                                        : (detailProvider
                                                                     .appointmentModel
                                                                     .result
                                                                     ?.elementAt(
                                                                         0)
                                                                     .status
                                                                     .toString() ==
-                                                                "4"
-                                                            ? absent
-                                                            : (detailProvider
+                                                                "3"
+                                                            ? rejected
+                                                            : detailProvider
                                                                         .appointmentModel
                                                                         .result
                                                                         ?.elementAt(
                                                                             0)
                                                                         .status
                                                                         .toString() ==
-                                                                    "5"
-                                                                ? completed
-                                                                : "-"))),
+                                                                    "4"
+                                                                ? absent
+                                                                : (detailProvider.appointmentModel.result
+                                                                            ?.elementAt(0)
+                                                                            .status
+                                                                            .toString() ==
+                                                                        "5"
+                                                                    ? completed
+                                                                    : "-")))
+                                                : "-",
                                             mFontSize: 12,
                                             mFontWeight: FontWeight.normal,
                                             mTextAlign: TextAlign.start,
                                             mTextColor: detailProvider
-                                                        .appointmentModel.result
-                                                        ?.elementAt(0)
-                                                        .status
-                                                        .toString() ==
-                                                    "1"
-                                                ? pendingStatus
-                                                : (detailProvider
+                                                    .appointmentModel.result!
+                                                    .elementAt(0)
+                                                    .status!
+                                                    .isNotEmpty
+                                                ? detailProvider
                                                             .appointmentModel
                                                             .result
                                                             ?.elementAt(0)
                                                             .status
                                                             .toString() ==
-                                                        "2"
-                                                    ? approvedStatus
+                                                        "1"
+                                                    ? pendingStatus
                                                     : (detailProvider
                                                                 .appointmentModel
                                                                 .result
                                                                 ?.elementAt(0)
                                                                 .status
                                                                 .toString() ==
-                                                            "3"
-                                                        ? rejectedStatus
-                                                        : detailProvider
+                                                            "2"
+                                                        ? approvedStatus
+                                                        : (detailProvider
                                                                     .appointmentModel
                                                                     .result
                                                                     ?.elementAt(
                                                                         0)
                                                                     .status
                                                                     .toString() ==
-                                                                "4"
-                                                            ? absentStatus
-                                                            : (detailProvider
+                                                                "3"
+                                                            ? rejectedStatus
+                                                            : detailProvider
                                                                         .appointmentModel
                                                                         .result
                                                                         ?.elementAt(
                                                                             0)
                                                                         .status
                                                                         .toString() ==
-                                                                    "5"
-                                                                ? completedStatus
-                                                                : black))),
+                                                                    "4"
+                                                                ? absentStatus
+                                                                : (detailProvider.appointmentModel.result?.elementAt(0).status.toString() ==
+                                                                        "5"
+                                                                    ? completedStatus
+                                                                    : black)))
+                                                : black,
                                           ),
                                         ],
                                       ),
@@ -282,11 +298,15 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 height: 4,
                               ),
                               MyText(
-                                mTitle: detailProvider.appointmentModel.result
-                                        ?.elementAt(0)
-                                        .doctorMobileNumber
-                                        .toString() ??
-                                    "-",
+                                mTitle: detailProvider.appointmentModel.result!
+                                        .elementAt(0)
+                                        .doctorMobileNumber!
+                                        .isNotEmpty
+                                    ? (detailProvider.appointmentModel.result!
+                                            .elementAt(0)
+                                            .doctorMobileNumber ??
+                                        "-")
+                                    : "-",
                                 mFontSize: 14,
                                 mFontWeight: FontWeight.normal,
                                 mFontStyle: FontStyle.normal,
@@ -394,11 +414,15 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 height: 4,
                               ),
                               MyText(
-                                mTitle: detailProvider.appointmentModel.result
-                                        ?.elementAt(0)
-                                        .doctorEmail
-                                        .toString() ??
-                                    "-",
+                                mTitle: detailProvider.appointmentModel.result!
+                                        .elementAt(0)
+                                        .doctorEmail!
+                                        .isNotEmpty
+                                    ? (detailProvider.appointmentModel.result!
+                                            .elementAt(0)
+                                            .doctorEmail ??
+                                        "-")
+                                    : "-",
                                 mFontSize: 14,
                                 mMaxLine: 1,
                                 mOverflow: TextOverflow.ellipsis,
@@ -422,11 +446,15 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 height: 4,
                               ),
                               MyText(
-                                mTitle: detailProvider.appointmentModel.result
-                                        ?.elementAt(0)
-                                        .allergiesToMedicine
-                                        .toString() ??
-                                    "-",
+                                mTitle: detailProvider.appointmentModel.result!
+                                        .elementAt(0)
+                                        .allergiesToMedicine!
+                                        .isNotEmpty
+                                    ? (detailProvider.appointmentModel.result!
+                                            .elementAt(0)
+                                            .allergiesToMedicine ??
+                                        "-")
+                                    : "-",
                                 mFontSize: 14,
                                 mMaxLine: 3,
                                 mOverflow: TextOverflow.ellipsis,
@@ -450,11 +478,15 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 height: 4,
                               ),
                               MyText(
-                                mTitle: detailProvider.appointmentModel.result
-                                        ?.elementAt(0)
-                                        .medicinesTaken
-                                        .toString() ??
-                                    "-",
+                                mTitle: detailProvider.appointmentModel.result!
+                                        .elementAt(0)
+                                        .medicinesTaken!
+                                        .isNotEmpty
+                                    ? (detailProvider.appointmentModel.result!
+                                            .elementAt(0)
+                                            .medicinesTaken ??
+                                        "-")
+                                    : "-",
                                 mFontSize: 14,
                                 mMaxLine: 2,
                                 mOverflow: TextOverflow.ellipsis,
@@ -478,11 +510,15 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 height: 4,
                               ),
                               MyText(
-                                mTitle: detailProvider.appointmentModel.result
-                                        ?.elementAt(0)
-                                        .description
-                                        .toString() ??
-                                    "-",
+                                mTitle: detailProvider.appointmentModel.result!
+                                        .elementAt(0)
+                                        .description!
+                                        .isNotEmpty
+                                    ? (detailProvider.appointmentModel.result!
+                                            .elementAt(0)
+                                            .description ??
+                                        "-")
+                                    : "-",
                                 mFontSize: 14,
                                 mMaxLine: 5,
                                 mOverflow: TextOverflow.ellipsis,
@@ -498,7 +534,10 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                           height: 65,
                         ),
                         Visibility(
-                          visible: true,
+                          visible: detailProvider.appointmentModel.result!
+                                  .elementAt(0)
+                                  .status ==
+                              "5",
                           child: InkWell(
                             borderRadius: BorderRadius.circular(4),
                             onTap: () {

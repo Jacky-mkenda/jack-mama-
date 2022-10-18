@@ -18,8 +18,7 @@ class NoData extends StatelessWidget {
         ),
         constraints: const BoxConstraints(minHeight: 0, minWidth: 0),
         child: MyAssetsImg(
-          imgWidth: MediaQuery.of(context).size.width,
-          imgHeight: 120,
+          imgHeight: 160,
           fit: BoxFit.contain,
           imageName: "nodata.png",
         ),

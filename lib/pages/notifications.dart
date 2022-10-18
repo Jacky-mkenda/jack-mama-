@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:patientapp/pages/appointmentdetails.dart';
+import 'package:patientapp/pages/nodata.dart';
 import 'package:patientapp/provider/notificationprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
@@ -94,7 +95,7 @@ class _NotificationsState extends State<Notifications> {
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(40),
@@ -144,7 +145,7 @@ class _NotificationsState extends State<Notifications> {
                                         .toString() ??
                                     "",
                                 mTextAlign: TextAlign.start,
-                                mMaxLine: 1,
+                                mMaxLine: 3,
                                 mOverflow: TextOverflow.ellipsis,
                                 mFontSize: 14,
                                 mTextColor: otherColor,
@@ -177,10 +178,10 @@ class _NotificationsState extends State<Notifications> {
                 ),
               );
             } else {
-              return Utility.pageLoader();
+              return const NoData();
             }
           } else {
-            return Utility.pageLoader();
+            return const NoData();
           }
         } else {
           return Utility.pageLoader();

@@ -250,9 +250,14 @@ class _ProfileState extends State<Profile> {
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
                                   ? profileProvider.profileModel.result!
-                                      .elementAt(0)
-                                      .mobileNumber
-                                      .toString()
+                                          .elementAt(0)
+                                          .mobileNumber!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                              .elementAt(0)
+                                              .mobileNumber ??
+                                          "")
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"
@@ -283,9 +288,14 @@ class _ProfileState extends State<Profile> {
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
                                   ? profileProvider.profileModel.result!
-                                      .elementAt(0)
-                                      .email
-                                      .toString()
+                                          .elementAt(0)
+                                          .email!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                              .elementAt(0)
+                                              .email ??
+                                          "-")
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"
@@ -318,9 +328,14 @@ class _ProfileState extends State<Profile> {
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
                                   ? profileProvider.profileModel.result!
-                                      .elementAt(0)
-                                      .location
-                                      .toString()
+                                          .elementAt(0)
+                                          .location!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                              .elementAt(0)
+                                              .location ??
+                                          "-")
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"
@@ -377,9 +392,14 @@ class _ProfileState extends State<Profile> {
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
                                   ? profileProvider.profileModel.result!
-                                      .elementAt(0)
-                                      .insuranceCompanyName
-                                      .toString()
+                                          .elementAt(0)
+                                          .insuranceCompanyName!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                              .elementAt(0)
+                                              .insuranceCompanyName ??
+                                          "-")
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"
@@ -412,9 +432,14 @@ class _ProfileState extends State<Profile> {
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
                                   ? profileProvider.profileModel.result!
-                                      .elementAt(0)
-                                      .insuranceNo
-                                      .toString()
+                                          .elementAt(0)
+                                          .insuranceNo!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                              .elementAt(0)
+                                              .insuranceNo ??
+                                          "-")
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"
@@ -446,10 +471,12 @@ class _ProfileState extends State<Profile> {
                       ? profileProvider.profileModel.status == 200
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
-                                  ? profileProvider.profileModel.result!
+                                  ? (profileProvider.profileModel.result!
                                       .elementAt(0)
                                       .insuranceCardPic
                                       .toString()
+                                      .split("/")
+                                      .last)
                                   : "-"
                               : "-"
                           : "-"
@@ -496,11 +523,15 @@ class _ProfileState extends State<Profile> {
                       ? profileProvider.profileModel.status == 200
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
-                                  ? (profileProvider.profileModel.result
-                                          ?.elementAt(0)
+                                  ? profileProvider.profileModel.result!
+                                          .elementAt(0)
+                                          .allergiesToMedicine!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                          .elementAt(0)
                                           .allergiesToMedicine
-                                          .toString() ??
-                                      "-")
+                                          .toString())
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"
@@ -532,11 +563,15 @@ class _ProfileState extends State<Profile> {
                       ? profileProvider.profileModel.status == 200
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
-                                  ? (profileProvider.profileModel.result
-                                          ?.elementAt(0)
-                                          .currentWeight
-                                          .toString() ??
-                                      "-")
+                                  ? profileProvider.profileModel.result!
+                                          .elementAt(0)
+                                          .currentWeight!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                              .elementAt(0)
+                                              .currentWeight ??
+                                          "-")
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"
@@ -568,11 +603,15 @@ class _ProfileState extends State<Profile> {
                       ? profileProvider.profileModel.status == 200
                           ? profileProvider.profileModel.result != null
                               ? profileProvider.profileModel.result!.isNotEmpty
-                                  ? (profileProvider.profileModel.result
-                                          ?.elementAt(0)
-                                          .currentHeight
-                                          .toString() ??
-                                      "-")
+                                  ? profileProvider.profileModel.result!
+                                          .elementAt(0)
+                                          .currentHeight!
+                                          .isNotEmpty
+                                      ? (profileProvider.profileModel.result!
+                                              .elementAt(0)
+                                              .currentHeight ??
+                                          "-")
+                                      : "-"
                                   : "-"
                               : "-"
                           : "-"

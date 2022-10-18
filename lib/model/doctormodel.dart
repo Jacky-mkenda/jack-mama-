@@ -63,6 +63,9 @@ class Result {
     this.createdAt,
     this.specialitiesName,
     this.doctorImage,
+    this.review,
+    this.totalRating,
+    this.ratingAvg,
   });
 
   String? id;
@@ -90,6 +93,9 @@ class Result {
   DateTime? createdAt;
   String? specialitiesName;
   String? doctorImage;
+  int? review;
+  String? totalRating;
+  int? ratingAvg;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         id: json["id"],
@@ -117,6 +123,9 @@ class Result {
         createdAt: DateTime.parse(json["created_at"]),
         specialitiesName: json["specialities_name"],
         doctorImage: json["doctor_image"],
+        review: json["review"],
+        totalRating: json["toitla_rating"],
+        ratingAvg: json["rating_avg"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -145,5 +154,8 @@ class Result {
         "created_at": createdAt.toString(),
         "specialities_name": specialitiesName,
         "doctor_image": doctorImage,
+        "review": review,
+        "toitla_rating": totalRating,
+        "rating_avg": ratingAvg,
       };
 }

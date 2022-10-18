@@ -26,8 +26,7 @@ class NoAppointments extends StatelessWidget {
         child: Column(
           children: [
             MyAssetsImg(
-              imgWidth: MediaQuery.of(context).size.width,
-              imgHeight: 120,
+              imgHeight: 160,
               fit: BoxFit.contain,
               imageName: "nodata.png",
             ),
@@ -64,6 +63,7 @@ class NoAppointments extends StatelessWidget {
                             builder: (context) => const ViewAll(
                               appBarTitle: speciality,
                               layoutType: "Speciality",
+                              searchedText: "",
                             ),
                           ),
                         );

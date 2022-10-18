@@ -143,8 +143,8 @@ class _HomeState extends State<Home> {
                     MaterialPageRoute(
                       builder: (context) {
                         return (Constant.userID == "0" || Constant.userID == "")
-                            ? const Profile()
-                            : const Login();
+                            ? const Login()
+                            : const Profile();
                       },
                     ),
                   );
