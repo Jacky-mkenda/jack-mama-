@@ -125,6 +125,66 @@ class ApiService {
     return profileModel;
   }
 
+  // updateprofile API
+  Future<SuccessModel> updatePersonalDetails(userId, email, firstName, lastName,
+      mobileNumber, insCompanyId, insNumber, File? patientProfileImg) async {
+    SuccessModel successModel;
+    String patientUpdateProfile = "updateprofile";
+    log("PatientUpdateProfile API :==> $baseUrl$patientUpdateProfile");
+    log("patientProfileImg Filename :==> ${patientProfileImg!.path.split('/').last}");
+    log("patientProfileImg Extension :==> ${patientProfileImg.path.split('/').last.split(".").last}");
+    Response response = await dio.post(
+      '$baseUrl$patientUpdateProfile',
+      data: FormData.fromMap({
+        'user_id': userId,
+        'email': email,
+        'first_name': firstName,
+        'last_name': lastName,
+        'mobile_number': mobileNumber,
+        'insurance_company_id': insCompanyId,
+        'insurance_no': insNumber,
+        "profile_img": patientProfileImg.path.isNotEmpty
+            ? (await MultipartFile.fromFile(
+                patientProfileImg.path,
+                filename: patientProfileImg.path.split('/').last,
+              ))
+            : "",
+      }),
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("updatePatientProfile statuscode :===> ${response.statusCode}");
+    log("updatePatientProfile Message :===> ${response.statusMessage}");
+    log("updatePatientProfile data :===> ${response.data}");
+    successModel = successModelFromJson(response.data.toString());
+    return successModel;
+  }
+
+  // updateprofile API
+  Future<SuccessModel> updateBMIDetails(
+      userId, allergiesToMedicine, cWeight, cHeight, bMI) async {
+    SuccessModel successModel;
+    String patientUpdateProfile = "updateprofile";
+    log("PatientUpdateProfile API :==> $baseUrl$patientUpdateProfile");
+    Response response = await dio.post(
+      '$baseUrl$patientUpdateProfile',
+      data: {
+        'user_id': userId,
+        'allergies_to_medicine': allergiesToMedicine,
+        'current_height': cWeight,
+        'current_weight': cHeight,
+        'BMI': bMI,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("updatePatientProfile statuscode :===> ${response.statusCode}");
+    log("updatePatientProfile Message :===> ${response.statusMessage}");
+    log("updatePatientProfile data :===> ${response.data}");
+    successModel = successModelFromJson(response.data.toString());
+    return successModel;
+  }
+
   // get_patient_appoinment API
   Future<NotificationModel> getPatientNotification() async {
     log("patientID :==> ${Constant.userID}");

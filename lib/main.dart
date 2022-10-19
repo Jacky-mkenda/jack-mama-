@@ -12,6 +12,7 @@ import 'package:patientapp/provider/historyprovider.dart';
 import 'package:patientapp/provider/homeprovider.dart';
 import 'package:patientapp/provider/notificationprovider.dart';
 import 'package:patientapp/provider/profileprovider.dart';
+import 'package:patientapp/provider/updateprofileprovider.dart';
 import 'package:patientapp/provider/viewallprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
@@ -28,6 +29,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ViewAllProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => UpdateProfileProvider()),
         ChangeNotifierProvider(create: (_) => AllAppointmentProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => AppointmentDetailProvider()),

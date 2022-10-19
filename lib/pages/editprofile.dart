@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:image_picker/image_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:patientapp/pages/nodata.dart';
+import 'package:patientapp/provider/updateprofileprovider.dart';
 import 'package:patientapp/widgets/mynetworkimg.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
 
@@ -15,6 +17,7 @@ import 'package:patientapp/utils/utility.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:patientapp/widgets/mytextformfield.dart';
+import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -44,6 +47,9 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
+    final updateProfileProvider =
+        Provider.of<UpdateProfileProvider>(context, listen: false);
+    updateProfileProvider.getPatientProfile();
     super.initState();
   }
 
@@ -169,256 +175,279 @@ class _EditProfileState extends State<EditProfile> {
         key: personalFormKey,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column(
-            children: <Widget>[
-              Stack(
-                alignment: Alignment.center,
-                clipBehavior: Clip.antiAlias,
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
-                    clipBehavior: Clip.antiAlias,
-                    child: pickedImageFile != null
-                        ? Image.file(
-                            pickedImageFile!,
-                            fit: BoxFit.cover,
-                            height: 80,
-                            width: 80,
-                          )
-                        : MyNetworkImage(
-                            imageUrl:
-                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-                            fit: BoxFit.cover,
-                            imgHeight: 80,
-                            imgWidth: 80,
+          child: Consumer<UpdateProfileProvider>(
+            builder: (context, updateProfileProvider, child) {
+              if (!updateProfileProvider.loading) {
+                if (updateProfileProvider.profileModel.status == 200) {
+                  if (updateProfileProvider.profileModel.result != null) {
+                    if (updateProfileProvider.profileModel.result!.isNotEmpty) {
+                      return Column(
+                        children: <Widget>[
+                          Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.antiAlias,
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(40),
+                                clipBehavior: Clip.antiAlias,
+                                child: pickedImageFile != null
+                                    ? Image.file(
+                                        pickedImageFile!,
+                                        fit: BoxFit.cover,
+                                        height: 80,
+                                        width: 80,
+                                      )
+                                    : MyNetworkImage(
+                                        imageUrl: updateProfileProvider
+                                                .profileModel.result!
+                                                .elementAt(0)
+                                                .profileImg ??
+                                            "",
+                                        fit: BoxFit.cover,
+                                        imgHeight: 80,
+                                        imgWidth: 80,
+                                      ),
+                              ),
+                              Positioned(
+                                child: InkWell(
+                                  onTap: () {
+                                    imagePickDialog();
+                                  },
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 80,
+                                    width: 80,
+                                    decoration: const BoxDecoration(
+                                      color: black50,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: MySvgAssetsImg(
+                                      imageName: 'edit_camera.svg',
+                                      fit: BoxFit.fill,
+                                      imgHeight: 27,
+                                      imgWidth: 27,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                  ),
-                  Positioned(
-                    child: InkWell(
-                      onTap: () {
-                        imagePickDialog();
-                      },
-                      borderRadius: BorderRadius.circular(40),
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 80,
-                        width: 80,
-                        decoration: const BoxDecoration(
-                          color: black50,
-                          shape: BoxShape.circle,
-                        ),
-                        child: MySvgAssetsImg(
-                          imageName: 'edit_camera.svg',
-                          fit: BoxFit.fill,
-                          imgHeight: 27,
-                          imgWidth: 27,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 17,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: firstNameReq,
-                  mController: mFirstNameController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType: TextInputType.name,
-                  mTextInputAction: TextInputAction.next,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: lastNameReq,
-                  mController: mLastNameController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType: TextInputType.name,
-                  mTextInputAction: TextInputAction.next,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: emailAddressReq,
-                  mController: mEmailController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType: TextInputType.emailAddress,
-                  mTextInputAction: TextInputAction.next,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: MyTextFormField(
-                        mHint: birthDateHint,
-                        mObscureText: false,
-                        mController: mBirthdateController,
-                        mHintTextColor: textHintColor,
-                        mMaxLine: 1,
-                        mReadOnly: true,
-                        mTextColor: textTitleColor,
-                        mInputBorder: InputBorder.none,
-                        mkeyboardType: TextInputType.text,
-                        mTextInputAction: TextInputAction.done,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        onPressed: () {
-                          openDatePicker();
-                        },
-                        icon: MySvgAssetsImg(
-                          imageName: "calendar.svg",
-                          fit: BoxFit.cover,
-                          imgHeight: 20,
-                          imgWidth: 20,
-                          iconColor: otherColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: phoneNumberReq,
-                  mController: mMobileController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType: TextInputType.phone,
-                  mTextInputAction: TextInputAction.next,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: insuranceName,
-                  mController: mInsNameController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType: TextInputType.text,
-                  mTextInputAction: TextInputAction.next,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: insuranceNumber,
-                  mController: mInsNoController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType: TextInputType.text,
-                  mTextInputAction: TextInputAction.done,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: MyTextFormField(
-                        mHint: insuranceImage,
-                        mObscureText: false,
-                        mController: mInsIMGController,
-                        mHintTextColor: textHintColor,
-                        mMaxLine: 1,
-                        mReadOnly: true,
-                        mTextColor: textTitleColor,
-                        mInputBorder: InputBorder.none,
-                        mkeyboardType: TextInputType.text,
-                        mTextInputAction: TextInputAction.done,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        onPressed: () {
-                          imagePickDialog();
-                        },
-                        icon: MySvgAssetsImg(
-                          imageName: "upload.svg",
-                          fit: BoxFit.cover,
-                          imgHeight: 20,
-                          imgWidth: 20,
-                          iconColor: otherColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              personalSaveButton(),
-            ],
+                          const SizedBox(
+                            height: 17,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: MyTextFormField(
+                              mHint: firstNameReq,
+                              mController: mFirstNameController,
+                              mObscureText: false,
+                              mMaxLine: 1,
+                              mHintTextColor: textHintColor,
+                              mTextColor: textTitleColor,
+                              mkeyboardType: TextInputType.name,
+                              mTextInputAction: TextInputAction.next,
+                              mInputBorder: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: MyTextFormField(
+                              mHint: lastNameReq,
+                              mController: mLastNameController,
+                              mObscureText: false,
+                              mMaxLine: 1,
+                              mHintTextColor: textHintColor,
+                              mTextColor: textTitleColor,
+                              mkeyboardType: TextInputType.name,
+                              mTextInputAction: TextInputAction.next,
+                              mInputBorder: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: MyTextFormField(
+                              mHint: emailAddressReq,
+                              mController: mEmailController,
+                              mObscureText: false,
+                              mMaxLine: 1,
+                              mHintTextColor: textHintColor,
+                              mTextColor: textTitleColor,
+                              mkeyboardType: TextInputType.emailAddress,
+                              mTextInputAction: TextInputAction.next,
+                              mInputBorder: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: MyTextFormField(
+                                    mHint: birthDateHint,
+                                    mObscureText: false,
+                                    mController: mBirthdateController,
+                                    mHintTextColor: textHintColor,
+                                    mMaxLine: 1,
+                                    mReadOnly: true,
+                                    mTextColor: textTitleColor,
+                                    mInputBorder: InputBorder.none,
+                                    mkeyboardType: TextInputType.text,
+                                    mTextInputAction: TextInputAction.done,
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      openDatePicker();
+                                    },
+                                    icon: MySvgAssetsImg(
+                                      imageName: "calendar.svg",
+                                      fit: BoxFit.cover,
+                                      imgHeight: 20,
+                                      imgWidth: 20,
+                                      iconColor: otherColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: MyTextFormField(
+                              mHint: phoneNumberReq,
+                              mController: mMobileController,
+                              mObscureText: false,
+                              mMaxLine: 1,
+                              mHintTextColor: textHintColor,
+                              mTextColor: textTitleColor,
+                              mkeyboardType: TextInputType.phone,
+                              mTextInputAction: TextInputAction.next,
+                              mInputBorder: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: MyTextFormField(
+                              mHint: insuranceName,
+                              mController: mInsNameController,
+                              mObscureText: false,
+                              mMaxLine: 1,
+                              mHintTextColor: textHintColor,
+                              mTextColor: textTitleColor,
+                              mkeyboardType: TextInputType.text,
+                              mTextInputAction: TextInputAction.next,
+                              mInputBorder: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: MyTextFormField(
+                              mHint: insuranceNumber,
+                              mController: mInsNoController,
+                              mObscureText: false,
+                              mMaxLine: 1,
+                              mHintTextColor: textHintColor,
+                              mTextColor: textTitleColor,
+                              mkeyboardType: TextInputType.text,
+                              mTextInputAction: TextInputAction.done,
+                              mInputBorder: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: MyTextFormField(
+                                    mHint: insuranceImage,
+                                    mObscureText: false,
+                                    mController: mInsIMGController,
+                                    mHintTextColor: textHintColor,
+                                    mMaxLine: 1,
+                                    mReadOnly: true,
+                                    mTextColor: textTitleColor,
+                                    mInputBorder: InputBorder.none,
+                                    mkeyboardType: TextInputType.text,
+                                    mTextInputAction: TextInputAction.done,
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      imagePickDialog();
+                                    },
+                                    icon: MySvgAssetsImg(
+                                      imageName: "upload.svg",
+                                      fit: BoxFit.cover,
+                                      imgHeight: 20,
+                                      imgWidth: 20,
+                                      iconColor: otherColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          personalSaveButton(),
+                        ],
+                      );
+                    } else {
+                      return const NoData();
+                    }
+                  } else {
+                    return const NoData();
+                  }
+                } else {
+                  return const NoData();
+                }
+              } else {
+                return Utility.pageLoader();
+              }
+            },
           ),
         ),
       ),

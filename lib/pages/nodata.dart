@@ -9,16 +9,16 @@ class NoData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
         margin: const EdgeInsets.only(left: 20, right: 20),
         decoration: BoxDecoration(
           color: white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
           shape: BoxShape.rectangle,
         ),
         constraints: const BoxConstraints(minHeight: 0, minWidth: 0),
         child: MyAssetsImg(
-          imgHeight: 160,
+          imgHeight: 150,
           fit: BoxFit.contain,
           imageName: "nodata.png",
         ),
