@@ -3,31 +3,45 @@ import 'dart:developer';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:patientapp/pages/nodata.dart';
+import 'package:patientapp/provider/bookappointmentprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
 import 'package:patientapp/utils/utility.dart';
 import 'package:flutter/material.dart';
+import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:patientapp/widgets/mytextformfield.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:provider/provider.dart';
 
 class BookAppointment extends StatefulWidget {
-  const BookAppointment({Key? key}) : super(key: key);
+  final String? doctorID, doctorName;
+  const BookAppointment(this.doctorID, this.doctorName, {Key? key})
+      : super(key: key);
 
   @override
   State<BookAppointment> createState() => _BookAppointmentState();
 }
 
 class _BookAppointmentState extends State<BookAppointment> {
+  late ProgressDialog prDialog;
   final DatePickerController mDateController = DatePickerController();
-  late DateTime selectedDate = DateTime.now();
   final mSymtomsController = TextEditingController();
   final mMedicineTakenController = TextEditingController();
   final mDescriptionController = TextEditingController();
-  dynamic sAvailableTime, sAppointmentTime;
+  dynamic sAvailableTimePos, sAppointmentTimePos;
+  String? strDate = "",
+      strStartTime = "",
+      strEndTime = "",
+      appointmentSlotId = "";
 
   @override
   void initState() {
+    prDialog = ProgressDialog(context);
+    log("doctorID ===> ${widget.doctorID}");
+    log("doctorName ===> ${widget.doctorName}");
     super.initState();
   }
 
@@ -44,7 +58,7 @@ class _BookAppointmentState extends State<BookAppointment> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: primaryColor,
-      appBar: Utility.appBarCommon(makeAnAppointment),
+      appBar: Utility.appBarCommon(widget.doctorName),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -58,25 +72,43 @@ class _BookAppointmentState extends State<BookAppointment> {
             decoration: Utility.topRoundBG(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(
                   height: 24,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: MyText(
+                    mTitle: selectAppointmentDate,
+                    mFontSize: 16,
+                    mFontStyle: FontStyle.normal,
+                    mFontWeight: FontWeight.bold,
+                    mMaxLine: 1,
+                    mTextAlign: TextAlign.start,
+                    mTextColor: textTitleColor,
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: DatePicker(
                     DateTime.now(),
                     controller: mDateController,
-                    initialSelectedDate: DateTime.now(),
                     selectionColor: primaryColor,
                     selectedTextColor: white,
                     deactivatedColor: white,
-                    onDateChange: (date) {
-                      log('$date');
-                      // New date selected
-                      setState(() {
-                        selectedDate = date;
-                      });
+                    onDateChange: (date) async {
+                      log('Clicked date ==>> $date');
+                      strDate = Utility.formateFullDate(date.toString());
+                      log('strDate ==>> $strDate');
+                      final bookAppointmentProvider =
+                          Provider.of<BookAppointmentProvider>(context,
+                              listen: false);
+                      await bookAppointmentProvider.getTimeSlotByDoctorId(
+                          widget.doctorID, strDate);
                     },
                     monthTextStyle: GoogleFonts.roboto(
                       textStyle: const TextStyle(
@@ -161,7 +193,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                       ),
                       SizedBox(
                         height: 62,
-                        child: appointmentTimeList(),
+                        child: appointmentTimeList(0),
                       ),
                       const SizedBox(
                         height: 17,
@@ -289,7 +321,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                           borderRadius: BorderRadius.circular(4),
                           onTap: () {
                             log('Tapped on $makeAnAppointment');
-                            showMyDialog();
+                            validateAndMake();
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.5,
@@ -327,99 +359,234 @@ class _BookAppointmentState extends State<BookAppointment> {
   }
 
   Widget availableTimeList() {
-    return AlignedGridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 5,
-      crossAxisSpacing: 9,
-      mainAxisSpacing: 9,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      itemCount: 12,
-      itemBuilder: (BuildContext context, int position) => InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          log("Item Clicked!");
-          onAvailableTimeClick(position);
-        },
-        child: Container(
-          constraints: const BoxConstraints(
-            minHeight: 60,
-            minWidth: 60,
-          ),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: sAvailableTime != null && sAvailableTime == position
-                ? primaryColor
-                : timeDisableBGColor,
-          ),
-          child: MyText(
-            mTitle: '10:00\nAM',
-            mFontSize: 14,
-            mFontStyle: FontStyle.normal,
-            mFontWeight: FontWeight.normal,
-            mTextAlign: TextAlign.center,
-            mTextColor: sAvailableTime != null && sAvailableTime == position
-                ? white
-                : otherLightColor,
-          ),
-        ),
-      ),
+    return Consumer<BookAppointmentProvider>(
+      builder: (context, timeSlotProvider, child) {
+        if (!timeSlotProvider.loading) {
+          if (timeSlotProvider.timeSlotModel.status == 200) {
+            if (timeSlotProvider.timeSlotModel.result != null) {
+              if (timeSlotProvider.timeSlotModel.result!.isNotEmpty) {
+                return AlignedGridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 9,
+                  mainAxisSpacing: 9,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  itemCount: timeSlotProvider.timeSlotModel.result!.length,
+                  itemBuilder: (BuildContext context, int position) {
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () {
+                        log("Clicked position ===>  $position");
+                        setState(() {
+                          sAvailableTimePos = position;
+                        });
+                      },
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          minHeight: 60,
+                          minWidth: 60,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: sAvailableTimePos != null &&
+                                  sAvailableTimePos == position
+                              ? primaryColor
+                              : timeDisableBGColor,
+                        ),
+                        child: MyText(
+                          mTitle: Utility.formateTimeSetInColumn(
+                              timeSlotProvider.timeSlotModel.result!
+                                      .elementAt(position)
+                                      .startTime ??
+                                  ""),
+                          mFontSize: 14,
+                          mFontStyle: FontStyle.normal,
+                          mFontWeight: FontWeight.normal,
+                          mTextAlign: TextAlign.center,
+                          mTextColor: sAvailableTimePos != null &&
+                                  sAvailableTimePos == position
+                              ? white
+                              : otherLightColor,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const NoData();
+              }
+            } else {
+              return Container();
+            }
+          } else {
+            return Container();
+          }
+        } else {
+          return Utility.pageLoader();
+        }
+      },
     );
   }
 
   void onAvailableTimeClick(int sPosition) {
     log('Clicked on => $sPosition');
-    setState(() {
-      sAvailableTime = sPosition;
-    });
   }
 
-  Widget appointmentTimeList() {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      scrollDirection: Axis.horizontal,
-      itemCount: 8,
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 9,
-      ),
-      itemBuilder: (BuildContext context, int position) => InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          log("Item Clicked!");
-          onAppointmentTimeClick(position);
-        },
-        child: Container(
-          width: 60,
-          height: 60,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: sAppointmentTime != null && sAppointmentTime == position
-                ? primaryColor
-                : timeDisableBGColor,
-          ),
-          child: MyText(
-            mTitle: '10:00\nAM',
-            mFontSize: 14,
-            mFontStyle: FontStyle.normal,
-            mFontWeight: FontWeight.normal,
-            mTextAlign: TextAlign.center,
-            mTextColor: sAppointmentTime != null && sAppointmentTime == position
-                ? white
-                : otherLightColor,
-          ),
-        ),
-      ),
+  Widget appointmentTimeList(int aTimePos) {
+    return Consumer<BookAppointmentProvider>(
+      builder: (context, timeSlotProvider, child) {
+        if (!timeSlotProvider.loading) {
+          if (timeSlotProvider.timeSlotModel.status == 200) {
+            if (timeSlotProvider.timeSlotModel.result != null) {
+              if (timeSlotProvider.timeSlotModel.result!.isNotEmpty) {
+                if (timeSlotProvider.timeSlotModel.result!
+                    .elementAt(aTimePos)
+                    .slot!
+                    .isNotEmpty) {
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: timeSlotProvider.timeSlotModel.result!
+                        .elementAt(aTimePos)
+                        .slot!
+                        .length,
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 9,
+                    ),
+                    itemBuilder: (BuildContext context, int position) {
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () {
+                          log('Clicked on position => $position');
+                          setState(() {
+                            strStartTime = timeSlotProvider
+                                    .timeSlotModel.result!
+                                    .elementAt(aTimePos)
+                                    .slot!
+                                    .elementAt(position)
+                                    .startTime ??
+                                "";
+                            strEndTime = timeSlotProvider.timeSlotModel.result!
+                                    .elementAt(aTimePos)
+                                    .slot!
+                                    .elementAt(position)
+                                    .endTime ??
+                                "";
+                            appointmentSlotId = timeSlotProvider
+                                    .timeSlotModel.result!
+                                    .elementAt(aTimePos)
+                                    .slot!
+                                    .elementAt(position)
+                                    .appointmentSlotsId ??
+                                "";
+                            log('strStartTime ======> $strStartTime');
+                            log('strEndTime ======> $strEndTime');
+                            log('appointmentSlotId ======> $appointmentSlotId');
+                            sAppointmentTimePos = position;
+                          });
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: sAppointmentTimePos != null &&
+                                    sAppointmentTimePos == position
+                                ? primaryColor
+                                : timeDisableBGColor,
+                          ),
+                          child: MyText(
+                            mTitle: Utility.formateTimeSetInColumn(
+                                timeSlotProvider.timeSlotModel.result!
+                                        .elementAt(aTimePos)
+                                        .slot!
+                                        .elementAt(position)
+                                        .startTime ??
+                                    ""),
+                            mFontSize: 14,
+                            mFontStyle: FontStyle.normal,
+                            mFontWeight: FontWeight.normal,
+                            mTextAlign: TextAlign.center,
+                            mTextColor: sAppointmentTimePos != null &&
+                                    sAppointmentTimePos == position
+                                ? white
+                                : otherLightColor,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return const NoData();
+                }
+              } else {
+                return Container();
+              }
+            } else {
+              return Container();
+            }
+          } else {
+            return Container();
+          }
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
-  void onAppointmentTimeClick(int sPosition) {
-    log('Clicked on => $sPosition');
-    setState(() {
-      sAppointmentTime = sPosition;
-    });
+  void validateAndMake() async {
+    String symptoms = mSymtomsController.text.toString().trim();
+    String medicineTaken = mMedicineTakenController.text.toString().trim();
+    String addNote = mDescriptionController.text.toString().trim();
+    log("strDate :==> $strDate");
+    log("strStartTime :==> $strStartTime");
+    log("strEndTime :==> $strEndTime");
+    log("appointmentSlotId :==> $appointmentSlotId");
+    log("symptoms :==> $symptoms");
+    log("medicineTaken :==> $medicineTaken");
+    log("additional Note :==> $addNote");
+    if (symptoms.isEmpty) {
+      symptoms = "";
+    }
+    if (medicineTaken.isEmpty) {
+      medicineTaken = "";
+    }
+    if (addNote.isEmpty) {
+      addNote = "";
+    }
+    if (strDate!.isEmpty) {
+      Utility.showToast(selectAppointmentDate);
+    } else if (strStartTime!.isEmpty) {
+      Utility.showToast(selectAppointmentTime);
+    } else {
+      final bookAppointmentProvider =
+          Provider.of<BookAppointmentProvider>(context, listen: false);
+      // login API call
+      Utility.showProgress(context, prDialog);
+      await bookAppointmentProvider.getMakeAppointment(
+          widget.doctorID,
+          strDate,
+          strStartTime,
+          appointmentSlotId,
+          strEndTime,
+          symptoms,
+          medicineTaken,
+          addNote);
+      await prDialog.hide();
+      clearTextFormField();
+      showMyDialog();
+    }
+  }
+
+  void clearTextFormField() {
+    mSymtomsController.clear();
+    mMedicineTakenController.clear();
+    mDescriptionController.clear();
   }
 
   Future<void> showMyDialog() async {
@@ -428,15 +595,41 @@ class _BookAppointmentState extends State<BookAppointment> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Registration Details'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
+                MySvgAssetsImg(
+                  imageName: "thumb.svg",
+                  fit: BoxFit.contain,
+                  imgHeight: 112,
+                  imgWidth: 112,
+                ),
+                const SizedBox(height: 30),
                 MyText(
-                  mTitle:
-                      "Date : $selectedDate\nSymptoms : ${mSymtomsController.text}\nMedicine Taken : ${mMedicineTakenController.text}\nDescription : ${mDescriptionController.text}",
+                  mTitle: thankYou,
                   mTextColor: black,
-                  mFontSize: 16,
+                  mFontSize: 30,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.w600,
+                  mTextAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 15),
+                MyText(
+                  mTitle: successfulBookingDesc,
+                  mTextColor: black,
+                  mFontSize: 15,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.normal,
+                  mTextAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                MyText(
+                  mTitle: "$youBookedAnAppointmentWith ${widget.doctorName}.",
+                  mTextColor: otherColor,
+                  mFontSize: 15,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.normal,
+                  mTextAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -444,7 +637,7 @@ class _BookAppointmentState extends State<BookAppointment> {
           actions: <Widget>[
             TextButton(
               child: MyText(
-                mTitle: okay,
+                mTitle: done,
                 mTextColor: primaryDarkColor,
                 mFontSize: 20,
                 mFontStyle: FontStyle.normal,
@@ -461,11 +654,5 @@ class _BookAppointmentState extends State<BookAppointment> {
         );
       },
     );
-  }
-
-  void clearTextFormField() {
-    mSymtomsController.clear();
-    mMedicineTakenController.clear();
-    mDescriptionController.clear();
   }
 }

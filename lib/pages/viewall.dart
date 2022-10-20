@@ -5,7 +5,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:patientapp/pages/appointmentdetails.dart';
 import 'package:patientapp/pages/bookappointment.dart';
 import 'package:patientapp/pages/doctordetails.dart';
-import 'package:patientapp/pages/historydetails.dart';
 import 'package:patientapp/pages/noappointments.dart';
 import 'package:patientapp/pages/nodata.dart';
 import 'package:patientapp/provider/viewallprovider.dart';
@@ -508,11 +507,11 @@ class _ViewAllState extends State<ViewAll> {
                       borderRadius: BorderRadius.circular(8),
                       onTap: () {
                         log("Item Clicked!");
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const HistoryDetails(),
-                          ),
-                        );
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const HistoryDetails(),
+                        //   ),
+                        // );
                       },
                       child: Stack(
                         children: <Widget>[
@@ -828,7 +827,13 @@ class _ViewAllState extends State<ViewAll> {
                             log("Item Clicked! => $position");
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const BookAppointment(),
+                                builder: (context) => BookAppointment(
+                                  viewAllProvider.doctorModel.result!
+                                          .elementAt(position)
+                                          .id ??
+                                      "",
+                                  "${viewAllProvider.doctorModel.result!.elementAt(position).firstName} ${viewAllProvider.doctorModel.result!.elementAt(position).lastName}",
+                                ),
                               ),
                             );
                           },
@@ -974,7 +979,13 @@ class _ViewAllState extends State<ViewAll> {
                             log("Item Clicked! => $position");
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const BookAppointment(),
+                                builder: (context) => BookAppointment(
+                                  viewAllProvider.searchedDoctorModel.result!
+                                          .elementAt(position)
+                                          .id ??
+                                      "",
+                                  "${viewAllProvider.searchedDoctorModel.result!.elementAt(position).firstName} ${viewAllProvider.searchedDoctorModel.result!.elementAt(position).lastName}",
+                                ),
                               ),
                             );
                           },

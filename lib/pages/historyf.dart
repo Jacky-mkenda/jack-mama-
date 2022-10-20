@@ -73,7 +73,9 @@ class _HistoryFState extends State<HistoryF> {
                         log("Item Clicked!");
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const HistoryDetails(),
+                            builder: (context) => HistoryDetails(
+                                historyProvider.appointmentModel.result,
+                                position),
                           ),
                         );
                       },
@@ -265,9 +267,8 @@ class _HistoryFState extends State<HistoryF> {
                                           Container(
                                             alignment: Alignment.topLeft,
                                             child: MyText(
-                                              mTitle: Constant.dummyDataList
-                                                  .elementAt(position)
-                                                  .date,
+                                              mTitle:
+                                                  '${Utility.formateDate((historyProvider.appointmentModel.result!.elementAt(position).date ?? "").toString())} at ${Utility.formateTime((historyProvider.appointmentModel.result!.elementAt(position).startTime ?? ""))} - ${Utility.formateTime((historyProvider.appointmentModel.result!.elementAt(position).endTime ?? ""))}',
                                               mFontSize: 13,
                                               mOverflow: TextOverflow.ellipsis,
                                               mMaxLine: 1,
@@ -292,9 +293,13 @@ class _HistoryFState extends State<HistoryF> {
                                               ),
                                               Flexible(
                                                 child: MyText(
-                                                  mTitle: Constant.dummyDataList
-                                                      .elementAt(position)
-                                                      .testDesc,
+                                                  mTitle: historyProvider
+                                                              .appointmentModel
+                                                              .result!
+                                                              .elementAt(
+                                                                  position)
+                                                              .description ??
+                                                          "",
                                                   mFontSize: 12,
                                                   mMaxLine: 1,
                                                   mOverflow:

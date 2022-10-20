@@ -37,6 +37,7 @@ const next = "Next";
 const forgotPassNote = "We will send new password to this email address.";
 const acceptPrivacyPolicyMsg = "Please, accept the Privacy Policy of this app.";
 const pickInsImageNote = "Choose option to pick your Insurance image!";
+const pickProfileImageNote = "Choose option to pick your Profile image!";
 const pleaseWait = "Please wait...";
 //Login, Registration Strings END
 
@@ -71,6 +72,7 @@ const rejected = "Rejected";
 const completed = "Completed";
 const notDataFound = "Data Not Found!";
 const guestUser = "Guest User";
+const guestDoctor = "Guest Doctor";
 const searchDoctorByName = "Find a doctor by Name or Speciality";
 const youDontHaveAnyAppointment = "You don't have any appointment";
 const findBestDoctorsNearYouBySpeciality =
@@ -153,8 +155,17 @@ const insuranceCompanyName = "Insurance Company Name";
 //Profile END
 
 //Book Appointment START
+const selectAppointmentDate = "Select Appointment Date";
 const availableTime = "Available Time";
 const reminderMeBefore = "Reminder Me Before";
 const pickAppointmentTime = "Pick Appointment Time";
 const symptoms = "Symptoms";
+const selectAppointmentTime = "Select appointment time";
+const done = "Done";
+const thankYou = "Thank You!";
+const successfulBookingDesc =
+    "Appointment successfully booked. Ensure to keep time otherwise you will lose your slot and will have to book another one.";
+const editYourAppointment = "Edit your appointment";
+const youBookedAnAppointmentWith = "You booked an appointment with";
+const youBookedTestAppointment = "You booked test appointment successfully.";
 //Book Appointment END

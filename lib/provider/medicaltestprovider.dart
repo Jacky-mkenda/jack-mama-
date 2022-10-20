@@ -1,13 +1,12 @@
 import 'package:patientapp/model/appointmentmodel.dart';
-import 'package:patientapp/model/prescriptiondetailmodel.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/sharedpre.dart';
 import 'package:patientapp/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
-class HistoryProvider extends ChangeNotifier {
+class MedicalTestProvider extends ChangeNotifier {
   AppointmentModel appointmentModel = AppointmentModel();
-  PrescriptionDetailModel prescriptionDetailModel = PrescriptionDetailModel();
+  AppointmentModel patientTestModel = AppointmentModel();
 
   bool loading = false;
 
@@ -23,14 +22,14 @@ class HistoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPrescriptionHistory() async {
-    debugPrint("getPrescriptionHistory patientID :==> ${Constant.userID}");
+  Future<void> getTestPatientAppointment() async {
+    debugPrint("getTestPatientAppointment patientID :==> ${Constant.userID}");
     loading = true;
-    prescriptionDetailModel = await ApiService().prescriptionHistory();
+    patientTestModel = await ApiService().patientTestAppointment();
     debugPrint(
-        "get_medicine_history status :==> ${prescriptionDetailModel.status}");
+        "get_test_patient_appoinment status :==> ${patientTestModel.status}");
     debugPrint(
-        "get_medicine_history message :==> ${prescriptionDetailModel.message}");
+        "get_test_patient_appoinment message :==> ${patientTestModel.message}");
     loading = false;
     notifyListeners();
   }

@@ -1,24 +1,42 @@
 import 'dart:developer';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:patientapp/model/prescriptiondetailmodel.dart';
+import 'package:patientapp/provider/historyprovider.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
+import 'package:patientapp/utils/utility.dart';
 import 'package:patientapp/widgets/mynetworkimg.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:patientapp/model/appointmentmodel.dart' as history;
 
 class HistoryDetails extends StatefulWidget {
-  const HistoryDetails({Key? key}) : super(key: key);
+  final List<history.Result>? historyList;
+  final int position;
+  const HistoryDetails(this.historyList, this.position, {Key? key})
+      : super(key: key);
 
   @override
   State<HistoryDetails> createState() => _HistoryDetailsState();
 }
 
 class _HistoryDetailsState extends State<HistoryDetails> {
+  String? appointmentId = "";
+  List<Prescription>? prescriptionList;
+
   @override
   void initState() {
+    prescriptionList = <Prescription>[];
+    appointmentId = widget.historyList?.elementAt(widget.position).id;
+    log("appointmentId ==>>>> $appointmentId");
+    final prescriptionHistorProvider =
+        Provider.of<HistoryProvider>(context, listen: false);
+    prescriptionHistorProvider.getPrescriptionHistory();
     super.initState();
   }
 
@@ -49,8 +67,11 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                       borderRadius: BorderRadius.circular(5),
                       clipBehavior: Clip.antiAlias,
                       child: MyNetworkImage(
-                        imageUrl:
-                            "https://images.unsplash.com/photo-1512479064533-47d51d07bb93?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NjF8fGRvY3RvcnxlbnwwfDF8MHx8&auto=format&fit=crop&w=400&q=60",
+                        imageUrl: widget.historyList
+                                ?.elementAt(widget.position)
+                                .doctorImage
+                                .toString() ??
+                            Constant.userPlaceholder,
                         fit: BoxFit.fill,
                         imgHeight: 66,
                         imgWidth: 66,
@@ -64,7 +85,11 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             MyText(
-                              mTitle: "Tonya Burns",
+                              mTitle: widget.historyList
+                                      ?.elementAt(widget.position)
+                                      .doctorName
+                                      .toString() ??
+                                  guestDoctor,
                               mTextAlign: TextAlign.start,
                               mTextColor: textTitleColor,
                               mFontSize: 14,
@@ -79,7 +104,11 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 MyText(
-                                  mTitle: 'Dentist',
+                                  mTitle: widget.historyList
+                                          ?.elementAt(widget.position)
+                                          .specialitiesName
+                                          .toString() ??
+                                      "-",
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
                                   mTextAlign: TextAlign.start,
@@ -100,11 +129,77 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                                   width: 4,
                                 ),
                                 MyText(
-                                  mTitle: 'Completed',
+                                  mTitle: widget.historyList
+                                              ?.elementAt(widget.position)
+                                              .status
+                                              .toString() ==
+                                          "1"
+                                      ? pending
+                                      : (widget.historyList
+                                                  ?.elementAt(widget.position)
+                                                  .status
+                                                  .toString() ==
+                                              "2"
+                                          ? approved
+                                          : (widget.historyList
+                                                      ?.elementAt(
+                                                          widget.position)
+                                                      .status
+                                                      .toString() ==
+                                                  "3"
+                                              ? rejected
+                                              : widget.historyList
+                                                          ?.elementAt(
+                                                              widget.position)
+                                                          .status
+                                                          .toString() ==
+                                                      "4"
+                                                  ? absent
+                                                  : (widget.historyList
+                                                              ?.elementAt(widget
+                                                                  .position)
+                                                              .status
+                                                              .toString() ==
+                                                          "5"
+                                                      ? completed
+                                                      : "-"))),
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
                                   mTextAlign: TextAlign.start,
-                                  mTextColor: completedStatus,
+                                  mTextColor: widget.historyList
+                                              ?.elementAt(widget.position)
+                                              .status
+                                              .toString() ==
+                                          "1"
+                                      ? pendingStatus
+                                      : (widget.historyList
+                                                  ?.elementAt(widget.position)
+                                                  .status
+                                                  .toString() ==
+                                              "2"
+                                          ? approvedStatus
+                                          : (widget.historyList
+                                                      ?.elementAt(
+                                                          widget.position)
+                                                      .status
+                                                      .toString() ==
+                                                  "3"
+                                              ? rejectedStatus
+                                              : widget.historyList
+                                                          ?.elementAt(
+                                                              widget.position)
+                                                          .status
+                                                          .toString() ==
+                                                      "4"
+                                                  ? absentStatus
+                                                  : (widget.historyList
+                                                              ?.elementAt(widget
+                                                                  .position)
+                                                              .status
+                                                              .toString() ==
+                                                          "5"
+                                                      ? completedStatus
+                                                      : black))),
                                 ),
                               ],
                             ),
@@ -112,11 +207,21 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                         ),
                       ),
                     ),
-                    MySvgAssetsImg(
-                      imageName: "mobile_dark.svg",
-                      fit: BoxFit.cover,
-                      imgHeight: 38,
-                      imgWidth: 38,
+                    InkWell(
+                      onTap: () {
+                        log('Clicked on call!');
+                        Utility.launchPhoneDialer(widget.historyList
+                                ?.elementAt(widget.position)
+                                .doctorMobileNumber
+                                .toString() ??
+                            "");
+                      },
+                      child: MySvgAssetsImg(
+                        imageName: "mobile_dark.svg",
+                        fit: BoxFit.cover,
+                        imgHeight: 38,
+                        imgWidth: 38,
+                      ),
                     ),
                   ],
                 ),
@@ -150,7 +255,11 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                       height: 4,
                     ),
                     MyText(
-                      mTitle: "Normal headache",
+                      mTitle: widget.historyList
+                              ?.elementAt(widget.position)
+                              .doctorSymptoms
+                              .toString() ??
+                          "-",
                       mFontSize: 14,
                       mFontWeight: FontWeight.normal,
                       mFontStyle: FontStyle.normal,
@@ -172,7 +281,11 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                       height: 4,
                     ),
                     MyText(
-                      mTitle: "Given tablets to cure.",
+                      mTitle: widget.historyList
+                              ?.elementAt(widget.position)
+                              .doctorDiagnosis
+                              .toString() ??
+                          "-",
                       mFontSize: 14,
                       mMaxLine: 1,
                       mOverflow: TextOverflow.ellipsis,
@@ -195,78 +308,141 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                     const SizedBox(
                       height: 4,
                     ),
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 3,
-                      itemBuilder: (BuildContext context, int position) =>
-                          Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          MyText(
-                            mTitle: "Paracetamole",
-                            mFontSize: 14,
-                            mFontWeight: FontWeight.normal,
-                            mFontStyle: FontStyle.normal,
-                            mTextAlign: TextAlign.start,
-                            mTextColor: textTitleColor,
-                          ),
-                          const SizedBox(
-                            height: 2,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: 4,
-                                height: 4,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: otherLightColor,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              MyText(
-                                mTitle: "250 mg",
-                                mFontSize: 12,
-                                mFontWeight: FontWeight.normal,
-                                mTextAlign: TextAlign.start,
-                                mTextColor: textTitleColor,
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Container(
-                                width: 4,
-                                height: 4,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: otherLightColor,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              MyText(
-                                mTitle: "Tablet",
-                                mFontSize: 12,
-                                mFontWeight: FontWeight.normal,
-                                mTextAlign: TextAlign.start,
-                                mTextColor: textTitleColor,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                        ],
-                      ),
+                    Consumer<HistoryProvider>(
+                      builder: (context, prescriptionProvider, child) {
+                        if (!prescriptionProvider.loading) {
+                          if (prescriptionProvider
+                                  .prescriptionDetailModel.status ==
+                              200) {
+                            if (prescriptionProvider
+                                    .prescriptionDetailModel.result !=
+                                null) {
+                              if (prescriptionProvider
+                                  .prescriptionDetailModel.result!.isNotEmpty) {
+                                for (int i = 0;
+                                    i <
+                                        prescriptionProvider
+                                            .prescriptionDetailModel
+                                            .result!
+                                            .length;
+                                    i++) {
+                                  for (int j = 0;
+                                      j <
+                                          prescriptionProvider
+                                              .prescriptionDetailModel.result!
+                                              .elementAt(i)
+                                              .prescription!
+                                              .length;
+                                      j++) {
+                                    prescriptionList?.add(prescriptionProvider
+                                        .prescriptionDetailModel.result!
+                                        .elementAt(i)
+                                        .prescription!
+                                        .elementAt(j));
+                                    log("prescriptionList length ==>> ${prescriptionList!.length}");
+                                  }
+                                }
+                                return ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: prescriptionList!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int position) {
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        MyText(
+                                          mTitle: prescriptionList!
+                                                  .elementAt(position)
+                                                  .name ??
+                                              "-",
+                                          mFontSize: 14,
+                                          mFontWeight: FontWeight.normal,
+                                          mFontStyle: FontStyle.normal,
+                                          mTextAlign: TextAlign.start,
+                                          mTextColor: textTitleColor,
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              width: 4,
+                                              height: 4,
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: otherLightColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 4,
+                                            ),
+                                            MyText(
+                                              mTitle: prescriptionList!
+                                                      .elementAt(position)
+                                                      .power ??
+                                                  "-",
+                                              mFontSize: 12,
+                                              mFontWeight: FontWeight.normal,
+                                              mTextAlign: TextAlign.start,
+                                              mTextColor: textTitleColor,
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            Container(
+                                              width: 4,
+                                              height: 4,
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: otherLightColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 4,
+                                            ),
+                                            MyText(
+                                              mTitle: prescriptionList!
+                                                      .elementAt(position)
+                                                      .form ??
+                                                  "-",
+                                              mFontSize: 12,
+                                              mFontWeight: FontWeight.normal,
+                                              mTextAlign: TextAlign.start,
+                                              mTextColor: textTitleColor,
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                return Container();
+                              }
+                            } else {
+                              return Container();
+                            }
+                          } else {
+                            return Container();
+                          }
+                        } else {
+                          return Container();
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -304,39 +480,40 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: 5,
-                      itemBuilder: (BuildContext context, int position) =>
-                          Container(
-                        margin: const EdgeInsets.only(bottom: 15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            RatingBarIndicator(
-                              rating: 4.5,
-                              itemBuilder: (context, index) => const Icon(
-                                Icons.star,
-                                color: starColor,
+                      itemBuilder: (BuildContext context, int position) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              RatingBarIndicator(
+                                rating: 4.5,
+                                itemBuilder: (context, index) => const Icon(
+                                  Icons.star,
+                                  color: starColor,
+                                ),
+                                itemPadding: const EdgeInsets.only(right: 1),
+                                itemCount: 5,
+                                itemSize: 12,
+                                direction: Axis.horizontal,
                               ),
-                              itemPadding: const EdgeInsets.only(right: 1),
-                              itemCount: 5,
-                              itemSize: 12,
-                              direction: Axis.horizontal,
-                            ),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            MyText(
-                              mTitle:
-                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                              mFontSize: 12,
-                              mFontWeight: FontWeight.normal,
-                              mTextAlign: TextAlign.start,
-                              mTextColor: otherColor,
-                            ),
-                          ],
-                        ),
-                      ),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              MyText(
+                                mTitle:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                mFontSize: 12,
+                                mFontWeight: FontWeight.normal,
+                                mTextAlign: TextAlign.start,
+                                mTextColor: otherColor,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

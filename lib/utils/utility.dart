@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:patientapp/utils/colors.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_html/flutter_html.dart';
+// ignore: import_of_legacy_library_into_null_safe, depend_on_referenced_packages
+import 'package:html/parser.dart' show parse;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:patientapp/utils/sharedpre.dart';
@@ -296,6 +298,36 @@ class Utility {
     return finalDate;
   }
 
+  static String formateInYYYYMMDD(String date) {
+    String finalDate = "";
+    DateFormat inputDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    DateFormat outputDate = DateFormat("yyyy-MM-dd");
+
+    log('date => $date');
+    DateTime inputTime = inputDate.parse(date);
+    log('inputTime => $inputTime');
+
+    finalDate = outputDate.format(inputTime);
+    log('finalDate => $finalDate');
+
+    return finalDate;
+  }
+
+  static String formateFullDate(String date) {
+    String finalDate = "";
+    DateFormat inputDate = DateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    DateFormat outputDate = DateFormat("yyyy-MM-dd");
+
+    log('date => $date');
+    DateTime inputTime = inputDate.parse(date);
+    log('inputTime => $inputTime');
+
+    finalDate = outputDate.format(inputTime);
+    log('finalDate => $finalDate');
+
+    return finalDate;
+  }
+
   static String formateInMMMMDD(String date) {
     String finalDate = "";
     DateFormat inputDate = DateFormat("yyyy-MM-dd");
@@ -321,6 +353,22 @@ class Utility {
     log('inputTime => $inputTime');
 
     finalTime = mmFormatter.format(inputTime);
+    log('finalTime => $finalTime');
+
+    return finalTime;
+  }
+
+  static String formateTimeSetInColumn(String time) {
+    String finalTime = "";
+    DateFormat hhmmFormatter = DateFormat("HH:mm");
+    DateFormat mmFormatter = DateFormat("hh:mm a");
+
+    log('date => $date');
+    DateTime inputTime = hhmmFormatter.parse(time);
+    log('inputTime => $inputTime');
+
+    finalTime = mmFormatter.format(inputTime);
+    finalTime = finalTime.split(" ").join("\n");
     log('finalTime => $finalTime');
 
     return finalTime;
@@ -411,13 +459,20 @@ class Utility {
         bmiResult = "You are in the obese BMI range!";
       }
 
-      strBMIText = htmlTexts(
-              "BMI is : <b><font color='#000'>${bmi.toStringAsFixed(2)}</font></b> and $bmiResult")
-          .data
-          .toString();
+      strBMIText = parseHtmlString(
+          "<p>BMI is : <b><font color='#000'>${bmi.toStringAsFixed(2)}</font></b> and $bmiResult </p>");
+      log("strBMIText :==> $strBMIText");
     } else {
-      strBMIText = "-";
+      strBMIText = "";
     }
     return strBMIText;
+  }
+
+  //Convert Html to simple String
+  static String parseHtmlString(String htmlString) {
+    final document = parse(htmlString);
+    final String parsedString = parse(document.body.text).documentElement.text;
+
+    return parsedString;
   }
 }

@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:patientapp/pages/splash.dart';
 import 'package:patientapp/provider/allappointmentprovider.dart';
 import 'package:patientapp/provider/appointmentdetailprovider.dart';
+import 'package:patientapp/provider/bookappointmentprovider.dart';
 import 'package:patientapp/provider/doctordetailprovider.dart';
 import 'package:patientapp/provider/generalprovider.dart';
 import 'package:patientapp/provider/historyprovider.dart';
 import 'package:patientapp/provider/homeprovider.dart';
+import 'package:patientapp/provider/medicaltestprovider.dart';
 import 'package:patientapp/provider/notificationprovider.dart';
 import 'package:patientapp/provider/profileprovider.dart';
 import 'package:patientapp/provider/updateprofileprovider.dart';
@@ -34,6 +36,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => AppointmentDetailProvider()),
         ChangeNotifierProvider(create: (_) => DoctorDetailProvider()),
+        ChangeNotifierProvider(create: (_) => MedicalTestProvider()),
+        ChangeNotifierProvider(create: (_) => BookAppointmentProvider()),
       ],
       child: const MyApp(),
     ),

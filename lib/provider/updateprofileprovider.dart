@@ -24,8 +24,15 @@ class UpdateProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getUpdatePersonalDetails(email, firstName, lastName,
-      mobileNumber, insCompanyId, insNumber, patientProfileImg) async {
+  Future<void> getUpdatePersonalDetails(
+      email,
+      firstName,
+      lastName,
+      mobileNumber,
+      insCompanyId,
+      insNumber,
+      insImage,
+      patientProfileImg) async {
     debugPrint("getUpdatePersonalDetails patientID :==> ${Constant.userID}");
     loading = true;
     successPersonalModel = await ApiService().updatePersonalDetails(
@@ -36,6 +43,7 @@ class UpdateProfileProvider extends ChangeNotifier {
         mobileNumber,
         insCompanyId,
         insNumber,
+        insImage,
         patientProfileImg);
     debugPrint("updateprofile status :==> ${successPersonalModel.status}");
     debugPrint("updateprofile message :==> ${successPersonalModel.message}");

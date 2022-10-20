@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +18,7 @@ import 'package:patientapp/utils/utility.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:patientapp/widgets/mytextformfield.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
@@ -27,7 +29,9 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  File? pickedImageFile;
+  late ProgressDialog prDialog;
+  File? pickedImageFile, pickedInsImageFile;
+  String? strWeight = "", strHeight = "";
   final ImagePicker imagePicker = ImagePicker();
   final personalFormKey = GlobalKey<FormState>();
   final bmiFormKey = GlobalKey<FormState>();
@@ -47,6 +51,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
+    prDialog = ProgressDialog(context);
     final updateProfileProvider =
         Provider.of<UpdateProfileProvider>(context, listen: false);
     updateProfileProvider.getPatientProfile();
@@ -171,273 +176,338 @@ class _EditProfileState extends State<EditProfile> {
   Widget personalDetailTab() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
-      child: Form(
-        key: personalFormKey,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Consumer<UpdateProfileProvider>(
-            builder: (context, updateProfileProvider, child) {
-              if (!updateProfileProvider.loading) {
-                if (updateProfileProvider.profileModel.status == 200) {
-                  if (updateProfileProvider.profileModel.result != null) {
-                    if (updateProfileProvider.profileModel.result!.isNotEmpty) {
-                      return Column(
-                        children: <Widget>[
-                          Stack(
-                            alignment: Alignment.center,
-                            clipBehavior: Clip.antiAlias,
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(40),
-                                clipBehavior: Clip.antiAlias,
-                                child: pickedImageFile != null
-                                    ? Image.file(
-                                        pickedImageFile!,
-                                        fit: BoxFit.cover,
-                                        height: 80,
-                                        width: 80,
-                                      )
-                                    : MyNetworkImage(
-                                        imageUrl: updateProfileProvider
-                                                .profileModel.result!
-                                                .elementAt(0)
-                                                .profileImg ??
-                                            "",
-                                        fit: BoxFit.cover,
-                                        imgHeight: 80,
-                                        imgWidth: 80,
-                                      ),
-                              ),
-                              Positioned(
-                                child: InkWell(
-                                  onTap: () {
-                                    imagePickDialog();
-                                  },
-                                  borderRadius: BorderRadius.circular(40),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 80,
-                                    width: 80,
-                                    decoration: const BoxDecoration(
-                                      color: black50,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: MySvgAssetsImg(
-                                      imageName: 'edit_camera.svg',
-                                      fit: BoxFit.fill,
-                                      imgHeight: 27,
-                                      imgWidth: 27,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 17,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: MyTextFormField(
-                              mHint: firstNameReq,
-                              mController: mFirstNameController,
-                              mObscureText: false,
-                              mMaxLine: 1,
-                              mHintTextColor: textHintColor,
-                              mTextColor: textTitleColor,
-                              mkeyboardType: TextInputType.name,
-                              mTextInputAction: TextInputAction.next,
-                              mInputBorder: InputBorder.none,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: MyTextFormField(
-                              mHint: lastNameReq,
-                              mController: mLastNameController,
-                              mObscureText: false,
-                              mMaxLine: 1,
-                              mHintTextColor: textHintColor,
-                              mTextColor: textTitleColor,
-                              mkeyboardType: TextInputType.name,
-                              mTextInputAction: TextInputAction.next,
-                              mInputBorder: InputBorder.none,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: MyTextFormField(
-                              mHint: emailAddressReq,
-                              mController: mEmailController,
-                              mObscureText: false,
-                              mMaxLine: 1,
-                              mHintTextColor: textHintColor,
-                              mTextColor: textTitleColor,
-                              mkeyboardType: TextInputType.emailAddress,
-                              mTextInputAction: TextInputAction.next,
-                              mInputBorder: InputBorder.none,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: MyTextFormField(
-                                    mHint: birthDateHint,
-                                    mObscureText: false,
-                                    mController: mBirthdateController,
-                                    mHintTextColor: textHintColor,
-                                    mMaxLine: 1,
-                                    mReadOnly: true,
-                                    mTextColor: textTitleColor,
-                                    mInputBorder: InputBorder.none,
-                                    mkeyboardType: TextInputType.text,
-                                    mTextInputAction: TextInputAction.done,
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      openDatePicker();
-                                    },
-                                    icon: MySvgAssetsImg(
-                                      imageName: "calendar.svg",
-                                      fit: BoxFit.cover,
-                                      imgHeight: 20,
-                                      imgWidth: 20,
-                                      iconColor: otherColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: MyTextFormField(
-                              mHint: phoneNumberReq,
-                              mController: mMobileController,
-                              mObscureText: false,
-                              mMaxLine: 1,
-                              mHintTextColor: textHintColor,
-                              mTextColor: textTitleColor,
-                              mkeyboardType: TextInputType.phone,
-                              mTextInputAction: TextInputAction.next,
-                              mInputBorder: InputBorder.none,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: MyTextFormField(
-                              mHint: insuranceName,
-                              mController: mInsNameController,
-                              mObscureText: false,
-                              mMaxLine: 1,
-                              mHintTextColor: textHintColor,
-                              mTextColor: textTitleColor,
-                              mkeyboardType: TextInputType.text,
-                              mTextInputAction: TextInputAction.next,
-                              mInputBorder: InputBorder.none,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: MyTextFormField(
-                              mHint: insuranceNumber,
-                              mController: mInsNoController,
-                              mObscureText: false,
-                              mMaxLine: 1,
-                              mHintTextColor: textHintColor,
-                              mTextColor: textTitleColor,
-                              mkeyboardType: TextInputType.text,
-                              mTextInputAction: TextInputAction.done,
-                              mInputBorder: InputBorder.none,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: Constant.textFieldHeight,
-                            padding: const EdgeInsets.only(left: 10),
-                            decoration: Utility.textFieldBGWithBorder(),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: MyTextFormField(
-                                    mHint: insuranceImage,
-                                    mObscureText: false,
-                                    mController: mInsIMGController,
-                                    mHintTextColor: textHintColor,
-                                    mMaxLine: 1,
-                                    mReadOnly: true,
-                                    mTextColor: textTitleColor,
-                                    mInputBorder: InputBorder.none,
-                                    mkeyboardType: TextInputType.text,
-                                    mTextInputAction: TextInputAction.done,
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      imagePickDialog();
-                                    },
-                                    icon: MySvgAssetsImg(
-                                      imageName: "upload.svg",
-                                      fit: BoxFit.cover,
-                                      imgHeight: 20,
-                                      imgWidth: 20,
-                                      iconColor: otherColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          personalSaveButton(),
-                        ],
-                      );
-                    } else {
-                      return const NoData();
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Consumer<UpdateProfileProvider>(
+          builder: (context, updateProfileProvider, child) {
+            if (!updateProfileProvider.loading) {
+              if (updateProfileProvider.profileModel.status == 200) {
+                if (updateProfileProvider.profileModel.result != null) {
+                  if (updateProfileProvider.profileModel.result!.isNotEmpty) {
+                    log("profileModel result length ==> ${updateProfileProvider.profileModel.result?.length}");
+                    if (mFirstNameController.text.toString().isEmpty) {
+                      mFirstNameController.text = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .firstName ??
+                          "";
                     }
+                    if (mLastNameController.text.toString().isEmpty) {
+                      mLastNameController.text = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .lastName ??
+                          "";
+                    }
+                    if (mEmailController.text.toString().isEmpty) {
+                      mEmailController.text = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .email ??
+                          "";
+                    }
+                    if (mMobileController.text.toString().isEmpty) {
+                      mMobileController.text = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .mobileNumber ??
+                          "";
+                    }
+                    if (mInsNoController.text.toString().isEmpty) {
+                      mInsNoController.text = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .insuranceNo ??
+                          "";
+                    }
+                    if (mInsNameController.text.toString().isEmpty) {
+                      mInsNameController.text = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .insuranceCompanyName ??
+                          "";
+                    }
+                    if (mInsIMGController.text.toString().isEmpty) {
+                      mInsIMGController.text = (updateProfileProvider
+                                  .profileModel.result
+                                  ?.elementAt(0)
+                                  .insuranceCardPic ??
+                              "")
+                          .split("/")
+                          .last;
+                    }
+                    return Column(
+                      children: <Widget>[
+                        Stack(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.antiAlias,
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(40),
+                              clipBehavior: Clip.antiAlias,
+                              child: pickedImageFile != null
+                                  ? Image.file(
+                                      pickedImageFile!,
+                                      fit: BoxFit.cover,
+                                      height: 80,
+                                      width: 80,
+                                    )
+                                  : MyNetworkImage(
+                                      imageUrl: updateProfileProvider
+                                              .profileModel.result!
+                                              .elementAt(0)
+                                              .profileImg ??
+                                          "",
+                                      fit: BoxFit.cover,
+                                      imgHeight: 80,
+                                      imgWidth: 80,
+                                    ),
+                            ),
+                            Positioned(
+                              child: InkWell(
+                                onTap: () {
+                                  imagePickDialog("ProfilePic");
+                                },
+                                borderRadius: BorderRadius.circular(40),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 80,
+                                  width: 80,
+                                  decoration: const BoxDecoration(
+                                    color: black50,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: MySvgAssetsImg(
+                                    imageName: 'edit_camera.svg',
+                                    fit: BoxFit.fill,
+                                    imgHeight: 27,
+                                    imgWidth: 27,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 17,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(0),
+                          child: Form(
+                            key: personalFormKey,
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: MyTextFormField(
+                                    mHint: firstNameReq,
+                                    mController: mFirstNameController,
+                                    mObscureText: false,
+                                    mMaxLine: 1,
+                                    mHintTextColor: textHintColor,
+                                    mTextColor: textTitleColor,
+                                    mkeyboardType: TextInputType.name,
+                                    mTextInputAction: TextInputAction.next,
+                                    mInputBorder: InputBorder.none,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: MyTextFormField(
+                                    mHint: lastNameReq,
+                                    mController: mLastNameController,
+                                    mObscureText: false,
+                                    mMaxLine: 1,
+                                    mHintTextColor: textHintColor,
+                                    mTextColor: textTitleColor,
+                                    mkeyboardType: TextInputType.name,
+                                    mTextInputAction: TextInputAction.next,
+                                    mInputBorder: InputBorder.none,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: MyTextFormField(
+                                    mHint: emailAddressReq,
+                                    mController: mEmailController,
+                                    mObscureText: false,
+                                    mMaxLine: 1,
+                                    mHintTextColor: textHintColor,
+                                    mTextColor: textTitleColor,
+                                    mkeyboardType: TextInputType.emailAddress,
+                                    mTextInputAction: TextInputAction.next,
+                                    mInputBorder: InputBorder.none,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(left: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: MyTextFormField(
+                                          mHint: birthDateHint,
+                                          mObscureText: false,
+                                          mController: mBirthdateController,
+                                          mHintTextColor: textHintColor,
+                                          mMaxLine: 1,
+                                          mReadOnly: true,
+                                          mTextColor: textTitleColor,
+                                          mInputBorder: InputBorder.none,
+                                          mkeyboardType: TextInputType.text,
+                                          mTextInputAction:
+                                              TextInputAction.done,
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            openDatePicker();
+                                          },
+                                          icon: MySvgAssetsImg(
+                                            imageName: "calendar.svg",
+                                            fit: BoxFit.cover,
+                                            imgHeight: 20,
+                                            imgWidth: 20,
+                                            iconColor: otherColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: MyTextFormField(
+                                    mHint: phoneNumberReq,
+                                    mController: mMobileController,
+                                    mObscureText: false,
+                                    mMaxLine: 1,
+                                    mHintTextColor: textHintColor,
+                                    mTextColor: textTitleColor,
+                                    mkeyboardType: TextInputType.phone,
+                                    mTextInputAction: TextInputAction.next,
+                                    mInputBorder: InputBorder.none,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: MyTextFormField(
+                                    mHint: insuranceName,
+                                    mController: mInsNameController,
+                                    mObscureText: false,
+                                    mMaxLine: 1,
+                                    mHintTextColor: textHintColor,
+                                    mTextColor: textTitleColor,
+                                    mkeyboardType: TextInputType.text,
+                                    mTextInputAction: TextInputAction.next,
+                                    mInputBorder: InputBorder.none,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: MyTextFormField(
+                                    mHint: insuranceNumber,
+                                    mController: mInsNoController,
+                                    mObscureText: false,
+                                    mMaxLine: 1,
+                                    mHintTextColor: textHintColor,
+                                    mTextColor: textTitleColor,
+                                    mkeyboardType: TextInputType.text,
+                                    mTextInputAction: TextInputAction.done,
+                                    mInputBorder: InputBorder.none,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: Constant.textFieldHeight,
+                                  padding: const EdgeInsets.only(left: 10),
+                                  decoration: Utility.textFieldBGWithBorder(),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: MyTextFormField(
+                                          mHint: insuranceImage,
+                                          mObscureText: false,
+                                          mController: mInsIMGController,
+                                          mHintTextColor: textHintColor,
+                                          mMaxLine: 1,
+                                          mReadOnly: true,
+                                          mTextColor: textTitleColor,
+                                          mInputBorder: InputBorder.none,
+                                          mkeyboardType: TextInputType.text,
+                                          mTextInputAction:
+                                              TextInputAction.done,
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            imagePickDialog("InsImage");
+                                          },
+                                          icon: MySvgAssetsImg(
+                                            imageName: "upload.svg",
+                                            fit: BoxFit.cover,
+                                            imgHeight: 20,
+                                            imgWidth: 20,
+                                            iconColor: otherColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                personalSaveButton()
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
                   } else {
                     return const NoData();
                   }
@@ -445,10 +515,12 @@ class _EditProfileState extends State<EditProfile> {
                   return const NoData();
                 }
               } else {
-                return Utility.pageLoader();
+                return const NoData();
               }
-            },
-          ),
+            } else {
+              return Utility.pageLoader();
+            }
+          },
         ),
       ),
     );
@@ -457,97 +529,211 @@ class _EditProfileState extends State<EditProfile> {
   Widget bmiDetailTab() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
-      child: Form(
-        key: bmiFormKey,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: allergiesToMedicine,
-                  mController: mAllergyController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType: TextInputType.text,
-                  mTextInputAction: TextInputAction.next,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: weight,
-                  mController: mWeightController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  mTextInputAction: TextInputAction.next,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: Constant.textFieldHeight,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: Utility.textFieldBGWithBorder(),
-                child: MyTextFormField(
-                  mHint: height,
-                  mController: mHeightController,
-                  mObscureText: false,
-                  mMaxLine: 1,
-                  mHintTextColor: textHintColor,
-                  mTextColor: textTitleColor,
-                  mkeyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  mTextInputAction: TextInputAction.done,
-                  mInputBorder: InputBorder.none,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: 118,
-                  minWidth: MediaQuery.of(context).size.width,
-                ),
-                child: Container(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  decoration: Utility.textFieldBGWithBorder(),
-                  child: MyTextFormField(
-                    mHint: bmiHint,
-                    mController: mFinalBMIController,
-                    mObscureText: false,
-                    mHintTextColor: textHintColor,
-                    mTextColor: textTitleColor,
-                    mkeyboardType: TextInputType.multiline,
-                    mTextInputAction: TextInputAction.done,
-                    mInputBorder: InputBorder.none,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              bmiSaveButton(),
-            ],
-          ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Consumer<UpdateProfileProvider>(
+          builder: (context, updateProfileProvider, child) {
+            if (!updateProfileProvider.loading) {
+              if (updateProfileProvider.profileModel.status == 200) {
+                if (updateProfileProvider.profileModel.result != null) {
+                  if (updateProfileProvider.profileModel.result!.isNotEmpty) {
+                    log("BMI profileModel result ==> ${updateProfileProvider.profileModel.result?.length}");
+                    if (mAllergyController.text.toString().isEmpty) {
+                      mAllergyController.text = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .allergiesToMedicine ??
+                          "";
+                    }
+                    if (mWeightController.text.toString().isEmpty) {
+                      mWeightController.text = strWeight = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .currentWeight ??
+                          "";
+                    }
+                    if (mHeightController.text.toString().isEmpty) {
+                      mHeightController.text = strHeight = updateProfileProvider
+                              .profileModel.result
+                              ?.elementAt(0)
+                              .currentHeight ??
+                          "";
+                    }
+                    log("Initial strWeight ==> $strWeight");
+                    log("Initial strHeight ==> $strHeight");
+                    log("mFinalBMIController text ==> ${mFinalBMIController.text}");
+                    if (mFinalBMIController.text.toString().isEmpty) {
+                      mFinalBMIController.text = Utility.calculateBMI(
+                          updateProfileProvider.profileModel.result
+                                  ?.elementAt(0)
+                                  .currentWeight
+                                  .toString() ??
+                              "0",
+                          updateProfileProvider.profileModel.result
+                                  ?.elementAt(0)
+                                  .currentHeight
+                                  .toString() ??
+                              "0");
+                    }
+                    return Form(
+                      key: bmiFormKey,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: MyTextFormField(
+                              mHint: allergiesToMedicine,
+                              mController: mAllergyController,
+                              mObscureText: false,
+                              mMaxLine: 1,
+                              mHintTextColor: textHintColor,
+                              mTextColor: textTitleColor,
+                              mkeyboardType: TextInputType.text,
+                              mTextInputAction: TextInputAction.next,
+                              mInputBorder: InputBorder.none,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: TextFormField(
+                              controller: mWeightController,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              textInputAction: TextInputAction.next,
+                              obscureText: false,
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
+                              readOnly: false,
+                              onFieldSubmitted: (strValue) {
+                                log("WeightController strValue ==> $strValue");
+                                if (strValue.toString().isNotEmpty) {
+                                  strWeight = strValue.toString();
+                                  log("strWeight ==> $strWeight");
+                                }
+                              },
+                              decoration: InputDecoration(
+                                hintText: weight,
+                                hintStyle: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: textHintColor,
+                                  fontWeight: FontWeight.normal,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: GoogleFonts.roboto(
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: textTitleColor,
+                                  fontWeight: FontWeight.normal,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: Constant.textFieldHeight,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: Utility.textFieldBGWithBorder(),
+                            child: TextFormField(
+                              controller: mHeightController,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              textInputAction: TextInputAction.done,
+                              obscureText: false,
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
+                              readOnly: false,
+                              onFieldSubmitted: (strValue) {
+                                log("HeightController strValue ==> $strValue");
+                                log("HeightController strWeight ==> $strWeight");
+                                if (strValue.toString().isNotEmpty &&
+                                    strWeight.toString().isNotEmpty) {
+                                  strHeight = strValue.toString();
+                                  log("strHeight ==> $strHeight");
+                                  mFinalBMIController
+                                      .text = Utility.calculateBMI(
+                                          strWeight ?? "0", strHeight ?? "0")
+                                      .toString();
+                                }
+                              },
+                              decoration: InputDecoration(
+                                hintText: height,
+                                hintStyle: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: textHintColor,
+                                  fontWeight: FontWeight.normal,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: GoogleFonts.roboto(
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: textTitleColor,
+                                  fontWeight: FontWeight.normal,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 118,
+                              minWidth: MediaQuery.of(context).size.width,
+                            ),
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.only(left: 15, right: 15),
+                              decoration: Utility.textFieldBGWithBorder(),
+                              child: MyTextFormField(
+                                mHint: bmiHint,
+                                mController: mFinalBMIController,
+                                mObscureText: false,
+                                mHintTextColor: textHintColor,
+                                mReadOnly: true,
+                                mTextColor: textTitleColor,
+                                mkeyboardType: TextInputType.multiline,
+                                mTextInputAction: TextInputAction.done,
+                                mInputBorder: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          bmiSaveButton(),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return const NoData();
+                  }
+                } else {
+                  return const NoData();
+                }
+              } else {
+                return const NoData();
+              }
+            } else {
+              return Utility.pageLoader();
+            }
+          },
         ),
       ),
     );
@@ -571,7 +757,8 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  Future<void> imagePickDialog() async {
+  Future<void> imagePickDialog(String pickType) async {
+    log("pickType ==> $pickType");
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -581,7 +768,9 @@ class _EditProfileState extends State<EditProfile> {
             child: ListBody(
               children: <Widget>[
                 MyText(
-                  mTitle: pickInsImageNote,
+                  mTitle: pickType == "ProfilePic"
+                      ? pickProfileImageNote
+                      : pickInsImageNote,
                   mTextColor: black,
                   mFontSize: 18,
                 ),
@@ -600,7 +789,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                getFromGallery();
+                getFromGallery(pickType);
               },
             ),
             TextButton(
@@ -614,7 +803,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                getFromCamera();
+                getFromCamera(pickType);
               },
             ),
             TextButton(
@@ -637,7 +826,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   /// Get from gallery
-  void getFromGallery() async {
+  void getFromGallery(String clickToPick) async {
     final XFile? pickedFile = await imagePicker.pickImage(
       source: ImageSource.gallery,
       maxWidth: 1000,
@@ -646,15 +835,20 @@ class _EditProfileState extends State<EditProfile> {
     );
     if (pickedFile != null) {
       setState(() {
-        pickedImageFile = File(pickedFile.path);
-        mInsIMGController.text = p.basename(pickedFile.path);
-        log("Gallery ImageFile ==> ${pickedImageFile!.path}");
+        if (clickToPick == "ProfilePic") {
+          pickedImageFile = File(pickedFile.path);
+          mInsIMGController.text = p.basename(pickedFile.path);
+          log("Gallery pickedImageFile ==> ${pickedImageFile!.path}");
+        } else {
+          pickedInsImageFile = File(pickedFile.path);
+          log("Gallery pickedInsImageFile ==> ${pickedInsImageFile!.path}");
+        }
       });
     }
   }
 
   /// Get from Camera
-  void getFromCamera() async {
+  void getFromCamera(String clickToPick) async {
     final XFile? pickedFile = await imagePicker.pickImage(
       source: ImageSource.camera,
       maxWidth: 1000,
@@ -663,8 +857,14 @@ class _EditProfileState extends State<EditProfile> {
     );
     if (pickedFile != null) {
       setState(() {
-        pickedImageFile = File(pickedFile.path);
-        log("Camera ImageFile ==> ${pickedImageFile!.path}");
+        if (clickToPick == "ProfilePic") {
+          pickedImageFile = File(pickedFile.path);
+          mInsIMGController.text = p.basename(pickedFile.path);
+          log("Camera pickedImageFile ==> ${pickedImageFile!.path}");
+        } else {
+          pickedInsImageFile = File(pickedFile.path);
+          log("Camera pickedInsImageFile ==> ${pickedInsImageFile!.path}");
+        }
       });
     }
   }
@@ -709,32 +909,40 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void validatePersonalData() async {
+    String firstName = mFirstNameController.text.toString().trim();
+    String lastName = mLastNameController.text.toString().trim();
+    String email = mEmailController.text.toString().trim();
+    String mobile = mMobileController.text.toString().trim();
+    String birthDate = mBirthdateController.text.toString().trim();
+    String insNumber = mInsNoController.text.toString().trim();
+    String insName = mInsNameController.text.toString().trim();
+
     final isValidForm = personalFormKey.currentState!.validate();
     log("isValidForm => $isValidForm");
     // Validate returns true if the form is valid, or false otherwise.
     if (isValidForm) {
-      log("FirstName => ${mFirstNameController.text}");
-      log("LastName => ${mLastNameController.text}");
-      log("Email => ${mEmailController.text}");
-      log("Password => ${mBirthdateController.text}");
-      log("Mobile Number => ${mMobileController.text}");
-      log("Insurance Name => ${mInsNameController.text}");
-      log("Insurance Number => ${mInsNoController.text}");
-      log("Insurance Image => ${mInsIMGController.text}");
+      log("FirstName => $firstName");
+      log("LastName => $lastName");
+      log("Email => $email");
+      log("BirthDate => $birthDate");
+      log("Mobile Number => $mobile");
+      log("Insurance Name => $insName");
+      log("Insurance Number => $insNumber");
+      log("Insurance Image => ${pickedImageFile?.path}");
 
-      if (mFirstNameController.text.isEmpty) {
+      if (firstName.isEmpty) {
         Utility.showToast(enterFirstname);
         return;
       }
-      if (mLastNameController.text.isEmpty) {
+      if (lastName.isEmpty) {
         Utility.showToast(enterLastname);
         return;
       }
-      if (mEmailController.text.isEmpty) {
+      if (email.isEmpty) {
         Utility.showToast(enterEmail);
         return;
       }
-      if (mMobileController.text.isEmpty) {
+      if (mobile.isEmpty) {
         Utility.showToast(enterMobilenumber);
         return;
       }
@@ -742,13 +950,34 @@ class _EditProfileState extends State<EditProfile> {
         Utility.showToast(enterValidEmail);
         return;
       }
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Update Successfull!')),
-      );
+      final updateProfileProvider =
+          Provider.of<UpdateProfileProvider>(context, listen: false);
+      // updateprofile API call
+      Utility.showProgress(context, prDialog);
+      await updateProfileProvider.getUpdatePersonalDetails(
+          email,
+          firstName,
+          lastName,
+          mobile,
+          "1",
+          insNumber,
+          pickedInsImageFile,
+          pickedImageFile);
 
-      await showMyDialog('Personal');
+      log('PatientUpdateProfile loading ==>> ${updateProfileProvider.loading}');
+      if (!updateProfileProvider.loading) {
+        // Hide Progress Dialog
+        prDialog.hide();
+        if (updateProfileProvider.successPersonalModel.status == 200) {
+          final profileProvider =
+              // ignore: use_build_context_synchronously
+              Provider.of<UpdateProfileProvider>(context, listen: false);
+          await profileProvider.getPatientProfile();
+        }
+        // ignore: use_build_context_synchronously
+        Utility.showSnackbar(
+            context, updateProfileProvider.successPersonalModel.message ?? "");
+      }
     }
   }
 
@@ -773,70 +1002,38 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void validateBMIData() async {
+    String allergies = mAllergyController.text.toString().trim();
+    String finalBMI = mFinalBMIController.text.toString().trim();
+
     final isValidForm = bmiFormKey.currentState!.validate();
     log("isValidForm => $isValidForm");
     // Validate returns true if the form is valid, or false otherwise.
     if (isValidForm) {
-      log("Weight => ${mWeightController.text}");
-      log("Height => ${mHeightController.text}");
+      log("allergies => $allergies");
+      log("strHeight => $strHeight");
+      log("strWeight => $strWeight");
+      log("finalBMI => $finalBMI");
+      final updateProfileProvider =
+          Provider.of<UpdateProfileProvider>(context, listen: false);
+      // updateprofile API call
+      Utility.showProgress(context, prDialog);
+      await updateProfileProvider.getUpdateBMI(
+          allergies, strHeight, strWeight, finalBMI);
 
-      if (mWeightController.text.isEmpty) {
-        Utility.showToast(weightReqMsg);
-        return;
+      log('PatientUpdateProfile loading ==>> ${updateProfileProvider.loading}');
+      if (!updateProfileProvider.loading) {
+        // Hide Progress Dialog
+        prDialog.hide();
+        if (updateProfileProvider.successBMIModel.status == 200) {
+          final updateProfileProvider =
+              // ignore: use_build_context_synchronously
+              Provider.of<UpdateProfileProvider>(context, listen: false);
+          await updateProfileProvider.getPatientProfile();
+        }
+        // ignore: use_build_context_synchronously
+        Utility.showSnackbar(
+            context, updateProfileProvider.successBMIModel.message ?? "");
       }
-      if (mHeightController.text.isEmpty) {
-        Utility.showToast(heightReqMsg);
-        return;
-      }
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Update Successfull!')),
-      );
-
-      await showMyDialog('BMI');
     }
-  }
-
-  Future<void> showMyDialog(clickType) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Profile Details'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                MyText(
-                  mTitle: clickType == 'Personal'
-                      ? "FirstName : ${mFirstNameController.text}\nLastName : ${mLastNameController.text}\nEmail : ${mEmailController.text}\nBirthDate : ${mBirthdateController.text}\nMobile Number : ${mMobileController.text}\nIns. Name : ${mInsNameController.text}\nIns. Number : ${mInsNoController.text}\nIns. Image : ${mInsIMGController.text}"
-                      : "Allergies to Medicine : ${mAllergyController.text}\nWeight : ${mWeightController.text}\nHeight : ${mHeightController.text}\nBMI : ${mFinalBMIController.text}",
-                  mTextColor: black,
-                  mFontSize: 16,
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: MyText(
-                mTitle: save,
-                mTextColor: primaryDarkColor,
-                mFontSize: 20,
-                mFontStyle: FontStyle.normal,
-                mFontWeight: FontWeight.w600,
-                mTextAlign: TextAlign.center,
-              ),
-              onPressed: () {
-                clearTextFormField(clickType);
-                Navigator.pop(context);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }

@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:patientapp/pages/appointmentdetails.dart';
 import 'package:patientapp/pages/bookappointment.dart';
 import 'package:patientapp/pages/doctordetails.dart';
-import 'package:patientapp/pages/historydetails.dart';
 import 'package:patientapp/pages/noappointments.dart';
 import 'package:patientapp/pages/nodata.dart';
 import 'package:patientapp/pages/viewall.dart';
@@ -865,11 +864,11 @@ class _HomeFState extends State<HomeF> {
                         borderRadius: BorderRadius.circular(8),
                         onTap: () {
                           log("Item Clicked!");
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const HistoryDetails(),
-                            ),
-                          );
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const HistoryDetails(),
+                          //   ),
+                          // );
                         },
                         child: Stack(
                           children: <Widget>[
@@ -1054,9 +1053,8 @@ class _HomeFState extends State<HomeF> {
                                             Container(
                                               alignment: Alignment.topLeft,
                                               child: MyText(
-                                                mTitle: Constant.dummyDataList
-                                                    .elementAt(position)
-                                                    .date,
+                                                mTitle:
+                                                    '${Utility.formateDate((homeProvider.testAppointmentModel.result!.elementAt(position).date ?? "").toString())} at ${Utility.formateTime((homeProvider.testAppointmentModel.result!.elementAt(position).startTime ?? ""))} - ${Utility.formateTime((homeProvider.testAppointmentModel.result!.elementAt(position).endTime ?? ""))}',
                                                 mFontSize: 13,
                                                 mOverflow:
                                                     TextOverflow.ellipsis,
@@ -1082,10 +1080,12 @@ class _HomeFState extends State<HomeF> {
                                                 ),
                                                 Flexible(
                                                   child: MyText(
-                                                    mTitle: Constant
-                                                        .dummyDataList
-                                                        .elementAt(position)
-                                                        .testDesc,
+                                                    mTitle: homeProvider
+                                                            .testAppointmentModel
+                                                            .result!
+                                                            .elementAt(position)
+                                                            .description ??
+                                                        "",
                                                     mFontSize: 12,
                                                     mMaxLine: 1,
                                                     mOverflow:
@@ -1272,7 +1272,13 @@ class _HomeFState extends State<HomeF> {
                               log("Item Clicked! => $position");
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const BookAppointment(),
+                                  builder: (context) => BookAppointment(
+                                    homeProvider.doctorModel.result!
+                                            .elementAt(position)
+                                            .id ??
+                                        "",
+                                    "${homeProvider.doctorModel.result!.elementAt(position).firstName} ${homeProvider.doctorModel.result!.elementAt(position).lastName}",
+                                  ),
                                 ),
                               );
                             },
@@ -1425,7 +1431,13 @@ class _HomeFState extends State<HomeF> {
                               log("Item Clicked! => $position");
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const BookAppointment(),
+                                  builder: (context) => BookAppointment(
+                                    homeProvider.searchedDoctorModel.result!
+                                            .elementAt(position)
+                                            .id ??
+                                        "",
+                                    "${homeProvider.searchedDoctorModel.result!.elementAt(position).firstName} ${homeProvider.searchedDoctorModel.result!.elementAt(position).lastName}",
+                                  ),
                                 ),
                               );
                             },
