@@ -276,7 +276,7 @@ class _RegistrationState extends State<Registration> {
                                   onPressed: () {
                                     imagePickDialog();
                                   },
-                                  icon: MySvgAssetsImg(
+                                  icon: const MySvgAssetsImg(
                                     imageName: "upload.svg",
                                     fit: BoxFit.cover,
                                     imgHeight: 20,
@@ -322,7 +322,7 @@ class _RegistrationState extends State<Registration> {
         return AlertDialog(
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
+              children: const <Widget>[
                 MyText(
                   mTitle: pickInsImageNote,
                   mTextColor: black,
@@ -333,7 +333,7 @@ class _RegistrationState extends State<Registration> {
           ),
           actions: <Widget>[
             TextButton(
-              child: MyText(
+              child: const MyText(
                 mTitle: pickFromGallery,
                 mTextColor: primaryDarkColor,
                 mFontSize: 18,
@@ -347,7 +347,7 @@ class _RegistrationState extends State<Registration> {
               },
             ),
             TextButton(
-              child: MyText(
+              child: const MyText(
                 mTitle: captureByCamera,
                 mTextColor: primaryDarkColor,
                 mFontSize: 18,
@@ -361,7 +361,7 @@ class _RegistrationState extends State<Registration> {
               },
             ),
             TextButton(
-              child: MyText(
+              child: const MyText(
                 mTitle: cancel,
                 mTextColor: black,
                 mFontSize: 18,
@@ -456,7 +456,7 @@ class _RegistrationState extends State<Registration> {
         height: Constant.buttonHeight,
         decoration: Utility.primaryButton(),
         alignment: Alignment.center,
-        child: MyText(
+        child: const MyText(
           mTitle: signUp,
           mTextColor: white,
           mTextAlign: TextAlign.center,

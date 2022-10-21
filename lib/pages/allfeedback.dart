@@ -55,7 +55,7 @@ class _AllFeedbackState extends State<AllFeedback> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        MyText(
+                        const MyText(
                           mTitle: '4.5',
                           mFontSize: 32,
                           mFontWeight: FontWeight.bold,
@@ -77,15 +77,15 @@ class _AllFeedbackState extends State<AllFeedback> {
                               itemCount: 5,
                               itemSize: 15,
                               ratingWidget: RatingWidget(
-                                full: MySvgAssetsImg(
+                                full: const MySvgAssetsImg(
                                   imageName: 'star_full.svg',
                                   fit: BoxFit.cover,
                                 ),
-                                half: MySvgAssetsImg(
+                                half: const MySvgAssetsImg(
                                   imageName: 'star_border.svg',
                                   fit: BoxFit.cover,
                                 ),
-                                empty: MySvgAssetsImg(
+                                empty: const MySvgAssetsImg(
                                   imageName: 'star_border.svg',
                                   fit: BoxFit.cover,
                                 ),
@@ -99,7 +99,7 @@ class _AllFeedbackState extends State<AllFeedback> {
                             const SizedBox(
                               height: 5,
                             ),
-                            MyText(
+                            const MyText(
                               mTitle: '1090 ratings',
                               mFontSize: 14,
                               mFontWeight: FontWeight.normal,
@@ -142,7 +142,7 @@ class _AllFeedbackState extends State<AllFeedback> {
                       const SizedBox(
                         height: 2,
                       ),
-                      MyText(
+                      const MyText(
                         mTitle:
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                         mFontSize: 14,

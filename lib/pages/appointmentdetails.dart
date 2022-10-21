@@ -259,7 +259,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                           .toString() ??
                                       "");
                                 },
-                                child: MySvgAssetsImg(
+                                child: const MySvgAssetsImg(
                                   imageName: "mobile_dark.svg",
                                   fit: BoxFit.cover,
                                   imgHeight: 38,
@@ -286,7 +286,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              MyText(
+                              const MyText(
                                 mTitle: contactNo,
                                 mFontSize: 12,
                                 mFontWeight: FontWeight.normal,
@@ -329,7 +329,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        MyText(
+                                        const MyText(
                                           mTitle: date,
                                           mFontSize: 12,
                                           mFontWeight: FontWeight.normal,
@@ -367,7 +367,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        MyText(
+                                        const MyText(
                                           mTitle: time,
                                           mFontSize: 12,
                                           mFontWeight: FontWeight.normal,
@@ -402,7 +402,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              MyText(
+                              const MyText(
                                 mTitle: emailAddress,
                                 mFontSize: 12,
                                 mFontWeight: FontWeight.normal,
@@ -434,7 +434,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              MyText(
+                              const MyText(
                                 mTitle: allergiesToMedicine,
                                 mFontSize: 12,
                                 mFontWeight: FontWeight.normal,
@@ -466,7 +466,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              MyText(
+                              const MyText(
                                 mTitle: medicineTaken,
                                 mFontSize: 12,
                                 mFontWeight: FontWeight.normal,
@@ -498,7 +498,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              MyText(
+                              const MyText(
                                 mTitle: description,
                                 mFontSize: 12,
                                 mFontWeight: FontWeight.normal,
@@ -567,7 +567,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 borderRadius: BorderRadius.circular(4),
                                 shape: BoxShape.rectangle,
                               ),
-                              child: MyText(
+                              child: const MyText(
                                 mTitle: giveFeedBack,
                                 mFontSize: 16,
                                 mFontStyle: FontStyle.normal,
@@ -615,7 +615,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
           imgWidth: Constant.backBtnWidth,
         ),
       ),
-      title: MyText(
+      title: const MyText(
         mTitle: appointments,
         mFontSize: 20,
         mFontStyle: FontStyle.normal,
@@ -628,7 +628,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
           onPressed: () {
             log('Delete pressed!');
           },
-          icon: MySvgAssetsImg(
+          icon: const MySvgAssetsImg(
             imageName: 'delete_green.svg',
             fit: BoxFit.cover,
             imgWidth: 30,
@@ -658,7 +658,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
           const SizedBox(
             height: 13,
           ),
-          MyText(
+          const MyText(
             mTitle: giveFeedBack,
             mFontSize: 18,
             mFontStyle: FontStyle.normal,
@@ -684,7 +684,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
           const SizedBox(
             height: 13,
           ),
-          MyText(
+          const MyText(
             mTitle: giveRating,
             mFontSize: 14,
             mFontStyle: FontStyle.normal,
@@ -703,15 +703,15 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
             allowHalfRating: false,
             itemCount: 5,
             ratingWidget: RatingWidget(
-              full: MySvgAssetsImg(
+              full: const MySvgAssetsImg(
                 imageName: 'star_full.svg',
                 fit: BoxFit.cover,
               ),
-              half: MySvgAssetsImg(
+              half: const MySvgAssetsImg(
                 imageName: 'star_border.svg',
                 fit: BoxFit.cover,
               ),
-              empty: MySvgAssetsImg(
+              empty: const MySvgAssetsImg(
                 imageName: 'star_border.svg',
                 fit: BoxFit.cover,
               ),
@@ -760,7 +760,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                 borderRadius: BorderRadius.circular(4),
                 shape: BoxShape.rectangle,
               ),
-              child: MyText(
+              child: const MyText(
                 mTitle: submit,
                 mFontSize: 16,
                 mFontStyle: FontStyle.normal,

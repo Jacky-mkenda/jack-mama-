@@ -4,11 +4,10 @@ import 'package:patientapp/utils/colors.dart';
 import 'mysvgassetsimg.dart';
 import 'mytext.dart';
 
-// ignore: must_be_immutable
 class MyAppBarWithBack extends StatelessWidget {
-  dynamic iconHeight, iconWidth, abTitle, fontSize, fontColor, abBGColor;
+  final dynamic iconHeight, iconWidth, abTitle, fontSize, fontColor, abBGColor;
 
-  MyAppBarWithBack(
+  const MyAppBarWithBack(
       {Key? key,
       required this.abTitle,
       required this.fontSize,

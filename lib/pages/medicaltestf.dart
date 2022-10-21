@@ -15,6 +15,7 @@ import 'package:patientapp/widgets/mynetworkimg.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:patientapp/widgets/mytextformfield.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 
 class MedicalTestF extends StatefulWidget {
@@ -25,14 +26,20 @@ class MedicalTestF extends StatefulWidget {
 }
 
 class _MedicalTestFState extends State<MedicalTestF> {
+  late ProgressDialog prDialog;
+  late MedicalTestProvider medicalTestProvider;
   final DatePickerController mDateController = DatePickerController();
   late DateTime selectedDate = DateTime.now();
   final mDescriptionController = TextEditingController();
-  dynamic sAvailableTime, sAppointmentTime;
+  String? strDate = "",
+      strStartTime = "",
+      strEndTime = "",
+      appointmentSlotId = "";
 
   @override
   void initState() {
-    final medicalTestProvider =
+    prDialog = ProgressDialog(context);
+    medicalTestProvider =
         Provider.of<MedicalTestProvider>(context, listen: false);
     medicalTestProvider.getTestPatientAppointment();
     super.initState();
@@ -40,7 +47,9 @@ class _MedicalTestFState extends State<MedicalTestF> {
 
   @override
   void dispose() {
+    log("============ dispose called! ============");
     mDescriptionController.dispose();
+    medicalTestProvider.clearTestBookProvider();
     super.dispose();
   }
 
@@ -62,16 +71,16 @@ class _MedicalTestFState extends State<MedicalTestF> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
+         const  Padding(
+            padding: EdgeInsets.only(left: 30, right: 30),
             child: TabBar(
               isScrollable: false,
               labelColor: primaryColor,
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorColor: accentColor,
               indicatorWeight: 1,
-              labelPadding: const EdgeInsets.only(top: 5, bottom: 5),
-              indicatorPadding: const EdgeInsets.all(0),
+              labelPadding: EdgeInsets.only(top: 5, bottom: 5),
+              indicatorPadding: EdgeInsets.all(0),
               unselectedLabelColor: tabDefaultColor,
               tabs: <Widget>[
                 Tab(
@@ -142,7 +151,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
           ),
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
-            child: MyText(
+            child:const  MyText(
               mTitle: selectAppointmentDate,
               mFontSize: 16,
               mFontStyle: FontStyle.normal,
@@ -163,12 +172,14 @@ class _MedicalTestFState extends State<MedicalTestF> {
               selectionColor: primaryColor,
               selectedTextColor: white,
               deactivatedColor: white,
-              onDateChange: (date) {
-                log('$date');
-                // New date selected
-                setState(() {
-                  selectedDate = date;
-                });
+              onDateChange: (date) async {
+                log('Clicked date ==>> $date');
+                strDate = Utility.formateFullDate(date.toString());
+                log('strDate ==>> $strDate');
+                final bookAppointmentProvider =
+                    Provider.of<MedicalTestProvider>(context, listen: false);
+                await bookAppointmentProvider.getClickedDate(true);
+                await bookAppointmentProvider.getTestTimeSlot(strDate);
               },
               monthTextStyle: GoogleFonts.roboto(
                 textStyle: const TextStyle(
@@ -213,7 +224,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: MyText(
+                  child: const MyText(
                     mTitle: availableTime,
                     mFontSize: 16,
                     mFontStyle: FontStyle.normal,
@@ -234,7 +245,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: MyText(
+                  child: const MyText(
                     mTitle: pickAppointmentTime,
                     mFontSize: 16,
                     mFontStyle: FontStyle.normal,
@@ -256,7 +267,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: MyText(
+                  child:const  MyText(
                     mTitle: description,
                     mFontSize: 16,
                     mFontStyle: FontStyle.normal,
@@ -299,7 +310,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                     borderRadius: BorderRadius.circular(4),
                     onTap: () {
                       log('Tapped on $makeAnAppointment');
-                      showMyDialog();
+                      validateAndMake();
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.6,
@@ -310,7 +321,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                         borderRadius: BorderRadius.circular(4),
                         shape: BoxShape.rectangle,
                       ),
-                      child: MyText(
+                      child: const MyText(
                         mTitle: makeAnAppointment,
                         mFontSize: 16,
                         mFontStyle: FontStyle.normal,
@@ -335,7 +346,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
   }
 
   Widget specialTestTab() {
-    return Center(
+    return const Center(
       child: MyText(
         mTitle: 'Coming Soon...',
         mFontSize: 16,
@@ -358,101 +369,306 @@ class _MedicalTestFState extends State<MedicalTestF> {
   }
 
   Widget availableTimeList() {
-    return AlignedGridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 5,
-      crossAxisSpacing: 9,
-      mainAxisSpacing: 9,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      itemCount: 12,
-      itemBuilder: (BuildContext context, int position) {
-        return InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () {
-            log("Item Clicked!");
-            onAvailableTimeClick(position);
-          },
-          child: Container(
-            constraints: const BoxConstraints(
-              minHeight: 60,
-              minWidth: 60,
-            ),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: sAvailableTime != null && sAvailableTime == position
-                  ? primaryColor
-                  : timeDisableBGColor,
-            ),
-            child: MyText(
-              mTitle: '10:00\nAM',
-              mFontSize: 14,
-              mFontStyle: FontStyle.normal,
-              mFontWeight: FontWeight.normal,
-              mTextAlign: TextAlign.center,
-              mTextColor: sAvailableTime != null && sAvailableTime == position
-                  ? white
-                  : otherLightColor,
-            ),
-          ),
-        );
+    return Consumer<MedicalTestProvider>(
+      builder: (context, timeSlotProvider, child) {
+        if (timeSlotProvider.isDateSelected) {
+          if (!timeSlotProvider.loading) {
+            if (timeSlotProvider.testTimeSlotModel.status == 200) {
+              if (timeSlotProvider.testTimeSlotModel.result != null) {
+                if (timeSlotProvider.testTimeSlotModel.result!.isNotEmpty) {
+                  return AlignedGridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 5,
+                    crossAxisSpacing: 9,
+                    mainAxisSpacing: 9,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    itemCount:
+                        timeSlotProvider.testTimeSlotModel.result!.length,
+                    itemBuilder: (BuildContext context, int position) {
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () async {
+                          log("Item Clicked!");
+                          log("Clicked position ===>  $position");
+                          final bookAppointmentProvider =
+                              Provider.of<MedicalTestProvider>(context,
+                                  listen: false);
+                          await bookAppointmentProvider
+                              .getClickAvailableTime(position);
+                        },
+                        child: Container(
+                          constraints: const BoxConstraints(
+                            minHeight: 60,
+                            minWidth: 60,
+                          ),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: timeSlotProvider.availableTimePos != null &&
+                                    timeSlotProvider.availableTimePos ==
+                                        position
+                                ? primaryColor
+                                : timeDisableBGColor,
+                          ),
+                          child: MyText(
+                            mTitle: Utility.formateTimeSetInColumn(
+                                timeSlotProvider.testTimeSlotModel.result!
+                                        .elementAt(position)
+                                        .startTime ??
+                                    ""),
+                            mFontSize: 14,
+                            mFontStyle: FontStyle.normal,
+                            mFontWeight: FontWeight.normal,
+                            mTextAlign: TextAlign.center,
+                            mTextColor:
+                                timeSlotProvider.availableTimePos != null &&
+                                        timeSlotProvider.availableTimePos ==
+                                            position
+                                    ? white
+                                    : otherLightColor,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return const NoData();
+                }
+              } else {
+                return Container();
+              }
+            } else {
+              return Container();
+            }
+          } else {
+            return Utility.pageLoader();
+          }
+        } else {
+          return Container();
+        }
       },
     );
   }
 
-  void onAvailableTimeClick(int sPosition) {
-    log('Clicked on => $sPosition');
-    setState(() {
-      sAvailableTime = sPosition;
-    });
-  }
-
   Widget appointmentTimeList() {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      scrollDirection: Axis.horizontal,
-      itemCount: 8,
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 9,
-      ),
-      itemBuilder: (BuildContext context, int position) => InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          log("Item Clicked!");
-          onAppointmentTimeClick(position);
-        },
-        child: Container(
-          width: 60,
-          height: 60,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: sAppointmentTime != null && sAppointmentTime == position
-                ? primaryColor
-                : timeDisableBGColor,
-          ),
-          child: MyText(
-            mTitle: '10:00\nAM',
-            mFontSize: 14,
-            mFontStyle: FontStyle.normal,
-            mFontWeight: FontWeight.normal,
-            mTextAlign: TextAlign.center,
-            mTextColor: sAppointmentTime != null && sAppointmentTime == position
-                ? white
-                : otherLightColor,
-          ),
-        ),
-      ),
+    return Consumer<MedicalTestProvider>(
+      builder: (context, timeSlotProvider, child) {
+        if (!timeSlotProvider.loading) {
+          if (timeSlotProvider.testTimeSlotModel.status == 200) {
+            if (timeSlotProvider.testTimeSlotModel.result != null) {
+              if (timeSlotProvider.testTimeSlotModel.result!.isNotEmpty) {
+                if (timeSlotProvider.availableTimePos != null) {
+                  log("timeSlotProvider availableTimePos ====> ${timeSlotProvider.availableTimePos}");
+                  if (timeSlotProvider.availableTimePos! >= 0) {
+                    if (timeSlotProvider.testTimeSlotModel.result!
+                        .elementAt(timeSlotProvider.availableTimePos!)
+                        .slot!
+                        .isNotEmpty) {
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: timeSlotProvider.testTimeSlotModel.result!
+                            .elementAt(timeSlotProvider.availableTimePos!)
+                            .slot!
+                            .length,
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 9,
+                        ),
+                        itemBuilder: (BuildContext context, int position) =>
+                            InkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () async {
+                            log("Item Clicked!");
+                            log('Clicked on position => $position');
+
+                            final bookAppointmentProvider =
+                                Provider.of<MedicalTestProvider>(context,
+                                    listen: false);
+                            await bookAppointmentProvider
+                                .getClickAappointmentTime(position);
+
+                            strStartTime = timeSlotProvider
+                                    .testTimeSlotModel.result!
+                                    .elementAt(
+                                        timeSlotProvider.availableTimePos!)
+                                    .slot!
+                                    .elementAt(position)
+                                    .startTime ??
+                                "";
+                            strEndTime = timeSlotProvider
+                                    .testTimeSlotModel.result!
+                                    .elementAt(
+                                        timeSlotProvider.availableTimePos!)
+                                    .slot!
+                                    .elementAt(position)
+                                    .endTime ??
+                                "";
+                            appointmentSlotId = timeSlotProvider
+                                    .testTimeSlotModel.result!
+                                    .elementAt(
+                                        timeSlotProvider.availableTimePos!)
+                                    .slot!
+                                    .elementAt(position)
+                                    .testAppointmentSlotsId ??
+                                "";
+                            log('strStartTime ======> $strStartTime');
+                            log('strEndTime ======> $strEndTime');
+                            log('appointmentSlotId ======> $appointmentSlotId');
+                          },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  timeSlotProvider.appointmentTimePos != null &&
+                                          timeSlotProvider.appointmentTimePos ==
+                                              position
+                                      ? primaryColor
+                                      : timeDisableBGColor,
+                            ),
+                            child: MyText(
+                              mTitle: Utility.formateTimeSetInColumn(
+                                  timeSlotProvider.testTimeSlotModel.result!
+                                          .elementAt(timeSlotProvider
+                                              .availableTimePos!)
+                                          .slot!
+                                          .elementAt(position)
+                                          .startTime ??
+                                      ""),
+                              mFontSize: 14,
+                              mFontStyle: FontStyle.normal,
+                              mFontWeight: FontWeight.normal,
+                              mTextAlign: TextAlign.center,
+                              mTextColor:
+                                  timeSlotProvider.appointmentTimePos != null &&
+                                          timeSlotProvider.appointmentTimePos ==
+                                              position
+                                      ? white
+                                      : otherLightColor,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const NoData();
+                    }
+                  } else {
+                    return Container();
+                  }
+                } else {
+                  return Container();
+                }
+              } else {
+                return Container();
+              }
+            } else {
+              return Container();
+            }
+          } else {
+            return Container();
+          }
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
-  void onAppointmentTimeClick(int sPosition) {
-    log('Clicked on => $sPosition');
-    setState(() {
-      sAppointmentTime = sPosition;
-    });
+  void validateAndMake() async {
+    String addNote = mDescriptionController.text.toString().trim();
+    log("strDate :==> $strDate");
+    log("strStartTime :==> $strStartTime");
+    log("strEndTime :==> $strEndTime");
+    log("appointmentSlotId :==> $appointmentSlotId");
+    log("symptoms :==> $symptoms");
+    log("medicineTaken :==> $medicineTaken");
+    log("additional Note :==> $addNote");
+    if (addNote.isEmpty) {
+      addNote = "";
+    }
+    if (strDate!.isEmpty) {
+      Utility.showToast(selectAppointmentDate);
+    } else if (strStartTime!.isEmpty) {
+      Utility.showToast(selectAppointmentTime);
+    } else {
+      final bookAppointmentProvider =
+          Provider.of<MedicalTestProvider>(context, listen: false);
+      // login API call
+      Utility.showProgress(context, prDialog);
+      await bookAppointmentProvider.getMakeTestAppointment(
+          strDate, strStartTime, appointmentSlotId, strEndTime, addNote);
+      await prDialog.hide();
+      mDescriptionController.clear();
+      showMyDialog();
+    }
+  }
+
+  Future<void> showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                MySvgAssetsImg(
+                  imageName: "thumb.svg",
+                  fit: BoxFit.contain,
+                  imgHeight: 112,
+                  imgWidth: 112,
+                ),
+                SizedBox(height: 30),
+                MyText(
+                  mTitle: thankYou,
+                  mTextColor: black,
+                  mFontSize: 30,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.w600,
+                  mTextAlign: TextAlign.center,
+                ),
+                SizedBox(height: 15),
+                MyText(
+                  mTitle: successfulTestBookingDesc,
+                  mTextColor: black,
+                  mFontSize: 15,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.normal,
+                  mTextAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 2,
+                foregroundColor: Colors.white,
+                backgroundColor: primaryDarkColor, // foreground
+              ),
+              child: const MyText(
+                mTitle: done,
+                mTextColor: white,
+                mFontSize: 20,
+                mFontStyle: FontStyle.normal,
+                mFontWeight: FontWeight.w600,
+                mTextAlign: TextAlign.center,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                mDescriptionController.clear();
+                mDateController.animateToSelection();
+                medicalTestProvider.clearTestBookProvider();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   Widget historyList() {
@@ -524,7 +740,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                                                           .patientTestModel
                                                           .result!
                                                           .elementAt(position)
-                                                          .doctorName ??
+                                                          .patientsName ??
                                                       "",
                                                   mFontSize: 14,
                                                   mFontWeight: FontWeight.bold,
@@ -546,7 +762,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                                                               .result!
                                                               .elementAt(
                                                                   position)
-                                                              .specialitiesName ??
+                                                              .patientsMobileNumber ??
                                                           "",
                                                       mFontSize: 12,
                                                       mFontWeight:
@@ -684,7 +900,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                                           ),
                                           Row(
                                             children: <Widget>[
-                                              MySvgAssetsImg(
+                                             const  MySvgAssetsImg(
                                                 imageName: "test_desc.svg",
                                                 fit: BoxFit.cover,
                                                 imgHeight: 15,
@@ -722,7 +938,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                                     CupertinoButton(
                                       minSize: double.minPositive,
                                       padding: EdgeInsets.zero,
-                                      child: MySvgAssetsImg(
+                                      child: const MySvgAssetsImg(
                                         imageName: "delete.svg",
                                         fit: BoxFit.cover,
                                         imgHeight: 25,
@@ -746,7 +962,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                                 imageUrl: medicalTestProvider
                                         .patientTestModel.result!
                                         .elementAt(position)
-                                        .doctorImage ??
+                                        .patientsProfileImg ??
                                     Constant.userPlaceholder,
                                 fit: BoxFit.fill,
                                 imgHeight: 61,
@@ -769,46 +985,6 @@ class _MedicalTestFState extends State<MedicalTestF> {
         } else {
           return Utility.pageLoader();
         }
-      },
-    );
-  }
-
-  Future<void> showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Registration Details'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                MyText(
-                  mTitle:
-                      "Date : $selectedDate\nDescription : ${mDescriptionController.text}",
-                  mTextColor: black,
-                  mFontSize: 16,
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: MyText(
-                mTitle: okay,
-                mTextColor: primaryDarkColor,
-                mFontSize: 20,
-                mFontStyle: FontStyle.normal,
-                mFontWeight: FontWeight.w600,
-                mTextAlign: TextAlign.center,
-              ),
-              onPressed: () {
-                mDescriptionController.clear();
-                Navigator.of(context).pop(false);
-              },
-            ),
-          ],
-        );
       },
     );
   }

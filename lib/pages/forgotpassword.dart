@@ -88,7 +88,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   const SizedBox(
                                     height: 20,
                                   ),
-                                  MyText(
+                                  const MyText(
                                     mTitle: forgotPassNote,
                                     mFontSize: 16,
                                     mFontStyle: FontStyle.normal,
@@ -260,7 +260,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           ),
           actions: <Widget>[
             TextButton(
-              child: MyText(
+              child: const MyText(
                 mTitle: okay,
                 mTextColor: primaryDarkColor,
                 mFontSize: 20,

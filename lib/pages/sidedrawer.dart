@@ -5,6 +5,7 @@ import 'package:patientapp/pages/aboutprivacyterms.dart';
 import 'package:patientapp/pages/home.dart';
 import 'package:patientapp/pages/login.dart';
 import 'package:patientapp/utils/colors.dart';
+import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
@@ -86,8 +87,8 @@ class _MySideDrawerState extends State<MySideDrawer> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const SizedBox(
+                      children: const <Widget>[
+                        SizedBox(
                           width: 10,
                         ),
                         MySvgAssetsImg(
@@ -97,7 +98,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           iconColor: white,
                           imgWidth: 24,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         Expanded(
@@ -112,7 +113,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                             mTextAlign: TextAlign.start,
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         MySvgAssetsImg(
@@ -122,7 +123,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           imgWidth: 7,
                           iconColor: white,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 10,
                         ),
                       ],
@@ -157,8 +158,8 @@ class _MySideDrawerState extends State<MySideDrawer> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const SizedBox(
+                      children: const <Widget>[
+                        SizedBox(
                           width: 10,
                         ),
                         MySvgAssetsImg(
@@ -168,7 +169,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           imgHeight: 24,
                           imgWidth: 24,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         Expanded(
@@ -183,7 +184,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                             mTextAlign: TextAlign.start,
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         MySvgAssetsImg(
@@ -193,7 +194,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           imgWidth: 7,
                           iconColor: white,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 10,
                         ),
                       ],
@@ -228,8 +229,8 @@ class _MySideDrawerState extends State<MySideDrawer> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const SizedBox(
+                      children: const <Widget>[
+                        SizedBox(
                           width: 10,
                         ),
                         MySvgAssetsImg(
@@ -239,7 +240,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           iconColor: white,
                           imgWidth: 24,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         Expanded(
@@ -254,7 +255,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                             mTextAlign: TextAlign.start,
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         MySvgAssetsImg(
@@ -264,7 +265,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           imgWidth: 7,
                           iconColor: white,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 10,
                         ),
                       ],
@@ -299,8 +300,8 @@ class _MySideDrawerState extends State<MySideDrawer> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const SizedBox(
+                      children: const <Widget>[
+                        SizedBox(
                           width: 10,
                         ),
                         MySvgAssetsImg(
@@ -310,7 +311,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           iconColor: white,
                           imgWidth: 24,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         Expanded(
@@ -325,7 +326,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                             mTextAlign: TextAlign.start,
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         MySvgAssetsImg(
@@ -335,7 +336,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           imgWidth: 7,
                           iconColor: white,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 10,
                         ),
                       ],
@@ -370,8 +371,8 @@ class _MySideDrawerState extends State<MySideDrawer> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const SizedBox(
+                      children: const <Widget>[
+                        SizedBox(
                           width: 10,
                         ),
                         MySvgAssetsImg(
@@ -381,7 +382,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           imgWidth: 24,
                           iconColor: white,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         Expanded(
@@ -396,7 +397,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                             mTextAlign: TextAlign.start,
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 15,
                         ),
                         MySvgAssetsImg(
@@ -406,7 +407,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                           imgWidth: 7,
                           iconColor: white,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 10,
                         ),
                       ],
@@ -424,11 +425,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
               setState(() {
                 selectedMenuItemId = 6;
                 log("selectedMenuItemId => $selectedMenuItemId");
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const Login(),
-                  ),
-                );
+                showMyDialog();
               });
             },
             child: Container(
@@ -447,7 +444,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  MySvgAssetsImg(
+                  const MySvgAssetsImg(
                     imageName: "logout.svg",
                     fit: BoxFit.cover,
                     imgHeight: 24,
@@ -459,7 +456,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                   ),
                   Expanded(
                     child: MyText(
-                      mTitle: login,
+                      mTitle: Constant.userID == "0" ? login : logout,
                       mFontSize: 16,
                       mFontStyle: FontStyle.normal,
                       mFontWeight: FontWeight.normal,
@@ -472,7 +469,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                   const SizedBox(
                     width: 15,
                   ),
-                  MySvgAssetsImg(
+                  const MySvgAssetsImg(
                     imageName: "view_more.svg",
                     fit: BoxFit.cover,
                     imgHeight: 13,
@@ -490,5 +487,88 @@ class _MySideDrawerState extends State<MySideDrawer> {
 
   toggleDrawer() {
     _drawerBarController.toggle!();
+  }
+
+  Future<void> showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                MyText(
+                  mTitle: Constant.appName,
+                  mTextColor: black,
+                  mFontSize: 25,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.w600,
+                  mTextAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 15),
+                const MyText(
+                  mTitle: areYouSureWantToLogout,
+                  mTextColor: black,
+                  mFontSize: 18,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.normal,
+                  mTextAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 2,
+                foregroundColor: white,
+                backgroundColor: boxBorderColor, // foreground
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(5),
+                child: MyText(
+                  mTitle: no,
+                  mTextColor: black,
+                  mFontSize: 16,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.w600,
+                  mTextAlign: TextAlign.center,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 2,
+                foregroundColor: white,
+                backgroundColor: primaryDarkColor, // foreground
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(5),
+                child: MyText(
+                  mTitle: yes,
+                  mTextColor: white,
+                  mFontSize: 16,
+                  mFontStyle: FontStyle.normal,
+                  mFontWeight: FontWeight.w600,
+                  mTextAlign: TextAlign.center,
+                ),
+              ),
+              onPressed: () {
+                Constant.userID = "0";
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const Login(),
+                  ),
+                );
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }

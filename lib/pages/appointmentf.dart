@@ -288,7 +288,7 @@ class _AppointmentFState extends State<AppointmentF> {
                                     CupertinoButton(
                                       minSize: double.minPositive,
                                       padding: EdgeInsets.zero,
-                                      child: MySvgAssetsImg(
+                                      child: const MySvgAssetsImg(
                                         imageName: "delete.svg",
                                         fit: BoxFit.cover,
                                         imgHeight: 25,

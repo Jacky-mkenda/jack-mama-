@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
 class MyText extends StatelessWidget {
-  String mTitle;
-  double? mFontSize;
-  dynamic mFontWeight,
+  final String mTitle;
+  final double? mFontSize;
+  final dynamic mFontWeight,
       mFontStyle,
       mTextColor,
       mTextAlign,
@@ -13,7 +12,7 @@ class MyText extends StatelessWidget {
       mOverflow,
       mLetterSpacing;
 
-  MyText(
+  const MyText(
       {Key? key,
       required this.mTitle,
       this.mFontSize,

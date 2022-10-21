@@ -187,7 +187,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                               ),
                                             );
                                           },
-                                          child: MyText(
+                                          child: const MyText(
                                             mTitle: seeAllReviews,
                                             mMaxLine: 3,
                                             mOverflow: TextOverflow.ellipsis,
@@ -212,7 +212,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                             .toString() ??
                                         "");
                                   },
-                                  child: MySvgAssetsImg(
+                                  child: const MySvgAssetsImg(
                                     imageName: "mobile_dark.svg",
                                     fit: BoxFit.cover,
                                     imgHeight: 38,
@@ -239,7 +239,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                MyText(
+                                const MyText(
                                   mTitle: contactNo,
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
@@ -269,7 +269,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                MyText(
+                                const MyText(
                                   mTitle: address,
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
@@ -301,7 +301,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                MyText(
+                                const MyText(
                                   mTitle: aboutUs,
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
@@ -333,7 +333,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                MyText(
+                                const MyText(
                                   mTitle: workingTime,
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
@@ -365,7 +365,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                MyText(
+                                const MyText(
                                   mTitle: services,
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
@@ -397,7 +397,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                MyText(
+                                const MyText(
                                   mTitle: healthCare,
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
@@ -459,7 +459,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                   borderRadius: BorderRadius.circular(4),
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: MyText(
+                                child: const MyText(
                                   mTitle: makeAnAppointment,
                                   mFontSize: 16,
                                   mOverflow: TextOverflow.ellipsis,

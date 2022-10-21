@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-// ignore: must_be_immutable
 class MySvgAssetsImg extends StatelessWidget {
-  String imageName;
-  double? imgHeight, imgWidth;
-  dynamic fit, iconColor;
+  final String imageName;
+  final double? imgHeight, imgWidth;
+  final dynamic fit, iconColor;
 
-  MySvgAssetsImg(
+  const MySvgAssetsImg(
       {Key? key,
       required this.imageName,
       required this.fit,

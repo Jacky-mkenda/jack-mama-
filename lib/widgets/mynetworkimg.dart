@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class MyNetworkImage extends StatelessWidget {
-  String imageUrl;
-  double? imgHeight, imgWidth;
-  dynamic fit;
+  final String imageUrl;
+  final double? imgHeight, imgWidth;
+  final dynamic fit;
 
-  MyNetworkImage(
+  const MyNetworkImage(
       {Key? key,
       required this.imageUrl,
       required this.fit,

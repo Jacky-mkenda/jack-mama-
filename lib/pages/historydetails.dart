@@ -216,7 +216,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                                 .toString() ??
                             "");
                       },
-                      child: MySvgAssetsImg(
+                      child: const MySvgAssetsImg(
                         imageName: "mobile_dark.svg",
                         fit: BoxFit.cover,
                         imgHeight: 38,
@@ -243,7 +243,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    MyText(
+                    const MyText(
                       mTitle: doctorSymptoms,
                       mFontSize: 12,
                       mFontWeight: FontWeight.normal,
@@ -269,7 +269,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                     const SizedBox(
                       height: 15,
                     ),
-                    MyText(
+                    const MyText(
                       mTitle: doctorDiagnosis,
                       mFontSize: 12,
                       mFontWeight: FontWeight.normal,
@@ -297,7 +297,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                     const SizedBox(
                       height: 15,
                     ),
-                    MyText(
+                    const MyText(
                       mTitle: doctorPrescription,
                       mFontSize: 12,
                       mFontWeight: FontWeight.normal,
@@ -465,7 +465,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    MyText(
+                    const MyText(
                       mTitle: feedback,
                       mFontSize: 14,
                       mFontWeight: FontWeight.bold,
@@ -502,7 +502,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                               const SizedBox(
                                 height: 2,
                               ),
-                              MyText(
+                              const MyText(
                                 mTitle:
                                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                                 mFontSize: 12,
@@ -541,7 +541,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
           imgWidth: Constant.backBtnWidth,
         ),
       ),
-      title: MyText(
+      title: const MyText(
         mTitle: historyDetails,
         mFontSize: 20,
         mFontStyle: FontStyle.normal,
@@ -554,7 +554,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
           onPressed: () {
             log('Delete pressed!');
           },
-          icon: MySvgAssetsImg(
+          icon: const MySvgAssetsImg(
             imageName: 'delete_green.svg',
             fit: BoxFit.cover,
             imgWidth: 30,

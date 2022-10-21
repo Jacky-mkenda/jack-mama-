@@ -11,6 +11,7 @@ import 'package:patientapp/model/prescriptiondetailmodel.dart';
 import 'package:patientapp/model/profilemodel.dart';
 import 'package:patientapp/model/specialitymodel.dart';
 import 'package:patientapp/model/successmodel.dart';
+import 'package:patientapp/model/testtimeslotmodel.dart';
 import 'package:patientapp/model/timeslotmodel.dart';
 import 'package:patientapp/utils/constant.dart';
 
@@ -494,7 +495,7 @@ class ApiService {
       '$baseUrl$timeSlotByDoctor',
       data: {
         'doctor_id': doctorId,
-        'date': doctorId,
+        'date': date,
       },
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
@@ -540,6 +541,60 @@ class ApiService {
     log("timeSlotByDoctorId statuscode :===> ${response.statusCode}");
     log("timeSlotByDoctorId Message :===> ${response.statusMessage}");
     log("timeSlotByDoctorId data :===> ${response.data}");
+    successModel = successModelFromJson(response.data.toString());
+    return successModel;
+  }
+
+  // getTimeSlotByDoctorId API
+  Future<TestTimeSlotModel> testTimeSlot(date) async {
+    log("date :==> $date");
+
+    TestTimeSlotModel testTimeSlotModel;
+    String testTimeSlot = "getTestTimeSlot";
+    log("TestTimeSlot API :==> $baseUrl$testTimeSlot");
+    Response response = await dio.post(
+      '$baseUrl$testTimeSlot',
+      data: {
+        'date': date,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("testTimeSlot statuscode :===> ${response.statusCode}");
+    log("testTimeSlot Message :===> ${response.statusMessage}");
+    log("testTimeSlot data :===> ${response.data}");
+    testTimeSlotModel = testTimeSlotModelFromJson(response.data.toString());
+    return testTimeSlotModel;
+  }
+
+  // make_appoinment API
+  Future<SuccessModel> makeTestAppoinment(
+      date, startTime, slotsId, endTime, description) async {
+    log("date :==> $date");
+    log("startTime :==> $startTime");
+    log("slotsId :==> $slotsId");
+    log("endTime :==> $endTime");
+    log("description :==> $description");
+
+    SuccessModel successModel;
+    String makeTestAppoinment = "make_test_appoinment";
+    log("makeTestAppoinment API :==> $baseUrl$makeTestAppoinment");
+    Response response = await dio.post(
+      '$baseUrl$makeTestAppoinment',
+      data: {
+        'patient_id': Constant.userID,
+        'date': date,
+        'startTime': startTime,
+        'test_appointment_slots_id': slotsId,
+        'endTime': endTime,
+        'description': description,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("makeTestAppoinment statuscode :===> ${response.statusCode}");
+    log("makeTestAppoinment Message :===> ${response.statusMessage}");
+    log("makeTestAppoinment data :===> ${response.data}");
     successModel = successModelFromJson(response.data.toString());
     return successModel;
   }

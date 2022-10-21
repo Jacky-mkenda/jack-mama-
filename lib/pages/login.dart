@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
                           padding: const EdgeInsets.only(
                               left: 20, top: 15, right: 20),
                           alignment: Alignment.centerLeft,
-                          child: MyText(
+                          child: const MyText(
                             mTitle: signIn,
                             mTextColor: textTitleColor,
                             mTextAlign: TextAlign.start,
@@ -110,7 +110,7 @@ class _LoginState extends State<Login> {
                         Container(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           alignment: Alignment.centerLeft,
-                          child: MyText(
+                          child: const MyText(
                             mTitle: welcomeBack,
                             mTextColor: otherColor,
                             mTextAlign: TextAlign.start,
@@ -308,8 +308,8 @@ class _LoginState extends State<Login> {
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const ForgotPassword()));
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8),
+      child: const Padding(
+        padding: EdgeInsets.all(8),
         child: MyText(
             mTitle: forgotPassword,
             mTextColor: otherLightColor,

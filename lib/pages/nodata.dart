@@ -17,7 +17,7 @@ class NoData extends StatelessWidget {
           shape: BoxShape.rectangle,
         ),
         constraints: const BoxConstraints(minHeight: 0, minWidth: 0),
-        child: MyAssetsImg(
+        child: const MyAssetsImg(
           imgHeight: 150,
           fit: BoxFit.contain,
           imageName: "nodata.png",

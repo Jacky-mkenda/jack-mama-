@@ -119,7 +119,7 @@ class _EditProfileState extends State<EditProfile> {
                         right: BorderSide(color: boxBorderColor, width: 0.5),
                       ),
                     ),
-                    child: MyText(
+                    child: const MyText(
                       mTitle: personal,
                       mFontSize: 15,
                       mFontStyle: FontStyle.normal,
@@ -140,7 +140,7 @@ class _EditProfileState extends State<EditProfile> {
                         left: BorderSide(color: boxBorderColor, width: 0.5),
                       ),
                     ),
-                    child: MyText(
+                    child: const MyText(
                       mTitle: bMI,
                       mFontSize: 15,
                       mFontStyle: FontStyle.normal,
@@ -277,7 +277,7 @@ class _EditProfileState extends State<EditProfile> {
                                     color: black50,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: MySvgAssetsImg(
+                                  child: const MySvgAssetsImg(
                                     imageName: 'edit_camera.svg',
                                     fit: BoxFit.fill,
                                     imgHeight: 27,
@@ -384,7 +384,7 @@ class _EditProfileState extends State<EditProfile> {
                                           onPressed: () {
                                             openDatePicker();
                                           },
-                                          icon: MySvgAssetsImg(
+                                          icon: const MySvgAssetsImg(
                                             imageName: "calendar.svg",
                                             fit: BoxFit.cover,
                                             imgHeight: 20,
@@ -486,7 +486,7 @@ class _EditProfileState extends State<EditProfile> {
                                           onPressed: () {
                                             imagePickDialog("InsImage");
                                           },
-                                          icon: MySvgAssetsImg(
+                                          icon: const MySvgAssetsImg(
                                             imageName: "upload.svg",
                                             fit: BoxFit.cover,
                                             imgHeight: 20,
@@ -779,7 +779,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
           actions: <Widget>[
             TextButton(
-              child: MyText(
+              child: const MyText(
                 mTitle: pickFromGallery,
                 mTextColor: primaryDarkColor,
                 mFontSize: 18,
@@ -793,7 +793,7 @@ class _EditProfileState extends State<EditProfile> {
               },
             ),
             TextButton(
-              child: MyText(
+              child: const MyText(
                 mTitle: captureByCamera,
                 mTextColor: primaryDarkColor,
                 mFontSize: 18,
@@ -807,7 +807,7 @@ class _EditProfileState extends State<EditProfile> {
               },
             ),
             TextButton(
-              child: MyText(
+              child: const MyText(
                 mTitle: cancel,
                 mTextColor: black,
                 mFontSize: 18,
@@ -897,7 +897,7 @@ class _EditProfileState extends State<EditProfile> {
         height: Constant.buttonHeight,
         decoration: Utility.primaryButton(),
         alignment: Alignment.center,
-        child: MyText(
+        child: const MyText(
           mTitle: save,
           mTextColor: white,
           mTextAlign: TextAlign.center,
@@ -990,7 +990,7 @@ class _EditProfileState extends State<EditProfile> {
         height: Constant.buttonHeight,
         decoration: Utility.primaryButton(),
         alignment: Alignment.center,
-        child: MyText(
+        child: const MyText(
           mTitle: save,
           mTextColor: white,
           mTextAlign: TextAlign.center,

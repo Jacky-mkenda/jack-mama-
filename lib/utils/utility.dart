@@ -121,7 +121,7 @@ class Utility {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        icon: MySvgAssetsImg(
+        icon: const MySvgAssetsImg(
           imageName: "back.svg",
           fit: BoxFit.contain,
           imgHeight: 15,

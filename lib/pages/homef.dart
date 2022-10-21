@@ -90,7 +90,7 @@ class _HomeFState extends State<HomeF> {
                           mFontWeight: FontWeight.normal,
                           mFontSize: 20,
                         ),
-                        MyText(
+                        const MyText(
                           mTitle: welcomeBack,
                           mTextColor: textTitleColor,
                           mTextAlign: TextAlign.start,
@@ -208,7 +208,7 @@ class _HomeFState extends State<HomeF> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          MyText(
+                          const MyText(
                             mTitle: speciality,
                             mFontSize: 16,
                             mFontWeight: FontWeight.bold,
@@ -230,7 +230,7 @@ class _HomeFState extends State<HomeF> {
                               );
                             },
                             borderRadius: BorderRadius.circular(5),
-                            child: MyText(
+                            child: const MyText(
                               mTitle: seeAll,
                               mFontSize: 16,
                               mFontWeight: FontWeight.normal,
@@ -252,7 +252,7 @@ class _HomeFState extends State<HomeF> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          MyText(
+                          const MyText(
                             mTitle: upcomingAppointments,
                             mFontSize: 16,
                             mFontWeight: FontWeight.bold,
@@ -274,7 +274,7 @@ class _HomeFState extends State<HomeF> {
                               );
                             },
                             borderRadius: BorderRadius.circular(5),
-                            child: MyText(
+                            child: const MyText(
                               mTitle: seeAll,
                               mFontSize: 16,
                               mFontWeight: FontWeight.normal,
@@ -296,7 +296,7 @@ class _HomeFState extends State<HomeF> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          MyText(
+                          const MyText(
                             mTitle: upcomingTests,
                             mFontSize: 16,
                             mFontWeight: FontWeight.bold,
@@ -318,7 +318,7 @@ class _HomeFState extends State<HomeF> {
                               );
                             },
                             borderRadius: BorderRadius.circular(5),
-                            child: MyText(
+                            child: const MyText(
                               mTitle: seeAll,
                               mFontSize: 16,
                               mFontWeight: FontWeight.normal,
@@ -340,7 +340,7 @@ class _HomeFState extends State<HomeF> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          MyText(
+                          const MyText(
                             mTitle: availableDoctors,
                             mFontSize: 16,
                             mFontWeight: FontWeight.bold,
@@ -362,7 +362,7 @@ class _HomeFState extends State<HomeF> {
                               );
                             },
                             borderRadius: BorderRadius.circular(5),
-                            child: MyText(
+                            child: const MyText(
                               mTitle: seeAll,
                               mFontSize: 16,
                               mFontWeight: FontWeight.normal,
@@ -393,7 +393,7 @@ class _HomeFState extends State<HomeF> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          MyText(
+                          const MyText(
                             mTitle: availableDoctors,
                             mFontSize: 16,
                             mFontWeight: FontWeight.bold,
@@ -417,7 +417,7 @@ class _HomeFState extends State<HomeF> {
                               );
                             },
                             borderRadius: BorderRadius.circular(5),
-                            child: MyText(
+                            child: const MyText(
                               mTitle: seeAll,
                               mFontSize: 16,
                               mFontWeight: FontWeight.normal,
@@ -785,7 +785,7 @@ class _HomeFState extends State<HomeF> {
                                       CupertinoButton(
                                         minSize: double.minPositive,
                                         padding: EdgeInsets.zero,
-                                        child: MySvgAssetsImg(
+                                        child: const MySvgAssetsImg(
                                           imageName: "delete.svg",
                                           fit: BoxFit.cover,
                                           imgHeight: 25,
@@ -917,7 +917,7 @@ class _HomeFState extends State<HomeF> {
                                                             .result
                                                             ?.elementAt(
                                                                 position)
-                                                            .doctorName ??
+                                                            .patientsName ??
                                                         "",
                                                     mFontSize: 14,
                                                     mFontWeight:
@@ -940,8 +940,8 @@ class _HomeFState extends State<HomeF> {
                                                                 .result
                                                                 ?.elementAt(
                                                                     position)
-                                                                .specialitiesName ??
-                                                            "",
+                                                                .patientsMobileNumber ??
+                                                            "-",
                                                         mFontSize: 12,
                                                         mFontWeight:
                                                             FontWeight.normal,
@@ -1069,7 +1069,7 @@ class _HomeFState extends State<HomeF> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                MySvgAssetsImg(
+                                                const MySvgAssetsImg(
                                                   imageName: "test_desc.svg",
                                                   fit: BoxFit.cover,
                                                   imgHeight: 15,
@@ -1085,7 +1085,7 @@ class _HomeFState extends State<HomeF> {
                                                             .result!
                                                             .elementAt(position)
                                                             .description ??
-                                                        "",
+                                                        "-",
                                                     mFontSize: 12,
                                                     mMaxLine: 1,
                                                     mOverflow:
@@ -1107,7 +1107,7 @@ class _HomeFState extends State<HomeF> {
                                       CupertinoButton(
                                         minSize: double.minPositive,
                                         padding: EdgeInsets.zero,
-                                        child: MySvgAssetsImg(
+                                        child: const MySvgAssetsImg(
                                           imageName: "delete.svg",
                                           fit: BoxFit.cover,
                                           imgHeight: 25,
@@ -1131,7 +1131,7 @@ class _HomeFState extends State<HomeF> {
                                   imageUrl: homeProvider
                                           .testAppointmentModel.result
                                           ?.elementAt(position)
-                                          .doctorImage
+                                          .patientsProfileImg
                                           .toString() ??
                                       Constant.userPlaceholder,
                                   fit: BoxFit.fill,
@@ -1287,7 +1287,7 @@ class _HomeFState extends State<HomeF> {
                               padding: const EdgeInsets.fromLTRB(23, 8, 23, 8),
                               decoration: Utility.primaryButton(),
                               clipBehavior: Clip.antiAlias,
-                              child: MyText(
+                              child: const MyText(
                                 mTitle: bookNow,
                                 mFontSize: 12,
                                 mFontStyle: FontStyle.normal,
@@ -1446,7 +1446,7 @@ class _HomeFState extends State<HomeF> {
                               padding: const EdgeInsets.fromLTRB(23, 8, 23, 8),
                               decoration: Utility.primaryButton(),
                               clipBehavior: Clip.antiAlias,
-                              child: MyText(
+                              child: const MyText(
                                 mTitle: bookNow,
                                 mFontSize: 12,
                                 mFontStyle: FontStyle.normal,

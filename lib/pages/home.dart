@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
         onPressed: () {
           AwesomeDrawerBar.of(context)!.toggle();
         },
-        icon: MySvgAssetsImg(
+        icon: const MySvgAssetsImg(
           imageName: "drawer.svg",
           fit: BoxFit.contain,
           imgHeight: 13,
@@ -120,7 +120,7 @@ class _HomeState extends State<Home> {
                     mTextAlign: TextAlign.center,
                     mTextColor: primaryColor,
                   ),
-                  child: MySvgAssetsImg(
+                  child: const MySvgAssetsImg(
                     imageName: "notification.svg",
                     fit: BoxFit.contain,
                   ),
@@ -210,7 +210,7 @@ class _HomeState extends State<Home> {
         log('$value');
         onNavigationClick(value);
       },
-      items: <BottomNavigationBarItem>[
+      items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           label: home,
           tooltip: home,

@@ -1,15 +1,16 @@
 // To parse this JSON data, do
-// final timeSlotModel = timeSlotModelFromJson(jsonString);
+// final testTimeSlotModel = testTimeSlotModelFromJson(jsonString);
 
 import 'dart:convert';
 
-TimeSlotModel timeSlotModelFromJson(String str) =>
-    TimeSlotModel.fromJson(json.decode(str));
+TestTimeSlotModel testTimeSlotModelFromJson(String str) =>
+    TestTimeSlotModel.fromJson(json.decode(str));
 
-String timeSlotModelToJson(TimeSlotModel data) => json.encode(data.toJson());
+String testTimeSlotModelToJson(TestTimeSlotModel data) =>
+    json.encode(data.toJson());
 
-class TimeSlotModel {
-  TimeSlotModel({
+class TestTimeSlotModel {
+  TestTimeSlotModel({
     this.status,
     this.message,
     this.result,
@@ -19,7 +20,8 @@ class TimeSlotModel {
   String? message;
   List<Result>? result;
 
-  factory TimeSlotModel.fromJson(Map<String, dynamic> json) => TimeSlotModel(
+  factory TestTimeSlotModel.fromJson(Map<String, dynamic> json) =>
+      TestTimeSlotModel(
         status: json["status"],
         message: json["message"],
         result: json["result"] != null
@@ -39,7 +41,6 @@ class TimeSlotModel {
 class Result {
   Result({
     this.id,
-    this.doctorId,
     this.weekDay,
     this.startTime,
     this.endTime,
@@ -51,7 +52,6 @@ class Result {
   });
 
   String? id;
-  String? doctorId;
   String? weekDay;
   String? startTime;
   String? endTime;
@@ -63,7 +63,6 @@ class Result {
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         id: json["id"],
-        doctorId: json["doctor_id"],
         weekDay: json["week_day"],
         startTime: json["start_time"],
         endTime: json["end_time"],
@@ -78,7 +77,6 @@ class Result {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "doctor_id": doctorId,
         "week_day": weekDay,
         "start_time": startTime,
         "end_time": endTime,
@@ -95,51 +93,51 @@ class Result {
 class Slot {
   Slot({
     this.id,
-    this.doctorId,
     this.weekDay,
     this.startTime,
     this.endTime,
     this.status,
     this.createdAt,
     this.updatedAt,
-    this.appointmentSlotsId,
+    this.testAppointmentSlotsId,
     this.slotStatus,
+    this.totalBookingUser,
   });
 
   String? id;
-  String? doctorId;
   String? weekDay;
   String? startTime;
   String? endTime;
   String? status;
   DateTime? createdAt;
   DateTime? updatedAt;
-  String? appointmentSlotsId;
+  String? testAppointmentSlotsId;
   int? slotStatus;
+  int? totalBookingUser;
 
   factory Slot.fromJson(Map<String, dynamic> json) => Slot(
         id: json["id"],
-        doctorId: json["doctor_id"],
         weekDay: json["week_day"],
         startTime: json["start_time"],
         endTime: json["end_time"],
         status: json["status"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        appointmentSlotsId: json["appointment_slots_id"],
+        testAppointmentSlotsId: json["test_appointment_slots_id"],
         slotStatus: json["slot_status"],
+        totalBookingUser: json["totle_booking_user"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "doctor_id": doctorId,
         "week_day": weekDay,
         "start_time": startTime,
         "end_time": endTime,
         "status": status,
         "created_at": createdAt.toString(),
         "updated_at": updatedAt.toString(),
-        "appointment_slots_id": appointmentSlotsId,
+        "test_appointment_slots_id": testAppointmentSlotsId,
         "slot_status": slotStatus,
+        "totle_booking_user": totalBookingUser,
       };
 }

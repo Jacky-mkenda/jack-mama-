@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class MyAssetsImg extends StatelessWidget {
-  String imageName;
-  double? imgHeight, imgWidth;
-  dynamic fit, iconColor;
+  final String imageName;
+  final double? imgHeight, imgWidth;
+  final dynamic fit, iconColor;
 
-  MyAssetsImg({
+  const MyAssetsImg({
     Key? key,
     required this.imageName,
     required this.fit,

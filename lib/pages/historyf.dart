@@ -282,7 +282,7 @@ class _HistoryFState extends State<HistoryF> {
                                           ),
                                           Row(
                                             children: <Widget>[
-                                              MySvgAssetsImg(
+                                              const MySvgAssetsImg(
                                                 imageName: "test_desc.svg",
                                                 fit: BoxFit.cover,
                                                 imgHeight: 15,
@@ -294,12 +294,11 @@ class _HistoryFState extends State<HistoryF> {
                                               Flexible(
                                                 child: MyText(
                                                   mTitle: historyProvider
-                                                              .appointmentModel
-                                                              .result!
-                                                              .elementAt(
-                                                                  position)
-                                                              .description ??
-                                                          "",
+                                                          .appointmentModel
+                                                          .result!
+                                                          .elementAt(position)
+                                                          .description ??
+                                                      "",
                                                   mFontSize: 12,
                                                   mMaxLine: 1,
                                                   mOverflow:
@@ -321,7 +320,7 @@ class _HistoryFState extends State<HistoryF> {
                                     CupertinoButton(
                                       minSize: double.minPositive,
                                       padding: EdgeInsets.zero,
-                                      child: MySvgAssetsImg(
+                                      child: const MySvgAssetsImg(
                                         imageName: "delete.svg",
                                         fit: BoxFit.cover,
                                         imgHeight: 25,

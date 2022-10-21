@@ -114,14 +114,14 @@ class _ProfileState extends State<Profile> {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        icon: MySvgAssetsImg(
+        icon: const MySvgAssetsImg(
           imageName: "back.svg",
           fit: BoxFit.contain,
           imgHeight: 15,
           imgWidth: 19,
         ),
       ),
-      title: MyText(
+      title: const MyText(
         mTitle: profile,
         mFontSize: 20,
         mFontStyle: FontStyle.normal,
@@ -136,7 +136,7 @@ class _ProfileState extends State<Profile> {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const EditProfile()));
           },
-          icon: MySvgAssetsImg(
+          icon: const MySvgAssetsImg(
             imageName: 'edit_icon.svg',
             fit: BoxFit.cover,
             imgWidth: 23,
@@ -155,16 +155,16 @@ class _ProfileState extends State<Profile> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
+          const Padding(
+            padding: EdgeInsets.only(left: 30, right: 30),
             child: TabBar(
               isScrollable: false,
               labelColor: primaryColor,
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorColor: accentColor,
               indicatorWeight: 1,
-              labelPadding: const EdgeInsets.only(top: 5, bottom: 5),
-              indicatorPadding: const EdgeInsets.all(0),
+              labelPadding: EdgeInsets.only(top: 5, bottom: 5),
+              indicatorPadding: EdgeInsets.all(0),
               unselectedLabelColor: tabDefaultColor,
               tabs: <Widget>[
                 Tab(
@@ -233,7 +233,7 @@ class _ProfileState extends State<Profile> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                MyText(
+                const MyText(
                   mTitle: contactNo,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -271,7 +271,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: emailAddress,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -311,7 +311,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: address,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -351,7 +351,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: birthDate,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -362,7 +362,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 4,
                 ),
-                MyText(
+                const MyText(
                   mTitle: "-",
                   mFontSize: 14,
                   mMaxLine: 1,
@@ -375,7 +375,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: insuranceCompanyName,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -415,7 +415,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: insuranceNumber,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -455,7 +455,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: insuranceImage,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -507,7 +507,7 @@ class _ProfileState extends State<Profile> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                MyText(
+                const MyText(
                   mTitle: allergiesToMedicine,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -547,7 +547,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: weight,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -587,7 +587,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: height,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,
@@ -627,7 +627,7 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 15,
                 ),
-                MyText(
+                const MyText(
                   mTitle: bMIWithFullForm,
                   mFontSize: 12,
                   mFontWeight: FontWeight.normal,

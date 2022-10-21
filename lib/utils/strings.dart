@@ -33,6 +33,8 @@ const submit = "Submit";
 const send = "Send";
 const close = "Close";
 const okay = "Okay!";
+const yes = "Yes";
+const no = "No";
 const next = "Next";
 const forgotPassNote = "We will send new password to this email address.";
 const acceptPrivacyPolicyMsg = "Please, accept the Privacy Policy of this app.";
@@ -78,6 +80,7 @@ const youDontHaveAnyAppointment = "You don't have any appointment";
 const findBestDoctorsNearYouBySpeciality =
     "Find best doctors near you by speciality,";
 const clickHere = "click here";
+const areYouSureWantToLogout = "Are you sure want to logout?";
 //Home Strings END
 
 //Prescription Strings START
@@ -164,6 +167,8 @@ const selectAppointmentTime = "Select appointment time";
 const done = "Done";
 const thankYou = "Thank You!";
 const successfulBookingDesc =
+    "Appointment successfully booked. Ensure to keep time otherwise you will lose your slot and will have to book another one.";
+const successfulTestBookingDesc =
     "Appointment successfully booked. Ensure to keep time otherwise you will lose your slot and will have to book another one.";
 const editYourAppointment = "Edit your appointment";
 const youBookedAnAppointmentWith = "You booked an appointment with";

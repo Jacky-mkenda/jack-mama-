@@ -434,7 +434,7 @@ class _ViewAllState extends State<ViewAll> {
                                     CupertinoButton(
                                       minSize: double.minPositive,
                                       padding: EdgeInsets.zero,
-                                      child: MySvgAssetsImg(
+                                      child: const MySvgAssetsImg(
                                         imageName: "delete.svg",
                                         fit: BoxFit.cover,
                                         imgHeight: 25,
@@ -552,9 +552,12 @@ class _ViewAllState extends State<ViewAll> {
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 MyText(
-                                                  mTitle: Constant.dummyDataList
-                                                      .elementAt(position)
-                                                      .title,
+                                                  mTitle: viewAllProvider
+                                                          .testAppointmentModel
+                                                          .result
+                                                          ?.elementAt(position)
+                                                          .patientsName ??
+                                                      "",
                                                   mFontSize: 14,
                                                   mFontWeight: FontWeight.bold,
                                                   mTextAlign: TextAlign.start,
@@ -570,10 +573,13 @@ class _ViewAllState extends State<ViewAll> {
                                                       MainAxisAlignment.start,
                                                   children: <Widget>[
                                                     MyText(
-                                                      mTitle: Constant
-                                                          .dummyDataList
-                                                          .elementAt(position)
-                                                          .speciality,
+                                                      mTitle: viewAllProvider
+                                                              .testAppointmentModel
+                                                              .result
+                                                              ?.elementAt(
+                                                                  position)
+                                                              .patientsMobileNumber ??
+                                                          "-",
                                                       mFontSize: 12,
                                                       mFontWeight:
                                                           FontWeight.normal,
@@ -598,16 +604,91 @@ class _ViewAllState extends State<ViewAll> {
                                                       width: 4,
                                                     ),
                                                     MyText(
-                                                      mTitle: Constant
-                                                          .dummyDataList
-                                                          .elementAt(position)
-                                                          .status,
+                                                      mTitle: viewAllProvider
+                                                                  .testAppointmentModel
+                                                                  .result
+                                                                  ?.elementAt(
+                                                                      position)
+                                                                  .status
+                                                                  .toString() ==
+                                                              "1"
+                                                          ? pending
+                                                          : (viewAllProvider
+                                                                      .testAppointmentModel
+                                                                      .result
+                                                                      ?.elementAt(
+                                                                          position)
+                                                                      .status
+                                                                      .toString() ==
+                                                                  "2"
+                                                              ? approved
+                                                              : (viewAllProvider
+                                                                          .testAppointmentModel
+                                                                          .result
+                                                                          ?.elementAt(
+                                                                              position)
+                                                                          .status
+                                                                          .toString() ==
+                                                                      "3"
+                                                                  ? rejected
+                                                                  : viewAllProvider
+                                                                              .testAppointmentModel
+                                                                              .result
+                                                                              ?.elementAt(
+                                                                                  position)
+                                                                              .status
+                                                                              .toString() ==
+                                                                          "4"
+                                                                      ? absent
+                                                                      : (viewAllProvider.testAppointmentModel.result?.elementAt(position).status.toString() ==
+                                                                              "5"
+                                                                          ? completed
+                                                                          : "-"))),
                                                       mFontSize: 12,
                                                       mFontWeight:
                                                           FontWeight.normal,
                                                       mTextAlign:
                                                           TextAlign.start,
-                                                      mTextColor: pendingStatus,
+                                                      mTextColor: viewAllProvider
+                                                                  .testAppointmentModel
+                                                                  .result
+                                                                  ?.elementAt(
+                                                                      position)
+                                                                  .status
+                                                                  .toString() ==
+                                                              "1"
+                                                          ? pendingStatus
+                                                          : (viewAllProvider
+                                                                      .testAppointmentModel
+                                                                      .result
+                                                                      ?.elementAt(
+                                                                          position)
+                                                                      .status
+                                                                      .toString() ==
+                                                                  "2"
+                                                              ? approvedStatus
+                                                              : (viewAllProvider
+                                                                          .testAppointmentModel
+                                                                          .result
+                                                                          ?.elementAt(
+                                                                              position)
+                                                                          .status
+                                                                          .toString() ==
+                                                                      "3"
+                                                                  ? rejectedStatus
+                                                                  : viewAllProvider
+                                                                              .testAppointmentModel
+                                                                              .result
+                                                                              ?.elementAt(
+                                                                                  position)
+                                                                              .status
+                                                                              .toString() ==
+                                                                          "4"
+                                                                      ? absentStatus
+                                                                      : (viewAllProvider.testAppointmentModel.result?.elementAt(position).status.toString() ==
+                                                                              "5"
+                                                                          ? completedStatus
+                                                                          : black))),
                                                     ),
                                                   ],
                                                 ),
@@ -620,9 +701,8 @@ class _ViewAllState extends State<ViewAll> {
                                           Container(
                                             alignment: Alignment.topLeft,
                                             child: MyText(
-                                              mTitle: Constant.dummyDataList
-                                                  .elementAt(position)
-                                                  .date,
+                                              mTitle:
+                                                  '${Utility.formateDate((viewAllProvider.testAppointmentModel.result!.elementAt(position).date ?? "").toString())} at ${Utility.formateTime((viewAllProvider.testAppointmentModel.result!.elementAt(position).startTime ?? ""))} - ${Utility.formateTime((viewAllProvider.testAppointmentModel.result!.elementAt(position).endTime ?? ""))}',
                                               mFontSize: 13,
                                               mOverflow: TextOverflow.ellipsis,
                                               mMaxLine: 1,
@@ -636,7 +716,7 @@ class _ViewAllState extends State<ViewAll> {
                                           ),
                                           Row(
                                             children: <Widget>[
-                                              MySvgAssetsImg(
+                                              const MySvgAssetsImg(
                                                 imageName: "test_desc.svg",
                                                 fit: BoxFit.cover,
                                                 imgHeight: 15,
@@ -647,9 +727,12 @@ class _ViewAllState extends State<ViewAll> {
                                               ),
                                               Flexible(
                                                 child: MyText(
-                                                  mTitle: Constant.dummyDataList
-                                                      .elementAt(position)
-                                                      .testDesc,
+                                                  mTitle: viewAllProvider
+                                                          .testAppointmentModel
+                                                          .result!
+                                                          .elementAt(position)
+                                                          .description ??
+                                                      "-",
                                                   mFontSize: 12,
                                                   mMaxLine: 1,
                                                   mOverflow:
@@ -671,7 +754,7 @@ class _ViewAllState extends State<ViewAll> {
                                     CupertinoButton(
                                       minSize: double.minPositive,
                                       padding: EdgeInsets.zero,
-                                      child: MySvgAssetsImg(
+                                      child: const MySvgAssetsImg(
                                         imageName: "delete.svg",
                                         fit: BoxFit.cover,
                                         imgHeight: 25,
@@ -692,9 +775,12 @@ class _ViewAllState extends State<ViewAll> {
                               borderRadius: BorderRadius.circular(4.0),
                               clipBehavior: Clip.antiAlias,
                               child: MyNetworkImage(
-                                imageUrl: Constant.dummyDataList
-                                    .elementAt(position)
-                                    .imageUrl,
+                                imageUrl: viewAllProvider
+                                        .testAppointmentModel.result
+                                        ?.elementAt(position)
+                                        .patientsProfileImg
+                                        .toString() ??
+                                    Constant.userPlaceholder,
                                 fit: BoxFit.fill,
                                 imgHeight: 61,
                                 imgWidth: 54,
@@ -841,7 +927,7 @@ class _ViewAllState extends State<ViewAll> {
                             transform: Matrix4.translationValues(0, 10, 0),
                             padding: const EdgeInsets.fromLTRB(23, 8, 23, 8),
                             decoration: Utility.primaryButton(),
-                            child: MyText(
+                            child: const MyText(
                               mTitle: bookNow,
                               mFontSize: 12,
                               mFontStyle: FontStyle.normal,
@@ -993,7 +1079,7 @@ class _ViewAllState extends State<ViewAll> {
                             transform: Matrix4.translationValues(0, 10, 0),
                             padding: const EdgeInsets.fromLTRB(23, 8, 23, 8),
                             decoration: Utility.primaryButton(),
-                            child: MyText(
+                            child: const MyText(
                               mTitle: bookNow,
                               mFontSize: 12,
                               mFontStyle: FontStyle.normal,

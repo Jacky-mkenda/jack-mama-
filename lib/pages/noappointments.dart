@@ -26,7 +26,7 @@ class NoAppointments extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 0, minWidth: 0),
         child: Column(
           children: [
-            MyAssetsImg(
+            const MyAssetsImg(
               imgHeight: 150,
               fit: BoxFit.contain,
               imageName: "nodata.png",
@@ -34,7 +34,7 @@ class NoAppointments extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            MyText(
+            const MyText(
               mTitle: youDontHaveAnyAppointment,
               mFontSize: 12,
               mFontWeight: FontWeight.w500,
