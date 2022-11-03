@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:patientapp/model/prescriptiondetailmodel.dart';
 import 'package:patientapp/provider/historyprovider.dart';
 import 'package:patientapp/utils/colors.dart';
@@ -450,74 +449,74 @@ class _HistoryDetailsState extends State<HistoryDetails> {
               const SizedBox(
                 height: 12,
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(8),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const MyText(
-                      mTitle: feedback,
-                      mFontSize: 14,
-                      mFontWeight: FontWeight.bold,
-                      mFontStyle: FontStyle.normal,
-                      mTextAlign: TextAlign.start,
-                      mTextColor: textTitleColor,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (BuildContext context, int position) {
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              RatingBarIndicator(
-                                rating: 4.5,
-                                itemBuilder: (context, index) => const Icon(
-                                  Icons.star,
-                                  color: starColor,
-                                ),
-                                itemPadding: const EdgeInsets.only(right: 1),
-                                itemCount: 5,
-                                itemSize: 12,
-                                direction: Axis.horizontal,
-                              ),
-                              const SizedBox(
-                                height: 2,
-                              ),
-                              const MyText(
-                                mTitle:
-                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                                mFontSize: 12,
-                                mFontWeight: FontWeight.normal,
-                                mTextAlign: TextAlign.start,
-                                mTextColor: otherColor,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   alignment: Alignment.centerLeft,
+              //   margin: const EdgeInsets.only(bottom: 8),
+              //   padding: const EdgeInsets.all(15),
+              //   decoration: BoxDecoration(
+              //     color: white,
+              //     borderRadius: BorderRadius.circular(8),
+              //     shape: BoxShape.rectangle,
+              //   ),
+              //   child: Column(
+              //     mainAxisSize: MainAxisSize.min,
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: <Widget>[
+              //       const MyText(
+              //         mTitle: feedback,
+              //         mFontSize: 14,
+              //         mFontWeight: FontWeight.bold,
+              //         mFontStyle: FontStyle.normal,
+              //         mTextAlign: TextAlign.start,
+              //         mTextColor: textTitleColor,
+              //       ),
+              //       const SizedBox(
+              //         height: 5,
+              //       ),
+              //       ListView.builder(
+              //         physics: const NeverScrollableScrollPhysics(),
+              //         shrinkWrap: true,
+              //         itemCount: 5,
+              //         itemBuilder: (BuildContext context, int position) {
+              //           return Container(
+              //             margin: const EdgeInsets.only(bottom: 15),
+              //             child: Column(
+              //               mainAxisAlignment: MainAxisAlignment.start,
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisSize: MainAxisSize.min,
+              //               children: <Widget>[
+              //                 RatingBarIndicator(
+              //                   rating: 4.5,
+              //                   itemBuilder: (context, index) => const Icon(
+              //                     Icons.star,
+              //                     color: starColor,
+              //                   ),
+              //                   itemPadding: const EdgeInsets.only(right: 1),
+              //                   itemCount: 5,
+              //                   itemSize: 12,
+              //                   direction: Axis.horizontal,
+              //                 ),
+              //                 const SizedBox(
+              //                   height: 2,
+              //                 ),
+              //                 const MyText(
+              //                   mTitle:
+              //                       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+              //                   mFontSize: 12,
+              //                   mFontWeight: FontWeight.normal,
+              //                   mTextAlign: TextAlign.start,
+              //                   mTextColor: otherColor,
+              //                 ),
+              //               ],
+              //             ),
+              //           );
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -549,19 +548,19 @@ class _HistoryDetailsState extends State<HistoryDetails> {
         mTextAlign: TextAlign.center,
         mTextColor: white,
       ),
-      actions: <Widget>[
-        IconButton(
-          onPressed: () {
-            log('Delete pressed!');
-          },
-          icon: const MySvgAssetsImg(
-            imageName: 'delete_green.svg',
-            fit: BoxFit.cover,
-            imgWidth: 30,
-            imgHeight: 30,
-          ),
-        ),
-      ],
+      // actions: <Widget>[
+      //   IconButton(
+      //     onPressed: () {
+      //       log('Delete pressed!');
+      //     },
+      //     icon: const MySvgAssetsImg(
+      //       imageName: 'delete_green.svg',
+      //       fit: BoxFit.cover,
+      //       imgWidth: 30,
+      //       imgHeight: 30,
+      //     ),
+      //   ),
+      // ],
     );
   }
 }

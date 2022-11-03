@@ -14,7 +14,8 @@ import '../widgets/mytext.dart';
 import '../widgets/mytextformfield.dart';
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+  final String viewFrom;
+  const ForgotPassword(this.viewFrom, {Key? key}) : super(key: key);
 
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
@@ -146,7 +147,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           ),
                         ),
                       ),
-                      goToLogin(),
+                      Visibility(
+                        visible: widget.viewFrom == "Drawer" ? false : true,
+                        child: goToLogin(),
+                      ),
                     ],
                   ),
                 ),

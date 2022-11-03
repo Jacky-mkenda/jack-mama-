@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:patientapp/pages/allfeedback.dart';
 import 'package:patientapp/pages/bookappointment.dart';
 import 'package:patientapp/pages/nodata.dart';
 import 'package:patientapp/provider/doctordetailprovider.dart';
@@ -174,30 +173,30 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                         const SizedBox(
                                           height: 8,
                                         ),
-                                        InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          onTap: () {
-                                            log('Tapped on $seeAllReviews');
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) {
-                                                  return const AllFeedback();
-                                                },
-                                              ),
-                                            );
-                                          },
-                                          child: const MyText(
-                                            mTitle: seeAllReviews,
-                                            mMaxLine: 3,
-                                            mOverflow: TextOverflow.ellipsis,
-                                            mTextAlign: TextAlign.start,
-                                            mTextColor: accentColor,
-                                            mFontSize: 14,
-                                            mFontStyle: FontStyle.normal,
-                                            mFontWeight: FontWeight.w400,
-                                          ),
-                                        ),
+                                        // InkWell(
+                                        //   borderRadius:
+                                        //       BorderRadius.circular(5),
+                                        //   onTap: () {
+                                        //     log('Tapped on $seeAllReviews');
+                                        //     Navigator.of(context).push(
+                                        //       MaterialPageRoute(
+                                        //         builder: (context) {
+                                        //           return const AllFeedback();
+                                        //         },
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        //   child: const MyText(
+                                        //     mTitle: seeAllReviews,
+                                        //     mMaxLine: 3,
+                                        //     mOverflow: TextOverflow.ellipsis,
+                                        //     mTextAlign: TextAlign.start,
+                                        //     mTextColor: accentColor,
+                                        //     mFontSize: 14,
+                                        //     mFontStyle: FontStyle.normal,
+                                        //     mFontWeight: FontWeight.w400,
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),

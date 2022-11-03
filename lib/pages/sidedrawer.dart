@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:awesome_drawer_bar/awesome_drawer_bar.dart';
 import 'package:patientapp/pages/aboutprivacyterms.dart';
+import 'package:patientapp/pages/forgotpassword.dart';
 import 'package:patientapp/pages/home.dart';
 import 'package:patientapp/pages/login.dart';
 import 'package:patientapp/utils/colors.dart';
@@ -66,15 +67,20 @@ class _MySideDrawerState extends State<MySideDrawer> {
                 InkWell(
                   borderRadius: BorderRadius.circular(6),
                   onTap: () {
-                    log("Tapped on $changePassword");
+                    log("Tapped on $forgotPassword");
                     toggleDrawer();
                     setState(() {
-                      selectedMenuItemId = 0;
+                      selectedMenuItemId = 1;
                       log("selectedMenuItemId => $selectedMenuItemId");
                     });
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPassword("Drawer"),
+                      ),
+                    );
                   },
                   child: Container(
-                    decoration: selectedMenuItemId == 0
+                    decoration: selectedMenuItemId == 1
                         ? BoxDecoration(
                             color: other50OpacColor,
                             borderRadius: BorderRadius.circular(6),
@@ -103,7 +109,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                         ),
                         Expanded(
                           child: MyText(
-                            mTitle: changePassword,
+                            mTitle: forgotPassword,
                             mFontSize: 16,
                             mFontStyle: FontStyle.normal,
                             mFontWeight: FontWeight.normal,
@@ -139,10 +145,13 @@ class _MySideDrawerState extends State<MySideDrawer> {
                       selectedMenuItemId = 2;
                       log("selectedMenuItemId => $selectedMenuItemId");
                     });
-                    Navigator.of(context).push(MaterialPageRoute(
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
                         builder: (context) => const AboutPrivacyTerms(
-                              appBarTitle: aboutUs,
-                            )));
+                          appBarTitle: aboutUs,
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.55,
@@ -210,10 +219,13 @@ class _MySideDrawerState extends State<MySideDrawer> {
                       selectedMenuItemId = 3;
                       log("selectedMenuItemId => $selectedMenuItemId");
                     });
-                    Navigator.of(context).push(MaterialPageRoute(
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
                         builder: (context) => const AboutPrivacyTerms(
-                              appBarTitle: termConditions,
-                            )));
+                          appBarTitle: termConditions,
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.55,
@@ -275,16 +287,19 @@ class _MySideDrawerState extends State<MySideDrawer> {
                 InkWell(
                   borderRadius: BorderRadius.circular(6),
                   onTap: () {
-                    log("Tapped on $reportIssues");
+                    log("Tapped on $privacyPolicy");
                     toggleDrawer();
                     setState(() {
                       selectedMenuItemId = 4;
                       log("selectedMenuItemId => $selectedMenuItemId");
                     });
-                    Navigator.of(context).push(MaterialPageRoute(
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
                         builder: (context) => const AboutPrivacyTerms(
-                              appBarTitle: reportIssues,
-                            )));
+                          appBarTitle: privacyPolicy,
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.55,
@@ -316,7 +331,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                         ),
                         Expanded(
                           child: MyText(
-                            mTitle: reportIssues,
+                            mTitle: privacyPolicy,
                             mFontSize: 16,
                             mFontStyle: FontStyle.normal,
                             mFontWeight: FontWeight.normal,
@@ -343,77 +358,77 @@ class _MySideDrawerState extends State<MySideDrawer> {
                     ),
                   ),
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(6),
-                  onTap: () {
-                    log("Tapped on $helpCenter");
-                    toggleDrawer();
-                    setState(() {
-                      selectedMenuItemId = 5;
-                      log("selectedMenuItemId => $selectedMenuItemId");
-                    });
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const AboutPrivacyTerms(
-                              appBarTitle: helpCenter,
-                            )));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.55,
-                    decoration: selectedMenuItemId == 5
-                        ? BoxDecoration(
-                            color: other50OpacColor,
-                            borderRadius: BorderRadius.circular(6),
-                            shape: BoxShape.rectangle,
-                          )
-                        : null,
-                    height: 60,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: const <Widget>[
-                        SizedBox(
-                          width: 10,
-                        ),
-                        MySvgAssetsImg(
-                          imageName: "help_center.svg",
-                          fit: BoxFit.cover,
-                          imgHeight: 24,
-                          imgWidth: 24,
-                          iconColor: white,
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: MyText(
-                            mTitle: helpCenter,
-                            mFontSize: 16,
-                            mFontStyle: FontStyle.normal,
-                            mFontWeight: FontWeight.normal,
-                            mTextColor: white,
-                            mOverflow: TextOverflow.ellipsis,
-                            mMaxLine: 2,
-                            mTextAlign: TextAlign.start,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        MySvgAssetsImg(
-                          imageName: "view_more.svg",
-                          fit: BoxFit.cover,
-                          imgHeight: 13,
-                          imgWidth: 7,
-                          iconColor: white,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(6),
+                //   onTap: () {
+                //     log("Tapped on $helpCenter");
+                //     toggleDrawer();
+                //     setState(() {
+                //       selectedMenuItemId = 5;
+                //       log("selectedMenuItemId => $selectedMenuItemId");
+                //     });
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //         builder: (context) => const AboutPrivacyTerms(
+                //               appBarTitle: helpCenter,
+                //             ),),);
+                //   },
+                //   child: Container(
+                //     width: MediaQuery.of(context).size.width * 0.55,
+                //     decoration: selectedMenuItemId == 5
+                //         ? BoxDecoration(
+                //             color: other50OpacColor,
+                //             borderRadius: BorderRadius.circular(6),
+                //             shape: BoxShape.rectangle,
+                //           )
+                //         : null,
+                //     height: 60,
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.start,
+                //       crossAxisAlignment: CrossAxisAlignment.center,
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: const <Widget>[
+                //         SizedBox(
+                //           width: 10,
+                //         ),
+                //         MySvgAssetsImg(
+                //           imageName: "help_center.svg",
+                //           fit: BoxFit.cover,
+                //           imgHeight: 24,
+                //           imgWidth: 24,
+                //           iconColor: white,
+                //         ),
+                //         SizedBox(
+                //           width: 15,
+                //         ),
+                //         Expanded(
+                //           child: MyText(
+                //             mTitle: helpCenter,
+                //             mFontSize: 16,
+                //             mFontStyle: FontStyle.normal,
+                //             mFontWeight: FontWeight.normal,
+                //             mTextColor: white,
+                //             mOverflow: TextOverflow.ellipsis,
+                //             mMaxLine: 2,
+                //             mTextAlign: TextAlign.start,
+                //           ),
+                //         ),
+                //         SizedBox(
+                //           width: 15,
+                //         ),
+                //         MySvgAssetsImg(
+                //           imageName: "view_more.svg",
+                //           fit: BoxFit.cover,
+                //           imgHeight: 13,
+                //           imgWidth: 7,
+                //           iconColor: white,
+                //         ),
+                //         SizedBox(
+                //           width: 10,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

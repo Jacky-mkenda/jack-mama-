@@ -305,8 +305,8 @@ class _LoginState extends State<Login> {
       borderRadius: BorderRadius.circular(5),
       onTap: () {
         log("$forgotPassword tapped!");
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const ForgotPassword()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const ForgotPassword("Login")));
       },
       child: const Padding(
         padding: EdgeInsets.all(8),

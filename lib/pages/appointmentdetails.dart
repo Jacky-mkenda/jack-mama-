@@ -530,55 +530,55 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          height: 65,
-                        ),
-                        Visibility(
-                          visible: detailProvider.appointmentModel.result!
-                                  .elementAt(0)
-                                  .status ==
-                              "5",
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(4),
-                            onTap: () {
-                              log("Tapped on $giveFeedBack");
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30),
-                                  ),
-                                ),
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                builder: (BuildContext context) {
-                                  return Wrap(children: <Widget>[
-                                    buildAddFeedBackDialog(),
-                                  ]);
-                                },
-                              );
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              height: Constant.buttonHeight,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.circular(4),
-                                shape: BoxShape.rectangle,
-                              ),
-                              child: const MyText(
-                                mTitle: giveFeedBack,
-                                mFontSize: 16,
-                                mFontStyle: FontStyle.normal,
-                                mFontWeight: FontWeight.w600,
-                                mMaxLine: 1,
-                                mTextAlign: TextAlign.center,
-                                mTextColor: primaryColor,
-                              ),
-                            ),
-                          ),
-                        ),
+                        // const SizedBox(
+                        //   height: 65,
+                        // ),
+                        // Visibility(
+                        //   visible: detailProvider.appointmentModel.result!
+                        //           .elementAt(0)
+                        //           .status ==
+                        //       "5",
+                        //   child: InkWell(
+                        //     borderRadius: BorderRadius.circular(4),
+                        //     onTap: () {
+                        //       log("Tapped on $giveFeedBack");
+                        //       showModalBottomSheet(
+                        //         context: context,
+                        //         isScrollControlled: true,
+                        //         shape: const RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.vertical(
+                        //             top: Radius.circular(30),
+                        //           ),
+                        //         ),
+                        //         clipBehavior: Clip.antiAliasWithSaveLayer,
+                        //         builder: (BuildContext context) {
+                        //           return Wrap(children: <Widget>[
+                        //             buildAddFeedBackDialog(),
+                        //           ]);
+                        //         },
+                        //       );
+                        //     },
+                        //     child: Container(
+                        //       width: MediaQuery.of(context).size.width * 0.5,
+                        //       height: Constant.buttonHeight,
+                        //       alignment: Alignment.center,
+                        //       decoration: BoxDecoration(
+                        //         color: white,
+                        //         borderRadius: BorderRadius.circular(4),
+                        //         shape: BoxShape.rectangle,
+                        //       ),
+                        //       child: const MyText(
+                        //         mTitle: giveFeedBack,
+                        //         mFontSize: 16,
+                        //         mFontStyle: FontStyle.normal,
+                        //         mFontWeight: FontWeight.w600,
+                        //         mMaxLine: 1,
+                        //         mTextAlign: TextAlign.center,
+                        //         mTextColor: primaryColor,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     );
                   } else {
@@ -623,19 +623,19 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
         mTextAlign: TextAlign.center,
         mTextColor: white,
       ),
-      actions: <Widget>[
-        IconButton(
-          onPressed: () {
-            log('Delete pressed!');
-          },
-          icon: const MySvgAssetsImg(
-            imageName: 'delete_green.svg',
-            fit: BoxFit.cover,
-            imgWidth: 30,
-            imgHeight: 30,
-          ),
-        ),
-      ],
+      // actions: <Widget>[
+      //   IconButton(
+      //     onPressed: () {
+      //       log('Delete pressed!');
+      //     },
+      //     icon: const MySvgAssetsImg(
+      //       imageName: 'delete_green.svg',
+      //       fit: BoxFit.cover,
+      //       imgWidth: 30,
+      //       imgHeight: 30,
+      //     ),
+      //   ),
+      // ],
     );
   }
 

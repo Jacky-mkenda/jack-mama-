@@ -55,6 +55,7 @@ const scanQRCode = "Scan QR Code";
 const aboutUs = "About Us";
 const termConditions = "Term & Conditions";
 const reportIssues = "Report Issues";
+const privacyPolicy = "Privacy Policy";
 const helpCenter = "Help Center";
 const logout = "Logout";
 //BottomNavigation & Side Navigation END

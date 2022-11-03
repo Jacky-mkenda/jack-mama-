@@ -6,7 +6,6 @@ import 'package:patientapp/pages/appointmentf.dart';
 import 'package:patientapp/pages/historyf.dart';
 import 'package:patientapp/pages/homef.dart';
 import 'package:patientapp/pages/login.dart';
-import 'package:patientapp/pages/medicaltestf.dart';
 import 'package:patientapp/pages/notifications.dart';
 import 'package:patientapp/pages/profile.dart';
 import 'package:patientapp/provider/homeprovider.dart';
@@ -36,7 +35,7 @@ class _HomeState extends State<Home> {
   final navigationPages = [
     const HomeF(),
     const AppointmentF(),
-    const MedicalTestF(),
+    //const MedicalTestF(),
     const HistoryF(),
   ];
 
@@ -243,22 +242,22 @@ class _HomeState extends State<Home> {
             imgWidth: 21,
           ),
         ),
-        BottomNavigationBarItem(
-          label: medicalTest,
-          tooltip: medicalTest,
-          icon: MySvgAssetsImg(
-            imageName: "medicaltest.svg",
-            fit: BoxFit.contain,
-            imgHeight: 21,
-            imgWidth: 21,
-          ),
-          activeIcon: MySvgAssetsImg(
-            imageName: "medicaltest_selected.svg",
-            fit: BoxFit.contain,
-            imgHeight: 21,
-            imgWidth: 21,
-          ),
-        ),
+        // BottomNavigationBarItem(
+        //   label: medicalTest,
+        //   tooltip: medicalTest,
+        //   icon: MySvgAssetsImg(
+        //     imageName: "medicaltest.svg",
+        //     fit: BoxFit.contain,
+        //     imgHeight: 21,
+        //     imgWidth: 21,
+        //   ),
+        //   activeIcon: MySvgAssetsImg(
+        //     imageName: "medicaltest_selected.svg",
+        //     fit: BoxFit.contain,
+        //     imgHeight: 21,
+        //     imgWidth: 21,
+        //   ),
+        // ),
         BottomNavigationBarItem(
           label: history,
           tooltip: history,
@@ -297,13 +296,13 @@ class _HomeState extends State<Home> {
             isHomePage = true;
           }
           break;
+        // case 2:
+        //   {
+        //     appBarTitle = medicalTest;
+        //     isHomePage = true;
+        //   }
+        //   break;
         case 2:
-          {
-            appBarTitle = medicalTest;
-            isHomePage = true;
-          }
-          break;
-        case 3:
           {
             appBarTitle = history;
             isHomePage = true;

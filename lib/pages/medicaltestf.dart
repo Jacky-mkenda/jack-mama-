@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:patientapp/pages/nodata.dart';
@@ -71,7 +70,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-         const  Padding(
+          const Padding(
             padding: EdgeInsets.only(left: 30, right: 30),
             child: TabBar(
               isScrollable: false,
@@ -151,7 +150,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
           ),
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
-            child:const  MyText(
+            child: const MyText(
               mTitle: selectAppointmentDate,
               mFontSize: 16,
               mFontStyle: FontStyle.normal,
@@ -267,7 +266,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child:const  MyText(
+                  child: const MyText(
                     mTitle: description,
                     mFontSize: 16,
                     mFontStyle: FontStyle.normal,
@@ -900,7 +899,7 @@ class _MedicalTestFState extends State<MedicalTestF> {
                                           ),
                                           Row(
                                             children: <Widget>[
-                                             const  MySvgAssetsImg(
+                                              const MySvgAssetsImg(
                                                 imageName: "test_desc.svg",
                                                 fit: BoxFit.cover,
                                                 imgHeight: 15,
@@ -935,19 +934,19 @@ class _MedicalTestFState extends State<MedicalTestF> {
                                     const SizedBox(
                                       width: 20,
                                     ),
-                                    CupertinoButton(
-                                      minSize: double.minPositive,
-                                      padding: EdgeInsets.zero,
-                                      child: const MySvgAssetsImg(
-                                        imageName: "delete.svg",
-                                        fit: BoxFit.cover,
-                                        imgHeight: 25,
-                                        imgWidth: 25,
-                                      ),
-                                      onPressed: () {
-                                        log("on Delete Click!");
-                                      },
-                                    ),
+                                    // CupertinoButton(
+                                    //   minSize: double.minPositive,
+                                    //   padding: EdgeInsets.zero,
+                                    //   child: const MySvgAssetsImg(
+                                    //     imageName: "delete.svg",
+                                    //     fit: BoxFit.cover,
+                                    //     imgHeight: 25,
+                                    //     imgWidth: 25,
+                                    //   ),
+                                    //   onPressed: () {
+                                    //     log("on Delete Click!");
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               ),

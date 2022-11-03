@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:patientapp/pages/appointmentdetails.dart';
@@ -289,50 +288,50 @@ class _HomeFState extends State<HomeF> {
                     const SizedBox(height: 8),
                     upcomingAppintmentList(),
                     const SizedBox(height: 24),
-                    Container(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          const MyText(
-                            mTitle: upcomingTests,
-                            mFontSize: 16,
-                            mFontWeight: FontWeight.bold,
-                            mOverflow: TextOverflow.ellipsis,
-                            mTextAlign: TextAlign.start,
-                            mTextColor: textTitleColor,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              log("Tapped on $seeAll");
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const ViewAll(
-                                    appBarTitle: upcomingTests,
-                                    layoutType: "Test",
-                                    searchedText: "",
-                                  ),
-                                ),
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(5),
-                            child: const MyText(
-                              mTitle: seeAll,
-                              mFontSize: 16,
-                              mFontWeight: FontWeight.normal,
-                              mOverflow: TextOverflow.ellipsis,
-                              mTextAlign: TextAlign.end,
-                              mTextColor: textSeeAllColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    upcomingTestList(),
-                    const SizedBox(height: 24),
+                    // Container(
+                    //   padding: const EdgeInsets.only(left: 20, right: 20),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     mainAxisSize: MainAxisSize.max,
+                    //     children: <Widget>[
+                    //       const MyText(
+                    //         mTitle: upcomingTests,
+                    //         mFontSize: 16,
+                    //         mFontWeight: FontWeight.bold,
+                    //         mOverflow: TextOverflow.ellipsis,
+                    //         mTextAlign: TextAlign.start,
+                    //         mTextColor: textTitleColor,
+                    //       ),
+                    //       InkWell(
+                    //         onTap: () {
+                    //           log("Tapped on $seeAll");
+                    //           Navigator.of(context).push(
+                    //             MaterialPageRoute(
+                    //               builder: (context) => const ViewAll(
+                    //                 appBarTitle: upcomingTests,
+                    //                 layoutType: "Test",
+                    //                 searchedText: "",
+                    //               ),
+                    //             ),
+                    //           );
+                    //         },
+                    //         borderRadius: BorderRadius.circular(5),
+                    //         child: const MyText(
+                    //           mTitle: seeAll,
+                    //           mFontSize: 16,
+                    //           mFontWeight: FontWeight.normal,
+                    //           mOverflow: TextOverflow.ellipsis,
+                    //           mTextAlign: TextAlign.end,
+                    //           mTextColor: textSeeAllColor,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // upcomingTestList(),
+                    // const SizedBox(height: 24),
                     Container(
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Row(
@@ -782,19 +781,19 @@ class _HomeFState extends State<HomeF> {
                                       const SizedBox(
                                         width: 20,
                                       ),
-                                      CupertinoButton(
-                                        minSize: double.minPositive,
-                                        padding: EdgeInsets.zero,
-                                        child: const MySvgAssetsImg(
-                                          imageName: "delete.svg",
-                                          fit: BoxFit.cover,
-                                          imgHeight: 25,
-                                          imgWidth: 25,
-                                        ),
-                                        onPressed: () {
-                                          log("on Delete Click!");
-                                        },
-                                      ),
+                                      // CupertinoButton(
+                                      //   minSize: double.minPositive,
+                                      //   padding: EdgeInsets.zero,
+                                      //   child: const MySvgAssetsImg(
+                                      //     imageName: "delete.svg",
+                                      //     fit: BoxFit.cover,
+                                      //     imgHeight: 25,
+                                      //     imgWidth: 25,
+                                      //   ),
+                                      //   onPressed: () {
+                                      //     log("on Delete Click!");
+                                      //   },
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -1104,19 +1103,19 @@ class _HomeFState extends State<HomeF> {
                                       const SizedBox(
                                         width: 20,
                                       ),
-                                      CupertinoButton(
-                                        minSize: double.minPositive,
-                                        padding: EdgeInsets.zero,
-                                        child: const MySvgAssetsImg(
-                                          imageName: "delete.svg",
-                                          fit: BoxFit.cover,
-                                          imgHeight: 25,
-                                          imgWidth: 25,
-                                        ),
-                                        onPressed: () {
-                                          log("on Delete Click!");
-                                        },
-                                      ),
+                                      // CupertinoButton(
+                                      //   minSize: double.minPositive,
+                                      //   padding: EdgeInsets.zero,
+                                      //   child: const MySvgAssetsImg(
+                                      //     imageName: "delete.svg",
+                                      //     fit: BoxFit.cover,
+                                      //     imgHeight: 25,
+                                      //     imgWidth: 25,
+                                      //   ),
+                                      //   onPressed: () {
+                                      //     log("on Delete Click!");
+                                      //   },
+                                      // ),
                                     ],
                                   ),
                                 ),

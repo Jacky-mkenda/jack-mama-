@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:patientapp/pages/appointmentdetails.dart';
 import 'package:patientapp/pages/bookappointment.dart';
@@ -431,19 +430,19 @@ class _ViewAllState extends State<ViewAll> {
                                     const SizedBox(
                                       width: 20,
                                     ),
-                                    CupertinoButton(
-                                      minSize: double.minPositive,
-                                      padding: EdgeInsets.zero,
-                                      child: const MySvgAssetsImg(
-                                        imageName: "delete.svg",
-                                        fit: BoxFit.cover,
-                                        imgHeight: 25,
-                                        imgWidth: 25,
-                                      ),
-                                      onPressed: () {
-                                        log("on Delete Click!");
-                                      },
-                                    ),
+                                    // CupertinoButton(
+                                    //   minSize: double.minPositive,
+                                    //   padding: EdgeInsets.zero,
+                                    //   child: const MySvgAssetsImg(
+                                    //     imageName: "delete.svg",
+                                    //     fit: BoxFit.cover,
+                                    //     imgHeight: 25,
+                                    //     imgWidth: 25,
+                                    //   ),
+                                    //   onPressed: () {
+                                    //     log("on Delete Click!");
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -751,19 +750,19 @@ class _ViewAllState extends State<ViewAll> {
                                     const SizedBox(
                                       width: 20,
                                     ),
-                                    CupertinoButton(
-                                      minSize: double.minPositive,
-                                      padding: EdgeInsets.zero,
-                                      child: const MySvgAssetsImg(
-                                        imageName: "delete.svg",
-                                        fit: BoxFit.cover,
-                                        imgHeight: 25,
-                                        imgWidth: 25,
-                                      ),
-                                      onPressed: () {
-                                        log("on Delete Click!");
-                                      },
-                                    ),
+                                    // CupertinoButton(
+                                    //   minSize: double.minPositive,
+                                    //   padding: EdgeInsets.zero,
+                                    //   child: const MySvgAssetsImg(
+                                    //     imageName: "delete.svg",
+                                    //     fit: BoxFit.cover,
+                                    //     imgHeight: 25,
+                                    //     imgWidth: 25,
+                                    //   ),
+                                    //   onPressed: () {
+                                    //     log("on Delete Click!");
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               ),

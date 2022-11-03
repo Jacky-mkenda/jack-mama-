@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:patientapp/pages/historydetails.dart';
 import 'package:patientapp/pages/nodata.dart';
@@ -317,19 +316,19 @@ class _HistoryFState extends State<HistoryF> {
                                     const SizedBox(
                                       width: 20,
                                     ),
-                                    CupertinoButton(
-                                      minSize: double.minPositive,
-                                      padding: EdgeInsets.zero,
-                                      child: const MySvgAssetsImg(
-                                        imageName: "delete.svg",
-                                        fit: BoxFit.cover,
-                                        imgHeight: 25,
-                                        imgWidth: 25,
-                                      ),
-                                      onPressed: () {
-                                        log("on Delete Click!");
-                                      },
-                                    ),
+                                    // CupertinoButton(
+                                    //   minSize: double.minPositive,
+                                    //   padding: EdgeInsets.zero,
+                                    //   child: const MySvgAssetsImg(
+                                    //     imageName: "delete.svg",
+                                    //     fit: BoxFit.cover,
+                                    //     imgHeight: 25,
+                                    //     imgWidth: 25,
+                                    //   ),
+                                    //   onPressed: () {
+                                    //     log("on Delete Click!");
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               ),

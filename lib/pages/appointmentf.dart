@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:patientapp/pages/appointmentdetails.dart';
 import 'package:patientapp/pages/noappointments.dart';
@@ -10,7 +9,6 @@ import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
 import 'package:patientapp/utils/utility.dart';
 import 'package:patientapp/widgets/mynetworkimg.dart';
-import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -285,19 +283,19 @@ class _AppointmentFState extends State<AppointmentF> {
                                     const SizedBox(
                                       width: 20,
                                     ),
-                                    CupertinoButton(
-                                      minSize: double.minPositive,
-                                      padding: EdgeInsets.zero,
-                                      child: const MySvgAssetsImg(
-                                        imageName: "delete.svg",
-                                        fit: BoxFit.cover,
-                                        imgHeight: 25,
-                                        imgWidth: 25,
-                                      ),
-                                      onPressed: () {
-                                        log("on Delete Click!");
-                                      },
-                                    ),
+                                    // CupertinoButton(
+                                    //   minSize: double.minPositive,
+                                    //   padding: EdgeInsets.zero,
+                                    //   child: const MySvgAssetsImg(
+                                    //     imageName: "delete.svg",
+                                    //     fit: BoxFit.cover,
+                                    //     imgHeight: 25,
+                                    //     imgWidth: 25,
+                                    //   ),
+                                    //   onPressed: () {
+                                    //     log("on Delete Click!");
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               ),
