@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:patientapp/pages/intro.dart';
 import 'package:patientapp/pages/login.dart';
 import 'package:patientapp/pages/sidedrawer.dart';
 import 'package:patientapp/provider/generalprovider.dart';
+import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/sharedpre.dart';
 import 'package:patientapp/widgets/myassetsimg.dart';
 import 'package:flutter/material.dart';
@@ -62,20 +64,31 @@ class _SplashState extends State<Splash> {
       log('seen ==> $seen');
       if (!mounted) return;
       if (seen == "1") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return const MySideDrawer();
-            },
-          ),
-        );
+        if (Constant.userID != "") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const MySideDrawer();
+              },
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const Login();
+              },
+            ),
+          );
+        }
       } else {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) {
-              return const Login();
+              return const Intro();
             },
           ),
         );

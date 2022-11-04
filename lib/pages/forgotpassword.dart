@@ -1,17 +1,19 @@
 import 'dart:developer';
 
+import 'package:patientapp/provider/forgotpasswordprovider.dart';
 import 'package:patientapp/utils/colors.dart';
+import 'package:patientapp/utils/constant.dart';
 import 'package:patientapp/utils/strings.dart';
 import 'package:patientapp/utils/utility.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../utils/constant.dart';
-import '../widgets/myassetsimg.dart';
-import '../widgets/mytext.dart';
-import '../widgets/mytextformfield.dart';
+import 'package:patientapp/widgets/myassetsimg.dart';
+import 'package:patientapp/widgets/mytext.dart';
+import 'package:patientapp/widgets/mytextformfield.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatefulWidget {
   final String viewFrom;
@@ -22,11 +24,13 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+  late ProgressDialog prDialog;
   final _formKey = GlobalKey<FormState>();
   final mEmailController = TextEditingController();
 
   @override
   void initState() {
+    prDialog = ProgressDialog(context);
     super.initState();
   }
 
@@ -224,62 +228,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     log("isValidForm => $isValidForm");
     // Validate returns true if the form is valid, or false otherwise.
     if (isValidForm) {
+      String email = mEmailController.text.toString().trim();
       log("Email => ${mEmailController.text}");
 
-      if (mEmailController.text.isEmpty) {
+      if (email.isEmpty) {
         Utility.showToast(enterEmail);
-        return;
-      }
-      if (!EmailValidator.validate(mEmailController.text)) {
+      } else if (!EmailValidator.validate(email)) {
         Utility.showToast(enterValidEmail);
-        return;
-      }
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password has been send Successfully!')),
-      );
+      } else {
+        final forgotPasswordProvider =
+            Provider.of<ForgotPasswordProvider>(context, listen: false);
+        Utility.showProgress(context, prDialog);
+        // forgot_password API call
+        await forgotPasswordProvider.getForgotPassword(email);
+        if (!forgotPasswordProvider.loading) {
+          // Hide Progress Dialog
+          prDialog.hide();
 
-      await showMyDialog();
+          // ignore: use_build_context_synchronously
+          Utility.showSnackbar(
+              context, "${forgotPasswordProvider.successModel.message}");
+          if (forgotPasswordProvider.successModel.status == 200) {
+            clearTextFormField();
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pop();
+          }
+        }
+      }
     }
   }
 
-  Future<void> showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Forgot Password Details'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                MyText(
-                  mTitle: "Email : ${mEmailController.text}",
-                  mTextColor: black,
-                  mFontSize: 16,
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const MyText(
-                mTitle: okay,
-                mTextColor: primaryDarkColor,
-                mFontSize: 20,
-                mFontStyle: FontStyle.normal,
-                mFontWeight: FontWeight.w600,
-                mTextAlign: TextAlign.center,
-              ),
-              onPressed: () {
-                log("$okay tapped!");
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void clearTextFormField() {
+    mEmailController.clear();
   }
 }

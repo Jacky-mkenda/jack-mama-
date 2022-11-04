@@ -38,9 +38,18 @@ class Utility {
     log('Constant userID ==> ${Constant.userID}');
   }
 
+  static setUserId() async {
+    SharedPre sharedPref = SharedPre();
+    await sharedPref.save("userid", "");
+    String userId = await sharedPref.read("userid");
+    log('setUserId userId ==> $userId');
+  }
+
   static setFirstTime() async {
     SharedPre sharedPref = SharedPre();
     await sharedPref.save("seen", "1");
+    String seenValue = await sharedPref.read("seen");
+    log('setFirstTime seen ==> $seenValue');
   }
 
   static Widget pageLoader() {

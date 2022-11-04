@@ -3,17 +3,19 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:patientapp/utils/colors.dart';
+import 'package:patientapp/utils/sharedpre.dart';
 import 'package:patientapp/utils/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AboutPrivacyTerms extends StatefulWidget {
-  final String appBarTitle;
+  final String appBarTitle, loadURL;
 
   const AboutPrivacyTerms({
     Key? key,
     this.cookieManager,
     required this.appBarTitle,
+    required this.loadURL,
   }) : super(key: key);
 
   final CookieManager? cookieManager;
@@ -23,6 +25,7 @@ class AboutPrivacyTerms extends StatefulWidget {
 
 class _AboutPrivacyTermsState extends State<AboutPrivacyTerms> {
   final _controller = Completer<WebViewController>();
+  SharedPre sharedPref = SharedPre();
   @override
   void initState() {
     super.initState();
@@ -56,7 +59,7 @@ class _AboutPrivacyTermsState extends State<AboutPrivacyTerms> {
 
   Widget setWebView() {
     return WebView(
-      initialUrl: 'https://divinetechs.com',
+      initialUrl: widget.loadURL,
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (WebViewController webViewController) {
         _controller.complete(webViewController);

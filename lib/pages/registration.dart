@@ -611,7 +611,6 @@ class _RegistrationState extends State<Registration> {
             generalProvider.loginRegisterModel.result![0].id ?? "";
         log('Constant userID ==>> ${Constant.userID}');
 
-        Utility.setFirstTime();
         clearTextFormField();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

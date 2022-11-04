@@ -107,6 +107,27 @@ class ApiService {
     return loginModel;
   }
 
+  // forgot_password API
+  Future<SuccessModel> forgotPassword(email) async {
+    log("email :==> $email");
+
+    SuccessModel successModel;
+    String doctorLogin = "forgot_password";
+    Response response = await dio.post(
+      '$baseUrl$doctorLogin',
+      data: {
+        'email': email,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+
+    log("forgotPassword statuscode :===> ${response.statusCode}");
+    log("forgotPassword Message :===> ${response.statusMessage}");
+    log("forgotPassword data :===> ${response.data}");
+    successModel = successModelFromJson(response.data.toString());
+    return successModel;
+  }
+
   // profile API
   Future<ProfileModel> patientProfile() async {
     log("userId :==> ${Constant.userID}");

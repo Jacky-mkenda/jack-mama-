@@ -8,6 +8,7 @@ import 'package:patientapp/provider/allappointmentprovider.dart';
 import 'package:patientapp/provider/appointmentdetailprovider.dart';
 import 'package:patientapp/provider/bookappointmentprovider.dart';
 import 'package:patientapp/provider/doctordetailprovider.dart';
+import 'package:patientapp/provider/forgotpasswordprovider.dart';
 import 'package:patientapp/provider/generalprovider.dart';
 import 'package:patientapp/provider/historyprovider.dart';
 import 'package:patientapp/provider/homeprovider.dart';
@@ -38,6 +39,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => DoctorDetailProvider()),
         ChangeNotifierProvider(create: (_) => MedicalTestProvider()),
         ChangeNotifierProvider(create: (_) => BookAppointmentProvider()),
+        ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()),
       ],
       child: const MyApp(),
     ),

@@ -1,5 +1,18 @@
 // Common Strings Text throughout the App
 
+//IntroScreen
+const finish = "Finish";
+const skip = "Skip";
+const intro1Title = "Find online Doctor Appointment";
+const intro2Title = "Get Medicine Prescription";
+const intro3Title = "Book Your Appointment";
+const intro1Desc =
+    "Lörem ipsum jyhänade spesektigt dede livspussel, käligen sobel, än biobesa inte dodade. Decidynar kjolprotest därför att nerväxt rement. Speryling demeskapet. Gardinhängarjobb ust dekarynyligen dide pogisk kipp. Du kan vara drabbad. Döbel plagen bilmålvakt inte fonogram än evunat. Trev vehänyr.";
+const intro2Desc =
+    "Lörem ipsum jyhänade spesektigt dede livspussel, käligen sobel, än biobesa inte dodade. Decidynar kjolprotest därför att nerväxt rement. Speryling demeskapet. Gardinhängarjobb ust dekarynyligen dide pogisk kipp. Du kan vara drabbad. Döbel plagen bilmålvakt inte fonogram än evunat. Trev vehänyr.";
+const intro3Desc =
+    "Lörem ipsum jyhänade spesektigt dede livspussel, käligen sobel, än biobesa inte dodade. Decidynar kjolprotest därför att nerväxt rement. Speryling demeskapet. Gardinhängarjobb ust dekarynyligen dide pogisk kipp. Du kan vara drabbad. Döbel plagen bilmålvakt inte fonogram än evunat. Trev vehänyr.";
+
 //Login, Registration Strings START
 const signIn = "Sign In";
 const welcomeBack = "Welcome back!";

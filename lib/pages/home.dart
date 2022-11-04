@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return (Constant.userID == "0" || Constant.userID == "")
+                        return (Constant.userID == "")
                             ? const Login()
                             : const Profile();
                       },

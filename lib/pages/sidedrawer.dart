@@ -7,7 +7,9 @@ import 'package:patientapp/pages/home.dart';
 import 'package:patientapp/pages/login.dart';
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/constant.dart';
+import 'package:patientapp/utils/sharedpre.dart';
 import 'package:patientapp/utils/strings.dart';
+import 'package:patientapp/utils/utility.dart';
 import 'package:patientapp/widgets/mysvgassetsimg.dart';
 import 'package:patientapp/widgets/mytext.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +24,21 @@ class MySideDrawer extends StatefulWidget {
 class _MySideDrawerState extends State<MySideDrawer> {
   final _drawerBarController = AwesomeDrawerBarController();
   late int selectedMenuItemId;
+  late String aboutUsUrl, privacyUrl, termsConditionUrl;
 
   @override
   void initState() {
-    super.initState();
+    getAboutPrivacyTermsURL();
     selectedMenuItemId = 0;
+    super.initState();
+  }
+
+  Future<void> getAboutPrivacyTermsURL() async {
+    SharedPre sharedPref = SharedPre();
+    aboutUsUrl = await sharedPref.read("about-us") ?? "";
+    privacyUrl = await sharedPref.read("privacy-policy") ?? "";
+    termsConditionUrl = await sharedPref.read("terms-and-conditions") ?? "";
+    log('Constant userID ==> ${Constant.userID}');
   }
 
   @override
@@ -147,8 +159,9 @@ class _MySideDrawerState extends State<MySideDrawer> {
                     });
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const AboutPrivacyTerms(
+                        builder: (context) => AboutPrivacyTerms(
                           appBarTitle: aboutUs,
+                          loadURL: aboutUsUrl,
                         ),
                       ),
                     );
@@ -221,8 +234,9 @@ class _MySideDrawerState extends State<MySideDrawer> {
                     });
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const AboutPrivacyTerms(
+                        builder: (context) => AboutPrivacyTerms(
                           appBarTitle: termConditions,
+                          loadURL: termsConditionUrl,
                         ),
                       ),
                     );
@@ -295,8 +309,9 @@ class _MySideDrawerState extends State<MySideDrawer> {
                     });
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const AboutPrivacyTerms(
+                        builder: (context) => AboutPrivacyTerms(
                           appBarTitle: privacyPolicy,
+                          loadURL: privacyUrl,
                         ),
                       ),
                     );
@@ -440,7 +455,15 @@ class _MySideDrawerState extends State<MySideDrawer> {
               setState(() {
                 selectedMenuItemId = 6;
                 log("selectedMenuItemId => $selectedMenuItemId");
-                showMyDialog();
+                if (Constant.userID != "") {
+                  showMyDialog();
+                } else {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const Login(),
+                    ),
+                  );
+                }
               });
             },
             child: Container(
@@ -471,7 +494,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                   ),
                   Expanded(
                     child: MyText(
-                      mTitle: Constant.userID == "0" ? login : logout,
+                      mTitle: (Constant.userID == "") ? login : logout,
                       mFontSize: 16,
                       mFontStyle: FontStyle.normal,
                       mFontWeight: FontWeight.normal,
@@ -572,9 +595,13 @@ class _MySideDrawerState extends State<MySideDrawer> {
                   mTextAlign: TextAlign.center,
                 ),
               ),
-              onPressed: () {
-                Constant.userID = "0";
-                Navigator.of(context).push(
+              onPressed: () async {
+                Constant.userID = "";
+                await Utility.setUserId();
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => const Login(),
                   ),

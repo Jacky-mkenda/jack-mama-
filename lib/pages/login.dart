@@ -305,8 +305,11 @@ class _LoginState extends State<Login> {
       borderRadius: BorderRadius.circular(5),
       onTap: () {
         log("$forgotPassword tapped!");
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const ForgotPassword("Login")));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ForgotPassword("Login"),
+          ),
+        );
       },
       child: const Padding(
         padding: EdgeInsets.all(8),
@@ -440,7 +443,6 @@ class _LoginState extends State<Login> {
             generalProvider.loginRegisterModel.result![0].id ?? "";
         log('Constant userID ==>> ${Constant.userID}');
 
-        Utility.setFirstTime();
         clearTextFormField();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
