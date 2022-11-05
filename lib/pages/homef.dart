@@ -37,7 +37,7 @@ class _HomeFState extends State<HomeF> {
     homeProvider.getPatientProfile();
     homeProvider.getSpecialities();
     homeProvider.getUpcomingAppointment();
-    homeProvider.getUpcomingTestAppointment();
+    //homeProvider.getUpcomingTestAppointment();
     homeProvider.getDoctor();
     super.initState();
   }

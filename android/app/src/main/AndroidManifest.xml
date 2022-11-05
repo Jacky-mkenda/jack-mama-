@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.patientapp">
+    package="com.divinetechs.patientapp">
     
     <uses-feature
         android:name="android.hardware.camera2.full"
@@ -29,8 +29,10 @@
         android:required="true" />
 
    <application
-        android:label="patientapp"
+        android:requestLegacyExternalStorage="true"
+        android:label="DTCare"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

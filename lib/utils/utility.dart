@@ -480,7 +480,8 @@ class Utility {
   //Convert Html to simple String
   static String parseHtmlString(String htmlString) {
     final document = parse(htmlString);
-    final String parsedString = parse(document.body.text).documentElement.text;
+    final String parsedString =
+        parse(document.body!.text).documentElement!.text;
 
     return parsedString;
   }

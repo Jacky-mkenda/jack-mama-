@@ -8,7 +8,7 @@
 PRODUCT_NAME = patientapp
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.patientapp
+PRODUCT_BUNDLE_IDENTIFIER = com.divinetechs.patientapp
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 com.example. All rights reserved.
