@@ -38,9 +38,11 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    isPrivacyChecked = false;
+    isPrivacyChecked = true;
     _passwordVisible = false;
     prDialog = ProgressDialog(context);
+    mEmailController.text = "ms@dt.com";
+    mPasswordController.text = "123456";
     super.initState();
   }
 

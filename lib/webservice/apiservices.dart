@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio_logger/dio_logger.dart';
 import 'package:patientapp/model/appointmentmodel.dart';
 import 'package:patientapp/model/doctormodel.dart';
 import 'package:patientapp/model/generalsettingmodel.dart';
@@ -22,6 +23,7 @@ class ApiService {
 
   ApiService() {
     dio = Dio();
+    dio.interceptors.add(dioLoggerInterceptor);
   }
 
   // genaral_setting API
