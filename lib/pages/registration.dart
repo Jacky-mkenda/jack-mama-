@@ -393,6 +393,8 @@ class _RegistrationState extends State<Registration> {
         mInsIMGController.text = p.basename(pickedFile.path);
         log("Gallery ImageFile ==> ${pickedImageFile!.path}");
       });
+    } else {
+      pickedImageFile = File("");
     }
   }
 

@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//final profileModel = profileModelFromJson(jsonString);
-
 import 'dart:convert';
 
 ProfileModel profileModelFromJson(String str) =>
@@ -17,22 +14,18 @@ class ProfileModel {
 
   int? status;
   String? message;
-  List<Result>? result;
+  Result? result;
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
         status: json["status"],
         message: json["message"],
-        result: json["result"] != null
-            ? List<Result>.from(json["result"].map((x) => Result.fromJson(x)))
-            : <Result>[],
+        result: Result.fromJson(json["result"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "result": result != null
-            ? List<dynamic>.from(result!.map((x) => x.toJson()))
-            : <Result>[],
+        "result": result!.toJson(),
       };
 }
 
@@ -44,13 +37,14 @@ class Result {
     this.fullname,
     this.firstName,
     this.lastName,
-    this.username,
+    this.userName,
     this.email,
     this.profileImg,
     this.instagramUrl,
     this.facebookUrl,
     this.twitterUrl,
     this.biodata,
+    this.password,
     this.type,
     this.mobileNumber,
     this.location,
@@ -64,8 +58,10 @@ class Result {
     this.referenceCode,
     this.totalPoints,
     this.deviceToken,
+    this.date,
+    this.createdAt,
+    this.updatedAt,
     this.status,
-    this.cDate,
     this.insuranceCompanyName,
     this.patientsQrcodeImg,
   });
@@ -76,13 +72,14 @@ class Result {
   String? fullname;
   String? firstName;
   String? lastName;
-  String? username;
+  String? userName;
   String? email;
   String? profileImg;
   String? instagramUrl;
   String? facebookUrl;
   String? twitterUrl;
   String? biodata;
+  String? password;
   String? type;
   String? mobileNumber;
   String? location;
@@ -96,8 +93,10 @@ class Result {
   String? referenceCode;
   String? totalPoints;
   String? deviceToken;
+  String? date;
+  String? createdAt;
+  String? updatedAt;
   String? status;
-  DateTime? cDate;
   String? insuranceCompanyName;
   String? patientsQrcodeImg;
 
@@ -108,13 +107,14 @@ class Result {
         fullname: json["fullname"],
         firstName: json["first_name"],
         lastName: json["last_name"],
-        username: json["username"],
+        userName: json["user_name"],
         email: json["email"],
         profileImg: json["profile_img"],
         instagramUrl: json["instagram_url"],
         facebookUrl: json["facebook_url"],
         twitterUrl: json["twitter_url"],
         biodata: json["biodata"],
+        password: json["password"],
         type: json["type"],
         mobileNumber: json["mobile_number"],
         location: json["location"],
@@ -128,8 +128,10 @@ class Result {
         referenceCode: json["reference_code"],
         totalPoints: json["total_points"],
         deviceToken: json["device_token"],
+        date: json["date"],
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
         status: json["status"],
-        cDate: DateTime.parse(json["c_date"]),
         insuranceCompanyName: json["insurance_company_name"],
         patientsQrcodeImg: json["patients_qrcode_img"],
       );
@@ -141,13 +143,14 @@ class Result {
         "fullname": fullname,
         "first_name": firstName,
         "last_name": lastName,
-        "username": username,
+        "user_name": userName,
         "email": email,
         "profile_img": profileImg,
         "instagram_url": instagramUrl,
         "facebook_url": facebookUrl,
         "twitter_url": twitterUrl,
         "biodata": biodata,
+        "password": password,
         "type": type,
         "mobile_number": mobileNumber,
         "location": location,
@@ -161,8 +164,10 @@ class Result {
         "reference_code": referenceCode,
         "total_points": totalPoints,
         "device_token": deviceToken,
+        "date": date,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
         "status": status,
-        "c_date": cDate.toString(),
         "insurance_company_name": insuranceCompanyName,
         "patients_qrcode_img": patientsQrcodeImg,
       };

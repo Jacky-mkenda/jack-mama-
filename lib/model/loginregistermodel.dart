@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final loginRegisterModel = loginRegisterModelFromJson(jsonString);
-
 import 'dart:convert';
 
 LoginRegisterModel loginRegisterModelFromJson(String str) =>
@@ -25,17 +21,14 @@ class LoginRegisterModel {
       LoginRegisterModel(
         status: json["status"],
         message: json["message"],
-        result: json["result"] != null
-            ? List<Result>.from(json["result"].map((x) => Result.fromJson(x)))
-            : <Result>[],
+        result:
+            List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "result": result != null
-            ? List<dynamic>.from(result!.map((x) => x.toJson()))
-            : <Result>[],
+        "result": List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }
 
@@ -47,7 +40,7 @@ class Result {
     this.fullname,
     this.firstName,
     this.lastName,
-    this.username,
+    this.userName,
     this.email,
     this.profileImg,
     this.instagramUrl,
@@ -68,8 +61,10 @@ class Result {
     this.referenceCode,
     this.totalPoints,
     this.deviceToken,
+    this.date,
+    this.createdAt,
+    this.updatedAt,
     this.status,
-    this.cDate,
   });
 
   String? id;
@@ -78,7 +73,7 @@ class Result {
   String? fullname;
   String? firstName;
   String? lastName;
-  String? username;
+  String? userName;
   String? email;
   String? profileImg;
   String? instagramUrl;
@@ -99,8 +94,10 @@ class Result {
   String? referenceCode;
   String? totalPoints;
   String? deviceToken;
+  String? date;
+  String? createdAt;
+  String? updatedAt;
   String? status;
-  DateTime? cDate;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         id: json["id"],
@@ -109,7 +106,7 @@ class Result {
         fullname: json["fullname"],
         firstName: json["first_name"],
         lastName: json["last_name"],
-        username: json["username"],
+        userName: json["user_name"],
         email: json["email"],
         profileImg: json["profile_img"],
         instagramUrl: json["instagram_url"],
@@ -130,8 +127,10 @@ class Result {
         referenceCode: json["reference_code"],
         totalPoints: json["total_points"],
         deviceToken: json["device_token"],
+        date: json["date"],
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
         status: json["status"],
-        cDate: DateTime.parse(json["c_date"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -141,7 +140,7 @@ class Result {
         "fullname": fullname,
         "first_name": firstName,
         "last_name": lastName,
-        "username": username,
+        "user_name": userName,
         "email": email,
         "profile_img": profileImg,
         "instagram_url": instagramUrl,
@@ -162,7 +161,9 @@ class Result {
         "reference_code": referenceCode,
         "total_points": totalPoints,
         "device_token": deviceToken,
+        "date": date,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
         "status": status,
-        "c_date": cDate.toString(),
       };
 }

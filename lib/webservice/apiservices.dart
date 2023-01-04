@@ -30,10 +30,8 @@ class ApiService {
   Future<GeneralSettingModel> genaralSetting() async {
     GeneralSettingModel generalSettingModel;
     String generalsetting = "genaral_setting";
-    Response response = await dio.get('$baseUrl$generalsetting');
-    log('genaralSetting response ==>>> ${response.data}');
-    log('genaralSetting statusCode ==>>> ${response.statusCode}');
-    generalSettingModel = generalSettingModelFromJson(response.data.toString());
+    Response response = await dio.post('$baseUrl$generalsetting');
+    generalSettingModel = GeneralSettingModel.fromJson(response.data);
     return generalSettingModel;
   }
 
@@ -50,9 +48,6 @@ class ApiService {
       File? insImageFile) async {
     LoginRegisterModel loginRegisterModel;
     String registrationAPI = "registration";
-    log("registration API :==> $baseUrl$registrationAPI");
-    log("Insurance Filename :==> ${insImageFile!.path.split('/').last}");
-    log("Insurance Extension :==> ${insImageFile.path.split('/').last.split(".").last}");
     Response response = await dio.post(
       '$baseUrl$registrationAPI',
       data: FormData.fromMap({
@@ -62,22 +57,13 @@ class ApiService {
         'password': password,
         'mobile_number': mobileNumber,
         'device_token': deviceToken,
-        'insurance_company_id': insCompanyId ?? "0",
-        'insurance_no': insNumber ?? "0",
-        "insurance_card_pic": insImageFile.path.isNotEmpty
-            ? (await MultipartFile.fromFile(
-                insImageFile.path,
-                filename: insImageFile.path.split('/').last,
-              ))
-            : "",
+        'insurance_company_id': "",
+        'insurance_no': "",
+        "insurance_card_pic": "",
       }),
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
-
-    log("patientRegistration statuscode :===> ${response.statusCode}");
-    log("patientRegistration Message :===> ${response.statusMessage}");
-    log("patientRegistration data :===> ${response.data}");
-    loginRegisterModel = loginRegisterModelFromJson(response.data.toString());
+    loginRegisterModel = LoginRegisterModel.fromJson(response.data);
     return loginRegisterModel;
   }
 
@@ -105,7 +91,7 @@ class ApiService {
     log("patientLogin statuscode :===> ${response.statusCode}");
     log("patientLogin Message :===> ${response.statusMessage}");
     log("patientLogin data :===> ${response.data}");
-    loginModel = loginRegisterModelFromJson(response.data.toString());
+    loginModel = LoginRegisterModel.fromJson(response.data);
     return loginModel;
   }
 
@@ -126,7 +112,7 @@ class ApiService {
     log("forgotPassword statuscode :===> ${response.statusCode}");
     log("forgotPassword Message :===> ${response.statusMessage}");
     log("forgotPassword data :===> ${response.data}");
-    successModel = successModelFromJson(response.data.toString());
+    successModel = SuccessModel.fromJson(response.data);
     return successModel;
   }
 
@@ -147,7 +133,7 @@ class ApiService {
     log("patientProfile statuscode :===> ${response.statusCode}");
     log("patientProfile Message :===> ${response.statusMessage}");
     log("patientProfile data :===> ${response.data}");
-    profileModel = profileModelFromJson(response.data.toString());
+    profileModel = ProfileModel.fromJson(response.data);
     return profileModel;
   }
 
@@ -198,7 +184,7 @@ class ApiService {
     log("updatePatientProfile statuscode :===> ${response.statusCode}");
     log("updatePatientProfile Message :===> ${response.statusMessage}");
     log("updatePatientProfile data :===> ${response.data}");
-    successModel = successModelFromJson(response.data.toString());
+    successModel = SuccessModel.fromJson(response.data);
     return successModel;
   }
 
@@ -223,7 +209,7 @@ class ApiService {
     log("updatePatientProfile statuscode :===> ${response.statusCode}");
     log("updatePatientProfile Message :===> ${response.statusMessage}");
     log("updatePatientProfile data :===> ${response.data}");
-    successModel = successModelFromJson(response.data.toString());
+    successModel = SuccessModel.fromJson(response.data);
     return successModel;
   }
 
@@ -245,7 +231,7 @@ class ApiService {
     log("getPatientNotification statuscode :===> ${response.statusCode}");
     log("getPatientNotification Message :===> ${response.statusMessage}");
     log("getPatientNotification data :===> ${response.data}");
-    notificationModel = notificationModelFromJson(response.data.toString());
+    notificationModel = NotificationModel.fromJson(response.data);
     return notificationModel;
   }
 
@@ -269,7 +255,7 @@ class ApiService {
     log("updateNotificationStatus statuscode :===> ${response.statusCode}");
     log("updateNotificationStatus Message :===> ${response.statusMessage}");
     log("updateNotificationStatus data :===> ${response.data}");
-    successModel = successModelFromJson(response.data.toString());
+    successModel = SuccessModel.fromJson(response.data);
     return successModel;
   }
 
@@ -286,7 +272,7 @@ class ApiService {
     log("specialities statuscode :===> ${response.statusCode}");
     log("specialities Message :===> ${response.statusMessage}");
     log("specialities data :===> ${response.data}");
-    specialityModel = specialityModelFromJson(response.data.toString());
+    specialityModel = SpecialityModel.fromJson(response.data);
     return specialityModel;
   }
 
@@ -303,7 +289,7 @@ class ApiService {
     log("doctor statuscode :===> ${response.statusCode}");
     log("doctor Message :===> ${response.statusMessage}");
     log("doctor data :===> ${response.data}");
-    doctorModel = doctorModelFromJson(response.data.toString());
+    doctorModel = DoctorModel.fromJson(response.data);
     return doctorModel;
   }
 
@@ -325,7 +311,7 @@ class ApiService {
     log("doctorDetail statuscode :===> ${response.statusCode}");
     log("doctorDetail Message :===> ${response.statusMessage}");
     log("doctorDetail data :===> ${response.data}");
-    doctorModel = doctorModelFromJson(response.data.toString());
+    doctorModel = DoctorModel.fromJson(response.data);
     return doctorModel;
   }
 
@@ -347,7 +333,7 @@ class ApiService {
     log("searchDoctor statuscode :===> ${response.statusCode}");
     log("searchDoctor Message :===> ${response.statusMessage}");
     log("searchDoctor data :===> ${response.data}");
-    doctorModel = doctorModelFromJson(response.data.toString());
+    doctorModel = DoctorModel.fromJson(response.data);
     return doctorModel;
   }
 
@@ -369,7 +355,7 @@ class ApiService {
     log("upcomingAppointment statuscode :===> ${response.statusCode}");
     log("upcomingAppointment Message :===> ${response.statusMessage}");
     log("upcomingAppointment data :===> ${response.data}");
-    appointmentModel = appointmentModelFromJson(response.data.toString());
+    appointmentModel = AppointmentModel.fromJson(response.data);
     return appointmentModel;
   }
 
@@ -391,7 +377,7 @@ class ApiService {
     log("upcomingTestAppoinment statuscode :===> ${response.statusCode}");
     log("upcomingTestAppoinment Message :===> ${response.statusMessage}");
     log("upcomingTestAppoinment data :===> ${response.data}");
-    appointmentModel = appointmentModelFromJson(response.data.toString());
+    appointmentModel = AppointmentModel.fromJson(response.data);
     return appointmentModel;
   }
 
@@ -413,7 +399,7 @@ class ApiService {
     log("appointmentDetails statuscode :===> ${response.statusCode}");
     log("appointmentDetails Message :===> ${response.statusMessage}");
     log("appointmentDetails data :===> ${response.data}");
-    appointmentModel = appointmentModelFromJson(response.data.toString());
+    appointmentModel = AppointmentModel.fromJson(response.data);
     return appointmentModel;
   }
 
@@ -435,7 +421,7 @@ class ApiService {
     log("allAppointment statuscode :===> ${response.statusCode}");
     log("allAppointment Message :===> ${response.statusMessage}");
     log("allAppointment data :===> ${response.data}");
-    appointmentModel = appointmentModelFromJson(response.data.toString());
+    appointmentModel = AppointmentModel.fromJson(response.data);
     return appointmentModel;
   }
 
@@ -457,7 +443,7 @@ class ApiService {
     log("medicineHistory statuscode :===> ${response.statusCode}");
     log("medicineHistory Message :===> ${response.statusMessage}");
     log("medicineHistory data :===> ${response.data}");
-    appointmentModel = appointmentModelFromJson(response.data.toString());
+    appointmentModel = AppointmentModel.fromJson(response.data);
     return appointmentModel;
   }
 
@@ -479,8 +465,7 @@ class ApiService {
     log("prescriptionHistory statuscode :===> ${response.statusCode}");
     log("prescriptionHistory Message :===> ${response.statusMessage}");
     log("prescriptionHistory data :===> ${response.data}");
-    prescriptionDetailModel =
-        prescriptionDetailModelFromJson(response.data.toString());
+    prescriptionDetailModel = PrescriptionDetailModel.fromJson(response.data);
     return prescriptionDetailModel;
   }
 
@@ -502,7 +487,7 @@ class ApiService {
     log("patientTestAppointment statuscode :===> ${response.statusCode}");
     log("patientTestAppointment Message :===> ${response.statusMessage}");
     log("patientTestAppointment data :===> ${response.data}");
-    appointmentModel = appointmentModelFromJson(response.data.toString());
+    appointmentModel = AppointmentModel.fromJson(response.data);
     return appointmentModel;
   }
 
@@ -526,7 +511,7 @@ class ApiService {
     log("timeSlotByDoctorId statuscode :===> ${response.statusCode}");
     log("timeSlotByDoctorId Message :===> ${response.statusMessage}");
     log("timeSlotByDoctorId data :===> ${response.data}");
-    timeSlotModel = timeSlotModelFromJson(response.data.toString());
+    timeSlotModel = TimeSlotModel.fromJson(response.data);
     return timeSlotModel;
   }
 
@@ -564,7 +549,7 @@ class ApiService {
     log("timeSlotByDoctorId statuscode :===> ${response.statusCode}");
     log("timeSlotByDoctorId Message :===> ${response.statusMessage}");
     log("timeSlotByDoctorId data :===> ${response.data}");
-    successModel = successModelFromJson(response.data.toString());
+    successModel = SuccessModel.fromJson(response.data);
     return successModel;
   }
 
@@ -586,7 +571,7 @@ class ApiService {
     log("testTimeSlot statuscode :===> ${response.statusCode}");
     log("testTimeSlot Message :===> ${response.statusMessage}");
     log("testTimeSlot data :===> ${response.data}");
-    testTimeSlotModel = testTimeSlotModelFromJson(response.data.toString());
+    testTimeSlotModel = TestTimeSlotModel.fromJson(response.data);
     return testTimeSlotModel;
   }
 
@@ -618,7 +603,7 @@ class ApiService {
     log("makeTestAppoinment statuscode :===> ${response.statusCode}");
     log("makeTestAppoinment Message :===> ${response.statusMessage}");
     log("makeTestAppoinment data :===> ${response.data}");
-    successModel = successModelFromJson(response.data.toString());
+    successModel = SuccessModel.fromJson(response.data);
     return successModel;
   }
 }

@@ -1,5 +1,5 @@
 class Constant {
-  static const String baseurl = 'http://demo.divinetechs.com/apps/dtcare';
+  static const String baseurl = 'http://demo.divinetechs.in/apps/dtcare/public';
 
   static String appName = "";
 

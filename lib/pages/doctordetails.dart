@@ -111,24 +111,24 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                         const SizedBox(
                                           height: 1,
                                         ),
-                                        MyText(
-                                          mTitle: detailProvider
-                                                  .doctorModel.result!
-                                                  .elementAt(0)
-                                                  .specialitiesName!
-                                                  .isNotEmpty
-                                              ? (detailProvider
-                                                      .doctorModel.result!
-                                                      .elementAt(0)
-                                                      .specialitiesName ??
-                                                  "-")
-                                              : "-",
-                                          mTextAlign: TextAlign.start,
-                                          mTextColor: otherLightColor,
-                                          mFontSize: 14,
-                                          mFontStyle: FontStyle.normal,
-                                          mFontWeight: FontWeight.w400,
-                                        ),
+                                        // MyText(
+                                        //   mTitle: detailProvider
+                                        //           .doctorModel.result!
+                                        //           .elementAt(0)
+                                        //           .specialitiesName!
+                                        //           .isNotEmpty
+                                        //       ? (detailProvider
+                                        //               .doctorModel.result!
+                                        //               .elementAt(0)
+                                        //               .specialitiesName ??
+                                        //           "-")
+                                        //       : "-",
+                                        //   mTextAlign: TextAlign.start,
+                                        //   mTextColor: otherLightColor,
+                                        //   mFontSize: 14,
+                                        //   mFontStyle: FontStyle.normal,
+                                        //   mFontWeight: FontWeight.w400,
+                                        // ),
                                         const SizedBox(
                                           height: 3,
                                         ),
