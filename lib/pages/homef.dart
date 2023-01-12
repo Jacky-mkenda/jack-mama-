@@ -166,13 +166,17 @@ class _HomeFState extends State<HomeF> {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         log("isSearching ======> $isSearching");
                         if (isSearching) {
                           setState(() {
                             isSearching = false;
                           });
                         }
+                        final homeProvider =
+                            Provider.of<HomeProvider>(context, listen: false);
+                        await homeProvider
+                            .getSearchedDoctor(searchedText.toString());
                       },
                       child: Container(
                         width: 50,

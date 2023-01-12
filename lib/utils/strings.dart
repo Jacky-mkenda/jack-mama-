@@ -146,6 +146,7 @@ const workingTime = "Working Time";
 const address = "Address";
 const services = "Services";
 const healthCare = "Health Care";
+const specialist = "Specialist";
 const makeAnAppointment = "Make an Appointment";
 const pickFromGallery = "Pick from gallery!";
 const captureByCamera = "Capture by camera!";

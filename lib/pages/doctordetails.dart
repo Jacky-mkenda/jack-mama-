@@ -425,6 +425,38 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                   mTextAlign: TextAlign.start,
                                   mTextColor: textTitleColor,
                                 ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                const MyText(
+                                  mTitle: specialist,
+                                  mFontSize: 12,
+                                  mFontWeight: FontWeight.normal,
+                                  mFontStyle: FontStyle.normal,
+                                  mTextAlign: TextAlign.start,
+                                  mTextColor: otherLightColor,
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                MyText(
+                                  mTitle: detailProvider.doctorModel.result!
+                                          .elementAt(0)
+                                          .specialitiesName!
+                                          .isNotEmpty
+                                      ? (detailProvider.doctorModel.result!
+                                              .elementAt(0)
+                                              .specialitiesName ??
+                                          "-")
+                                      : "-",
+                                  mFontSize: 14,
+                                  mMaxLine: 5,
+                                  mOverflow: TextOverflow.ellipsis,
+                                  mFontWeight: FontWeight.normal,
+                                  mFontStyle: FontStyle.normal,
+                                  mTextAlign: TextAlign.start,
+                                  mTextColor: textTitleColor,
+                                ),
                               ],
                             ),
                           ),
