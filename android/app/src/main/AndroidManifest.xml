@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.divinetechs.patientapp">
+    package="com.jackmama.patient">
     
     <uses-feature
         android:name="android.hardware.camera2.full"
@@ -30,7 +30,7 @@
 
    <application
         android:requestLegacyExternalStorage="true"
-        android:label="DTCare"
+        android:label="Jack Mama"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">

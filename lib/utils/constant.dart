@@ -1,7 +1,7 @@
 class Constant {
-  static const String baseurl = 'http://demo.divinetechs.in/apps/dtcare/public';
+  static const String baseurl = 'http://www.capelex.co.tz';
 
-  static String appName = "";
+  static String appName = "Jack Mama";
 
   // Dimentions START
   static double appBarHeight = 60;

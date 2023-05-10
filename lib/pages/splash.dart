@@ -35,12 +35,13 @@ class _SplashState extends State<Splash> {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: MyAssetsImg(
-        imageName: "splash.png",
-        fit: BoxFit.fill,
-        imgHeight: MediaQuery.of(context).size.height,
-        imgWidth: MediaQuery.of(context).size.width,
-      ),
+      // child: MyAssetsImg(
+      //   imageName: "splash.png",
+      //   fit: BoxFit.fill,
+      //   imgHeight: MediaQuery.of(context).size.height,
+      //   imgWidth: MediaQuery.of(context).size.width,
+      // ),
+      child: Container(),
     );
   }
 
@@ -88,7 +89,7 @@ class _SplashState extends State<Splash> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return const Intro();
+              return const Login();
             },
           ),
         );

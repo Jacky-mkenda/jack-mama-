@@ -189,17 +189,17 @@ class _ProfileState extends State<Profile> {
                     mTextAlign: TextAlign.center,
                   ),
                 ),
-                Tab(
-                  child: MyText(
-                    mTitle: qrCode,
-                    mFontSize: 15,
-                    mFontStyle: FontStyle.normal,
-                    mFontWeight: FontWeight.w600,
-                    mMaxLine: 1,
-                    mOverflow: TextOverflow.ellipsis,
-                    mTextAlign: TextAlign.center,
-                  ),
-                ),
+                // Tab(
+                //   child: MyText(
+                //     mTitle: qrCode,
+                //     mFontSize: 15,
+                //     mFontStyle: FontStyle.normal,
+                //     mFontWeight: FontWeight.w600,
+                //     mMaxLine: 1,
+                //     mOverflow: TextOverflow.ellipsis,
+                //     mTextAlign: TextAlign.center,
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -214,7 +214,7 @@ class _ProfileState extends State<Profile> {
               children: [
                 personalDetailTab(),
                 bmiDetailTab(),
-                qrCodeTab(),
+                // qrCodeTab(),
               ],
             ),
           ),
@@ -674,34 +674,34 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget qrCodeTab() {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        color: white,
-        child: Consumer<ProfileProvider>(
-          builder: (context, profileProvider, child) {
-            return MyNetworkImage(
-              imageUrl: !profileProvider.loading
-                  ? profileProvider.profileModel.status == 200
-                      ? profileProvider.profileModel.result != null
-                          ? profileProvider.profileModel.result!.isNotEmpty
-                              ? (profileProvider.profileModel.result
-                                      ?.elementAt(0)
-                                      .patientsQrcodeImg
-                                      .toString() ??
-                                  "")
-                              : ""
-                          : ""
-                      : ""
-                  : "",
-              fit: BoxFit.cover,
-              imgHeight: MediaQuery.of(context).size.height * 0.25,
-              imgWidth: MediaQuery.of(context).size.width * 0.5,
-            );
-          },
-        ),
-      ),
-    );
-  }
+  // Widget qrCodeTab() {
+  //   return Center(
+  //     child: Container(
+  //       padding: const EdgeInsets.all(8),
+  //       color: white,
+  //       child: Consumer<ProfileProvider>(
+  //         builder: (context, profileProvider, child) {
+  //           return MyNetworkImage(
+  //             imageUrl: !profileProvider.loading
+  //                 ? profileProvider.profileModel.status == 200
+  //                     ? profileProvider.profileModel.result != null
+  //                         ? profileProvider.profileModel.result!.isNotEmpty
+  //                             ? (profileProvider.profileModel.result
+  //                                     ?.elementAt(0)
+  //                                     .patientsQrcodeImg
+  //                                     .toString() ??
+  //                                 "")
+  //                             : ""
+  //                         : ""
+  //                     : ""
+  //                 : "",
+  //             fit: BoxFit.cover,
+  //             imgHeight: MediaQuery.of(context).size.height * 0.25,
+  //             imgWidth: MediaQuery.of(context).size.width * 0.5,
+  //           );
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 }

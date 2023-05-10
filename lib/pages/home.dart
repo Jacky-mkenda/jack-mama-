@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:awesome_drawer_bar/awesome_drawer_bar.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:patientapp/pages/appointmentf.dart';
 import 'package:patientapp/pages/historyf.dart';
 import 'package:patientapp/pages/homef.dart';
@@ -101,8 +101,8 @@ class _HomeState extends State<Home> {
                     ),
                   );
                 },
-                icon: Badge(
-                  position: BadgePosition.bottomStart(bottom: 8, start: 8),
+                icon: badges.Badge(
+                  position: badges.BadgePosition.bottomStart(bottom: 8, start: 8),
                   badgeColor: white,
                   badgeContent: MyText(
                     mTitle: !homeProvider.loading

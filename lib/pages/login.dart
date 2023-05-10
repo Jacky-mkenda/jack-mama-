@@ -41,8 +41,8 @@ class _LoginState extends State<Login> {
     isPrivacyChecked = true;
     _passwordVisible = false;
     prDialog = ProgressDialog(context);
-    mEmailController.text = "ms@dt.com";
-    mPasswordController.text = "123456";
+    mEmailController.text = "";
+    mPasswordController.text = "";
     super.initState();
   }
 
@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
         ),
         Scaffold(
           resizeToAvoidBottomInset: true,
-          backgroundColor: statusBarColor,
+          // backgroundColor: statusBarColor,
           body: SafeArea(
             top: true,
             child: Column(
@@ -74,14 +74,15 @@ class _LoginState extends State<Login> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  flex: 3,
+                  flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(18),
-                    child: MyAssetsImg(
-                      imageName: "login_icon.png",
-                      fit: BoxFit.contain,
-                      imgWidth: MediaQuery.of(context).size.width * 0.43,
-                    ),
+                    child: Container(height: 20,),
+                    // child: MyAssetsImg(
+                    //   imageName: "login_icon.png",
+                    //   fit: BoxFit.contain,
+                    //   imgWidth: MediaQuery.of(context).size.width * 0.43,
+                    // ),
                   ),
                 ),
                 Expanded(
@@ -216,7 +217,8 @@ class _LoginState extends State<Login> {
                                         ],
                                       ),
                                     ),
-                                    privacyCheckBox(),
+                                    // privacyCheckBox(),
+                                    SizedBox(height: 20,),
                                     loginButton(),
                                     const SizedBox(
                                       height: 20,
