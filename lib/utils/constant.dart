@@ -1,5 +1,5 @@
 class Constant {
-  static const String baseurl = 'http://www.capelex.co.tz';
+  static const String baseurl = 'http://www.capelex.co.tz/public';
 
   static String appName = "Jack Mama";
 
