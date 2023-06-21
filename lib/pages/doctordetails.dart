@@ -111,24 +111,24 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                         const SizedBox(
                                           height: 1,
                                         ),
-                                        // MyText(
-                                        //   mTitle: detailProvider
-                                        //           .doctorModel.result!
-                                        //           .elementAt(0)
-                                        //           .specialitiesName!
-                                        //           .isNotEmpty
-                                        //       ? (detailProvider
-                                        //               .doctorModel.result!
-                                        //               .elementAt(0)
-                                        //               .specialitiesName ??
-                                        //           "-")
-                                        //       : "-",
-                                        //   mTextAlign: TextAlign.start,
-                                        //   mTextColor: otherLightColor,
-                                        //   mFontSize: 14,
-                                        //   mFontStyle: FontStyle.normal,
-                                        //   mFontWeight: FontWeight.w400,
-                                        // ),
+                                        MyText(
+                                          mTitle: detailProvider
+                                                  .doctorModel.result!
+                                                  .elementAt(0)
+                                                  .specialitiesName!
+                                                  .isNotEmpty
+                                              ? (detailProvider
+                                                      .doctorModel.result!
+                                                      .elementAt(0)
+                                                      .specialitiesName ??
+                                                  "-")
+                                              : "-",
+                                          mTextAlign: TextAlign.start,
+                                          mTextColor: otherLightColor,
+                                          mFontSize: 14,
+                                          mFontStyle: FontStyle.normal,
+                                          mFontWeight: FontWeight.w400,
+                                        ),
                                         const SizedBox(
                                           height: 3,
                                         ),
@@ -397,7 +397,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                   height: 15,
                                 ),
                                 const MyText(
-                                  mTitle: healthCare,
+                                  mTitle: "Location",
                                   mFontSize: 12,
                                   mFontWeight: FontWeight.normal,
                                   mFontStyle: FontStyle.normal,
@@ -410,11 +410,11 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                 MyText(
                                   mTitle: detailProvider.doctorModel.result!
                                           .elementAt(0)
-                                          .healthCare!
+                                          .address!
                                           .isNotEmpty
                                       ? (detailProvider.doctorModel.result!
                                               .elementAt(0)
-                                              .healthCare ??
+                                              .address ??
                                           "-")
                                       : "-",
                                   mFontSize: 14,

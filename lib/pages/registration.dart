@@ -288,7 +288,7 @@ class _RegistrationState extends State<Registration> {
                             ],
                           ),
                         ),
-                        // privacyCheckBox(),
+                        privacyCheckBox(),
                         SizedBox(height: 30,),
                         signUpButton(),
                       ],
