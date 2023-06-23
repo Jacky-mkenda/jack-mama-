@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:patientapp/utils/colors.dart';
 import 'package:patientapp/utils/sharedpre.dart';
 import 'package:patientapp/utils/utility.dart';

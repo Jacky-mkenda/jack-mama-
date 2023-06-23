@@ -1,7 +1,4 @@
-// @dart=2.9
-
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:patientapp/pages/splash.dart';
 import 'package:patientapp/provider/allappointmentprovider.dart';
@@ -41,20 +38,20 @@ void main() {
         ChangeNotifierProvider(create: (_) => BookAppointmentProvider()),
         ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()),
       ],
-      child: const MyApp(),
+      child:  MyApp(),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  PackageInfo packageInfo;
+  late PackageInfo packageInfo;
   @override
   void initState() {
     //Saved UserID in Constant for Future use

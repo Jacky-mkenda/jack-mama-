@@ -103,7 +103,7 @@ class _HomeState extends State<Home> {
                 },
                 icon: badges.Badge(
                   position: badges.BadgePosition.bottomStart(bottom: 8, start: 8),
-                  badgeColor: white,
+                  badgeStyle:const badges.BadgeStyle(badgeColor: white),
                   badgeContent: MyText(
                     mTitle: !homeProvider.loading
                         ? ((homeProvider.notificationModel.status == 200 &&

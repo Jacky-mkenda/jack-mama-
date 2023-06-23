@@ -256,28 +256,34 @@ class Utility {
   static Html htmlTexts(var strText) {
     return Html(
       data: strText,
-      onLinkTap: (url) async {
-        if (await canLaunchUrl(Uri.parse(url))) {
-          await launchUrl(
-            Uri.parse(url),
-            mode: LaunchMode.platformDefault,
-          );
-        } else {
-          throw 'Could not launch $url';
-        }
+      onLinkTap: (url, attributes, element) {
+        launchUrl(
+          Uri.parse(url!),
+          mode: LaunchMode.platformDefault
+        );
       },
-      shrinkToFit: false,
-      linkStyle:
-          const TextStyle(decoration: TextDecoration.none, color: linkColor),
-      defaultTextStyle: GoogleFonts.roboto(
-        textStyle: const TextStyle(
-          fontSize: 14,
-          color: otherLightColor,
-          fontWeight: FontWeight.w500,
-          fontStyle: FontStyle.normal,
-          letterSpacing: .2,
-        ),
-      ),
+      // onLinkTap:(url, context, attributes, element) async {
+      //   if (await canLaunchUrl(Uri.parse(url!))) {
+      //     await launchUrl(
+      //       Uri.parse(url),
+      //       mode: LaunchMode.platformDefault,
+      //     );
+      //   } else {
+      //     throw 'Could not launch $url';
+      //   }
+      // },
+      shrinkWrap: false,
+      // linkStyle:
+      //     const TextStyle(decoration: TextDecoration.none, color: linkColor),
+      // defaultTextStyle: GoogleFonts.roboto(
+      //   textStyle: const TextStyle(
+      //     fontSize: 14,
+      //     color: otherLightColor,
+      //     fontWeight: FontWeight.w500,
+      //     fontStyle: FontStyle.normal,
+      //     letterSpacing: .2,
+      //   ),
+      // ),
     );
   }
 
